@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cenry · 个人主页</title>
+  <meta name="description" content="一个用纯前端打造的炫酷个人主页" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- 顶部滚动进度条 -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- 背景：极光光斑 + 粒子画布 -->
+  <div class="aurora" aria-hidden="true">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+  </div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <!-- 导航 -->
+  <nav class="nav">
+    <a href="#home" class="nav-logo">Cenry</a>
+    <ul class="nav-links">
+      <li><a href="#about">关于</a></li>
+      <li><a href="#skills">技能</a></li>
+      <li><a href="#projects">作品</a></li>
+      <li><a href="#contact">联系</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <header id="home" class="hero">
+    <div class="hero-inner">
+      <p class="hero-greeting reveal">你好，我是</p>
+      <h1 class="hero-name reveal">CenryWang</h1>
+      <h1 class="hero-name reveal">你的名字</h1>
+      <p class="hero-typed"><span id="typed"></span><span class="cursor">|</span></p>
+      <div class="hero-actions reveal">
+        <a href="#projects" class="btn btn-primary">查看作品</a>
+        <a href="#contact" class="btn btn-ghost">联系我</a>
+      </div>
+    </div>
+    <div class="scroll-hint">向下滚动 ↓</div>
+  </header>
+
+  <!-- 关于 -->
+  <section id="about" class="section">
+    <h2 class="section-title reveal">关于我</h2>
+    <div class="about-card glass reveal">
+      <p>
+        在这里写一段关于你的介绍。可以介绍你的身份、擅长的领域、正在做的东西。
+        例如：我是一名开发者，热衷于把想法变成可用的产品，喜欢折腾前端动效与桌面应用。
+      </p>
+    </div>
+  </section>
+
+  <!-- 技能 -->
+  <section id="skills" class="section">
+    <h2 class="section-title reveal">技能</h2>
+    <div class="skills-grid">
+      <div class="skill glass reveal">JavaScript</div>
+      <div class="skill glass reveal">TypeScript</div>
+      <div class="skill glass reveal">Rust</div>
+      <div class="skill glass reveal">Vue</div>
+      <div class="skill glass reveal">Node.js</div>
+      <div class="skill glass reveal">Python</div>
+      <div class="skill glass reveal">UI / UX</div>
+      <div class="skill glass reveal">Git</div>
+    </div>
+  </section>
+
+  <!-- 作品 -->
+  <section id="projects" class="section">
+    <h2 class="section-title reveal">作品</h2>
+    <div class="projects-grid">
+      <article class="project glass reveal">
+        <div class="project-thumb"></div>
+        <h3>项目一</h3>
+        <p>一句话介绍这个项目解决了什么问题、用了什么技术。</p>
+        <div class="project-links">
+          <a href="#" target="_blank" rel="noopener">在线 Demo</a>
+          <a href="#" target="_blank" rel="noopener">源码</a>
+        </div>
+      </article>
+      <article class="project glass reveal">
+        <div class="project-thumb"></div>
+        <h3>项目二</h3>
+        <p>一句话介绍这个项目解决了什么问题、用了什么技术。</p>
+        <div class="project-links">
+          <a href="#" target="_blank" rel="noopener">在线 Demo</a>
+          <a href="#" target="_blank" rel="noopener">源码</a>
+        </div>
+      </article>
+      <article class="project glass reveal">
+        <div class="project-thumb"></div>
+        <h3>项目三</h3>
+        <p>一句话介绍这个项目解决了什么问题、用了什么技术。</p>
+        <div class="project-links">
+          <a href="#" target="_blank" rel="noopener">在线 Demo</a>
+          <a href="#" target="_blank" rel="noopener">源码</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 联系 -->
+  <section id="contact" class="section">
+    <h2 class="section-title reveal">联系我</h2>
+    <div class="contact glass reveal">
+      <a href="mailto:you@example.com" class="social">Email</a>
+      <a href="https://github.com/你的用户名" class="social" target="_blank" rel="noopener">GitHub</a>
+      <a href="#" class="social" target="_blank" rel="noopener">Twitter / X</a>
+      <a href="#" class="social" target="_blank" rel="noopener">博客</a>
+    </div>
+    <footer class="footer">© 2026 你的名字 · Built with vanilla JS</footer>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,413 @@
+:root {
+  --bg: #06060d;
+  --text: #e8e8f0;
+  --muted: #9aa0b5;
+  --accent1: #22d3ee; /* cyan */
+  --accent2: #a855f7; /* purple */
+  --accent3: #ec4899; /* pink */
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.10);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+/* 顶部进度条 */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
+  z-index: 1000;
+  transition: width 0.1s linear;
+}
+
+/* 极光背景 */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+}
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.5;
+  animation: float 18s ease-in-out infinite;
+}
+.blob-1 {
+  width: 420px;
+  height: 420px;
+  background: var(--accent2);
+  top: -100px;
+  left: -80px;
+}
+.blob-2 {
+  width: 380px;
+  height: 380px;
+  background: var(--accent1);
+  bottom: -120px;
+  right: -60px;
+  animation-delay: -6s;
+}
+.blob-3 {
+  width: 320px;
+  height: 320px;
+  background: var(--accent3);
+  top: 40%;
+  left: 55%;
+  animation-delay: -12s;
+}
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.1); }
+  66% { transform: translate(-30px, 40px) scale(0.95); }
+}
+#particles {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* 导航 */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 6vw;
+  backdrop-filter: blur(12px);
+  background: rgba(6, 6, 13, 0.5);
+  border-bottom: 1px solid var(--glass-border);
+}
+.nav-logo {
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-decoration: none;
+}
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.3s;
+  position: relative;
+}
+.nav-links a:hover {
+  color: var(--text);
+}
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  transition: width 0.3s;
+}
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 6vw;
+  position: relative;
+}
+.hero-greeting {
+  color: var(--muted);
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+}
+.hero-name {
+  font-size: clamp(3rem, 11vw, 7.5rem);
+  font-weight: 800;
+  line-height: 1.05;
+  margin: 10px 0;
+  background: linear-gradient(120deg, var(--accent1), var(--accent2) 45%, var(--accent3));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shine 6s linear infinite;
+}
+@keyframes shine {
+  to { background-position: 200% center; }
+}
+.hero-typed {
+  font-size: clamp(1.1rem, 3vw, 1.8rem);
+  color: var(--text);
+  min-height: 2em;
+}
+.cursor {
+  color: var(--accent1);
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+  50% { opacity: 0; }
+}
+.hero-actions {
+  display: flex;
+  gap: 18px;
+  margin-top: 34px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.btn {
+  padding: 13px 30px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: inline-block;
+}
+.btn-primary {
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  color: #06060d;
+  box-shadow: 0 8px 30px rgba(34, 211, 238, 0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(168, 85, 247, 0.45);
+}
+.btn-ghost {
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+}
+.btn-ghost:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent1);
+  box-shadow: 0 0 24px rgba(34, 211, 238, 0.2);
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 30px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  animation: bob 2s ease-in-out infinite;
+}
+@keyframes bob {
+  50% { transform: translateY(8px); }
+}
+
+/* 通用 section */
+.section {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 90px 6vw;
+}
+.section-title {
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 700;
+  margin-bottom: 36px;
+  text-align: center;
+  position: relative;
+}
+.section-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  margin: 14px auto 0;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  border-radius: 2px;
+}
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  padding: 30px;
+}
+
+/* 关于 */
+.about-card p {
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+/* 技能 */
+.skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+}
+.skill {
+  padding: 12px 22px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s, color 0.3s;
+}
+.skill:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent1);
+  box-shadow: 0 0 22px rgba(34, 211, 238, 0.25);
+  color: #fff;
+}
+
+/* 作品 */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+.project {
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.4s, box-shadow 0.4s;
+}
+.project:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(168, 85, 247, 0.25);
+}
+.project-thumb {
+  height: 150px;
+  background: linear-gradient(135deg, var(--accent2), var(--accent1));
+  position: relative;
+  overflow: hidden;
+}
+.project-thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.25), transparent 60%);
+}
+.project h3 {
+  margin: 18px 22px 8px;
+  font-size: 1.2rem;
+}
+.project p {
+  margin: 0 22px 18px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.project-links {
+  display: flex;
+  gap: 14px;
+  margin: 0 22px 22px;
+}
+.project-links a {
+  color: var(--accent1);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.project-links a:hover {
+  text-decoration: underline;
+}
+
+/* 联系 */
+.contact {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.social {
+  padding: 12px 26px;
+  border-radius: 50px;
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+  text-decoration: none;
+  background: var(--glass);
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+.social:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent3);
+  box-shadow: 0 0 24px rgba(236, 72, 153, 0.3);
+}
+.footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 50px;
+}
+
+/* 滚动揭示动画 */
+.reveal {
+  opacity: 0;
+  transform: translateY(34px);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* 自定义光标光晕 */
+.cursor-glow {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.5), transparent 70%);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  transition: width 0.2s, height 0.2s;
+  mix-blend-mode: screen;
+}
+
+@media (max-width: 640px) {
+  .nav-links {
+    gap: 16px;
+  }
+  .nav-links a {
+    font-size: 0.8rem;
+  }
+  .section {
+    padding: 60px 6vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
