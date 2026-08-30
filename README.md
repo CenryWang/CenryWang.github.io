@@ -23,7 +23,7 @@
 
 - Email：cenrywang@foxmail.com
 - GitHub：<https://github.com/CenryWang>
-- 小红书：<https://xhslink.cn/o/GKuYm3zIMN>（二维码图片 `xhs-qrcode.jpg`）
+- 小红书：<https://xhslink.cn/o/GKuYm3zIMN>
 
 ## 关于游戏
 

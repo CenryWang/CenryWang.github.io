@@ -379,27 +379,6 @@ body {
   margin-top: 50px;
 }
 
-/* 小红书二维码卡 */
-.xhs-qr {
-  margin: 30px auto 0;
-  width: fit-content;
-  max-width: 180px;
-  text-align: center;
-  padding: 16px;
-}
-.xhs-qr img {
-  width: 130px;
-  height: 130px;
-  border-radius: 12px;
-  display: block;
-  object-fit: cover;
-}
-.xhs-qr p {
-  margin: 10px 0 0;
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-
 /* 滚动揭示动画 */
 .reveal {
   opacity: 0;
