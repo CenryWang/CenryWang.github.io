@@ -312,6 +312,13 @@ body {
   inset: 0;
   background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.25), transparent 60%);
 }
+/* 游戏项目缩略图：水果链配色(西瓜绿 → 菠萝黄 → 樱桃红) */
+.project-thumb--game {
+  background: linear-gradient(135deg, #3eb864 0%, #f2c241 50%, #ff5a5a 100%);
+}
+.project--featured {
+  border-color: rgba(62, 184, 100, 0.35);
+}
 .project h3 {
   margin: 18px 22px 8px;
   font-size: 1.2rem;
