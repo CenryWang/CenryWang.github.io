@@ -1,13 +1,39 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>热榜速览 · Cenry</title>
-  <meta name="description" content="全网热榜聚合，GitHub Actions 每小时自动更新" />
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>热榜速览 · Cenry</title>
+<meta name="description" content="全网热榜聚合，每小时自动更新" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  .board-shell { max-width: 1200px; }
+  .board-meta { text-align: center; color: var(--muted); font-size: 0.95rem; margin: -18px 0 30px; }
+  .board-meta a { color: var(--accent1); text-decoration: none; }
+  .board-meta a:hover { text-decoration: underline; }
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 18px;
+  }
+  .board-card { padding: 22px 24px; }
+  .board-card h2 {
+    font-size: 1.05rem; margin: 0 0 12px; padding-left: 10px;
+    border-left: 3px solid var(--accent1);
+  }
+  .board-card:nth-child(3n+2) h2 { border-left-color: var(--accent2); }
+  .board-card:nth-child(3n) h2 { border-left-color: var(--accent3); }
+  .board-card ol { margin: 0; padding-left: 20px; }
+  .board-card li { margin: 7px 0; font-size: 0.9rem; line-height: 1.55; }
+  .board-card a { color: var(--text); text-decoration: none; }
+  .board-card a:hover { color: var(--accent1); }
+  .fail { color: #d29922; font-size: 0.9rem; margin: 0; }
+  .board-footer { text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 50px; }
+</style>
 </head>
 <body>
+  <div class="scroll-progress" id="scrollProgress"></div>
+
   <div class="aurora" aria-hidden="true">
     <span class="blob blob-1"></span>
     <span class="blob blob-2"></span>
@@ -23,21 +49,37 @@
     </ul>
   </nav>
 
-  <section class="section">
+  <section class="section board-shell">
     <h2 class="section-title">🔥 热榜速览</h2>
-    <div class="glass" style="text-align: center;">
-      <p style="color: var(--muted); font-size: 1.05rem;">
-        页面生成中——首次部署后，GitHub Actions 会每小时自动抓取
-        微博 / 百度 / 知乎 / B站 / 豆瓣热榜并替换本页。<br /><br />
-        若部署后长时间停留在本页，请到仓库 Actions 标签页手动运行一次
-        "Update hot board"。
-      </p>
-      <p style="margin-top: 26px;">
-        <a href="/" class="btn btn-primary" style="text-decoration: none;">← 返回首页</a>
-      </p>
+    <p class="board-meta">更新于 2026-08-30 20:35（北京时间） · 每小时自动抓取 · <a href="digest.html">每日简报</a></p>
+    <div class="board-grid">
+<section class="glass board-card reveal"><h2>微博热搜</h2><p class="fail">暂时获取失败，下个整点自动重试</p></section>
+<section class="glass board-card reveal"><h2>百度热搜</h2><ol><li><a href="https://www.baidu.com/s?wd=%E4%B9%A0%E8%BF%91%E5%B9%B3%E6%8A%B5%E8%BE%BE%E6%AF%94%E4%BB%80%E5%87%AF%E5%85%8B%E5%87%BA%E5%B8%AD%E4%B8%8A%E5%90%88%E5%B3%B0%E4%BC%9A" target="_blank" rel="noopener">习近平抵达比什凯克出席上合峰会</a></li><li><a href="https://www.baidu.com/s?wd=%E5%B0%BC%E6%B3%8A%E5%B0%94%E5%86%B0%E5%B4%A9%E6%98%AF%E5%9B%A0%E4%B8%BA%E5%85%A8%E7%90%83%E5%8F%98%E6%9A%96%E5%90%97" target="_blank" rel="noopener">尼泊尔冰崩是因为全球变暖吗</a></li><li><a href="https://www.baidu.com/s?wd=%E5%AE%9E%E4%BD%93%E8%8D%AF%E5%BA%97%E4%B8%A4%E5%B9%B4%E5%87%8F%E5%B0%912.2%E4%B8%87%E5%AE%B6" target="_blank" rel="noopener">实体药店两年减少2.2万家</a></li><li><a href="https://www.baidu.com/s?wd=%E5%8C%BB%E7%96%97%E9%98%B2%E7%96%AB%E5%88%86%E9%98%9F%E5%89%8D%E5%BE%80%E6%95%91%E6%8F%B4%E4%B8%80%E7%BA%BF" target="_blank" rel="noopener">医疗防疫分队前往救援一线</a></li><li><a href="https://www.baidu.com/s?wd=%E8%A5%BF%E8%97%8F%E5%90%89%E9%9A%86%E6%9C%89%E6%8C%96%E6%8E%98%E6%9C%BA%E6%84%8F%E5%A4%96%E5%9D%A0%E6%B2%B3" target="_blank" rel="noopener">西藏吉隆有挖掘机意外坠河</a></li><li><a href="https://www.baidu.com/s?wd=%E5%AE%98%E6%96%B9%E5%9B%9E%E5%BA%94%E2%80%9C%E5%8F%96%E6%B6%88ETC%E2%80%9D+%E8%AF%BB%E6%87%82%E8%BD%A6%E4%B8%BB%E7%9C%9F%E8%AF%89%E6%B1%82" target="_blank" rel="noopener">官方回应“取消ETC” 读懂车主真诉求</a></li><li><a href="https://www.baidu.com/s?wd=%E5%8D%97%E6%9E%81%E5%86%B0%E5%B7%9D%E8%9E%8D%E5%8C%96%E6%AD%A3%E9%87%8A%E6%94%BE%E5%89%A7%E6%AF%92%E6%B0%B4%E9%93%B6" target="_blank" rel="noopener">南极冰川融化正释放剧毒水银</a></li><li><a href="https://www.baidu.com/s?wd=%E4%B8%AD%E5%9B%BD%E5%A5%B3%E6%8E%92%E6%89%B3%E5%B9%B3%E5%B1%80%E5%88%86" target="_blank" rel="noopener">中国女排扳平局分</a></li><li><a href="https://www.baidu.com/s?wd=%E5%A4%AE%E8%A7%86%E6%9B%9D%E5%85%89%E7%84%A6%E7%B3%96%E8%89%B2%E7%B4%A0%E5%81%87%E5%85%A8%E9%BA%A6%E9%9D%A2%E5%8C%85" target="_blank" rel="noopener">央视曝光焦糖色素假全麦面包</a></li><li><a href="https://www.baidu.com/s?wd=%E9%80%9F%E6%88%90%E8%BD%A6%E7%9A%84%E4%BB%A3%E4%BB%B7" target="_blank" rel="noopener">速成车的代价</a></li><li><a href="https://www.baidu.com/s?wd=%E6%B2%B3%E5%8D%975%E4%BA%BA%E5%90%83%E7%94%9F%E9%B1%BC%E7%89%87%E7%A1%AE%E8%AF%8A%E8%82%9D%E5%90%B8%E8%99%AB%E7%97%85" target="_blank" rel="noopener">河南5人吃生鱼片确诊肝吸虫病</a></li><li><a href="https://www.baidu.com/s?wd=%E6%A1%82%E5%9C%86%E2%80%9C%E6%89%93%E9%92%88%E5%A2%9E%E7%94%9C%E2%80%9D%E4%B8%8D%E5%8F%AF%E8%83%BD" target="_blank" rel="noopener">桂圆“打针增甜”不可能</a></li><li><a href="https://www.baidu.com/s?wd=%E6%A2%85%E8%89%B3%E8%8A%B3%E6%AF%8D%E4%BA%B2%E5%8E%BB%E4%B8%96" target="_blank" rel="noopener">梅艳芳母亲去世</a></li><li><a href="https://www.baidu.com/s?wd=%E5%BC%80%E5%AD%A6%E4%B8%89%E4%BB%B6%E5%A5%97%E9%BD%90%E6%B6%A8%E4%BB%B7%E5%AE%B6%E9%95%BF%E7%9B%B4%E5%91%BC%E5%90%83%E4%B8%8D%E6%B6%88" target="_blank" rel="noopener">开学三件套齐涨价家长直呼吃不消</a></li><li><a href="https://www.baidu.com/s?wd=%E4%B8%AD%E5%9B%BD%E5%A5%B3%E6%8E%92%E5%86%B2%E5%86%A0" target="_blank" rel="noopener">中国女排冲冠</a></li><li><a href="https://www.baidu.com/s?wd=%E6%A2%85%E8%89%B3%E8%8A%B3%E9%81%97%E4%BA%A7%E4%BA%89%E5%A4%BA%E6%A1%8823%E5%B9%B4%E5%90%8E%E5%A4%A7%E7%BB%93%E5%B1%80" target="_blank" rel="noopener">梅艳芳遗产争夺案23年后大结局</a></li><li><a href="https://www.baidu.com/s?wd=%E8%A5%BF%E8%97%8F%E6%B3%A5%E7%9F%B3%E6%B5%81%E7%81%BE%E5%AE%B3%E5%8E%9F%E5%9B%A0%E7%8E%B0%E5%B7%B2%E6%9F%A5%E6%98%8E" target="_blank" rel="noopener">西藏泥石流灾害原因现已查明</a></li><li><a href="https://www.baidu.com/s?wd=%E7%BB%BC%E8%89%BA%E8%8A%82%E7%9B%AE%E9%81%97%E7%95%99%E9%81%93%E5%85%B72%E5%B9%B4%E6%88%90%E6%B5%B7%E6%BB%A9%E5%9E%83%E5%9C%BE" target="_blank" rel="noopener">综艺节目遗留道具2年成海滩垃圾</a></li><li><a href="https://www.baidu.com/s?wd=%E5%A4%AE%E8%A7%86%E6%9B%9D%E5%85%89%E2%80%9C%E6%AF%81%E5%AE%B9%E9%92%88%E2%80%9D" target="_blank" rel="noopener">央视曝光“毁容针”</a></li><li><a href="https://www.baidu.com/s?wd=%E6%B8%85%E5%8D%8E%E6%96%B0%E7%94%9F%E5%87%8C%E6%99%A8%E6%8B%89%E7%BB%8320%E5%85%AC%E9%87%8C" target="_blank" rel="noopener">清华新生凌晨拉练20公里</a></li></ol></section>
+<section class="glass board-card reveal"><h2>知乎热榜</h2><ol><li><a href="https://www.zhihu.com/question/2077426554766713765" target="_blank" rel="noopener">网易云音乐疑似官宣适配鸿蒙，长期缺席后为何选择此时适配？能否挽回此前流失的部分用户？</a></li><li><a href="https://www.zhihu.com/question/2077314972804014260" target="_blank" rel="noopener">西藏泥石流已致16死546失联，泥石流灾害系因尼泊尔一条冰川断裂发生冰岩崩，还有哪些信息值得关注？</a></li><li><a href="https://www.zhihu.com/question/2077196582349546349" target="_blank" rel="noopener">国家动物博物馆两个小孩手抓脚踢致莽山原矛头蝮标本受损，父亲一起玩闹，这一标本有多珍贵？谁该担责？</a></li><li><a href="https://www.zhihu.com/question/2077141243025536393" target="_blank" rel="noopener">2026年乒乓球德国杯，樊振东2：3不敌户上隼辅，怎么评价本次赛事杜塞尔多夫俱乐部止步16强的表现？</a></li><li><a href="https://www.zhihu.com/question/2077042396831946679" target="_blank" rel="noopener">国家自然基金委通报 31 个项目并追回资助，这暴露出我国科研管理存在哪些问题？</a></li><li><a href="https://www.zhihu.com/question/2076965570528941102" target="_blank" rel="noopener">特朗普称美国获得超650亿桶委石油储量的「多数控制权」，美国纳税人无需为此承担任何费用，如何看待此事？</a></li><li><a href="https://www.zhihu.com/question/2076947094842224747" target="_blank" rel="noopener">沃什发表央行年会主题演讲，黄金重挫超3%，美元、美债收益率集体上涨，美股下跌，如何解读？</a></li><li><a href="https://www.zhihu.com/question/2076757072998293859" target="_blank" rel="noopener">轻薄本疯狂砍掉A口、HDMI，全靠Type‑C，为轻薄牺牲接口，到底是进步还是对普通用户不负责任？</a></li><li><a href="https://www.zhihu.com/question/2076734017597194663" target="_blank" rel="noopener">如何看待工信部通报一致性检测典型案例，比亚迪一款插混车型因油耗过高上榜？</a></li><li><a href="https://www.zhihu.com/question/2076659559964341007" target="_blank" rel="noopener">一家三口候补车票，8 岁小孩被分到不同车厢致无奈退票，怎样能避免这种情况？购票机制还有哪些优化空间？</a></li><li><a href="https://www.zhihu.com/question/2076451823452528700" target="_blank" rel="noopener">刘翔个人的广告费应该属于他个人的所得，为什么体育局要分他的广告费呢？体育局分广告费是基于哪条规定？</a></li><li><a href="https://www.zhihu.com/question/2076406082747090665" target="_blank" rel="noopener">如何评价清华大学宣布废除GPA排名，实施推免综合评价？</a></li><li><a href="https://www.zhihu.com/question/2076313906579096130" target="_blank" rel="noopener">新加坡人几乎都是在外面吃饭，他们有没有预制菜？</a></li><li><a href="https://www.zhihu.com/question/2075696679496504350" target="_blank" rel="noopener">婚宴上，新郎的舅舅坐上席，新郎的叔叔不乐意了，扭头就走，舅舅应不应该坐上席?</a></li><li><a href="https://www.zhihu.com/question/2075552758049125616" target="_blank" rel="noopener">关于QWEN3.8-27B，大家的速度都是多少tokens/s？</a></li><li><a href="https://www.zhihu.com/question/2075494563582407902" target="_blank" rel="noopener">郑州北龙湖疑现多条巨型鱼类，网友推测为「水老虎」 ，这可能是什么鱼？出现在城市内湖会有哪些潜在影响？</a></li><li><a href="https://www.zhihu.com/question/2075414467538699623" target="_blank" rel="noopener">网传 PL-17 导弹 J-20 弹仓无法容纳，是真的吗？若属实，这是设计局限还是战略考量？</a></li><li><a href="https://www.zhihu.com/question/2075353195505772214" target="_blank" rel="noopener">如果一款武侠游戏加入火枪，那么如何避免这个游戏过于依赖热武器？</a></li><li><a href="https://www.zhihu.com/question/2075236179797096090" target="_blank" rel="noopener">当兵被班长往死里整，家里不愿帮你走动，你是硬留还是回家？</a></li><li><a href="https://www.zhihu.com/question/2073296164783502306" target="_blank" rel="noopener">诺基亚疑加快收缩中国业务，发言人称正调整在中国的运营布局，这是要退出中国市场了吗？其面临怎样的处境？</a></li></ol></section>
+<section class="glass board-card reveal"><h2>B站热搜</h2><p class="fail">暂时获取失败，下个整点自动重试</p></section>
+<section class="glass board-card reveal"><h2>B站排行榜</h2><p class="fail">暂时获取失败，下个整点自动重试</p></section>
+<section class="glass board-card reveal"><h2>豆瓣·正在热映</h2><ol><li><a href="https://movie.douban.com/subject/36808876" target="_blank" rel="noopener">奥德赛</a></li><li><a href="https://movie.douban.com/subject/35811064" target="_blank" rel="noopener">欢迎来龙餐馆</a></li><li><a href="https://movie.douban.com/subject/37508847" target="_blank" rel="noopener">空枪</a></li><li><a href="https://movie.douban.com/subject/1292052" target="_blank" rel="noopener">肖申克的救赎</a></li><li><a href="https://movie.douban.com/subject/36931140" target="_blank" rel="noopener">数到三</a></li><li><a href="https://movie.douban.com/subject/38581618" target="_blank" rel="noopener">牛来</a></li><li><a href="https://movie.douban.com/subject/35209727" target="_blank" rel="noopener">密档</a></li><li><a href="https://movie.douban.com/subject/37450627" target="_blank" rel="noopener">痴迷</a></li><li><a href="https://movie.douban.com/subject/36246195" target="_blank" rel="noopener">蜘蛛侠：崭新之日</a></li><li><a href="https://movie.douban.com/subject/35464353" target="_blank" rel="noopener">大唐妖探</a></li><li><a href="https://movie.douban.com/subject/36882191" target="_blank" rel="noopener">八仙！</a></li><li><a href="https://movie.douban.com/subject/36812879" target="_blank" rel="noopener">抓特务</a></li><li><a href="https://movie.douban.com/subject/2131459" target="_blank" rel="noopener">机器人总动员</a></li><li><a href="https://movie.douban.com/subject/36850814" target="_blank" rel="noopener">年会不能停！2</a></li><li><a href="https://movie.douban.com/subject/35275131" target="_blank" rel="noopener">去你的岛</a></li><li><a href="https://movie.douban.com/subject/36318703" target="_blank" rel="noopener">逃出绝命街</a></li><li><a href="https://movie.douban.com/subject/36452545" target="_blank" rel="noopener">功夫女足</a></li><li><a href="https://movie.douban.com/subject/3011051" target="_blank" rel="noopener">恐怖游轮</a></li><li><a href="https://movie.douban.com/subject/36791178" target="_blank" rel="noopener">汪汪队立大功大电影3：勇闯恐龙岛</a></li><li><a href="https://movie.douban.com/subject/37247652" target="_blank" rel="noopener">古村迷宅</a></li></ol></section>
     </div>
   </section>
 
-  <footer class="footer">© 2026 CenryWang · 本页由 GitHub Actions 自动生成</footer>
+  <footer class="board-footer">© 2026 CenryWang · 本次成功 3/6 个源 · 数据经 RSSHub 抓取，GitHub Actions 自动生成</footer>
+
+  <script>
+    (function () {
+      var bar = document.getElementById("scrollProgress");
+      window.addEventListener("scroll", function () {
+        var h = document.documentElement;
+        bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + "%";
+      });
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting) e.target.classList.add("visible"); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+      } else {
+        document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("visible"); });
+      }
+    })();
+  </script>
 </body>
 </html>
