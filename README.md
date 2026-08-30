@@ -9,6 +9,13 @@
 - `script.js` — 首页交互（粒子背景 / 打字机 / 滚动进度条等）
 - `merge-quest.html` — **合成大冒险 · Merge Quest** 游戏页，单文件自包含，开箱即玩
 
+## 作品列表
+
+- **合成大冒险 · Merge Quest** — 物理合成类休闲小游戏（Canvas + Matter.js）
+  - 在线游玩：<https://cenrywang.github.io/merge-quest.html>（本仓库 `merge-quest.html`）
+- **AIToolsChain · AI 工具链** — Windows AI 工具安装管理器（Tauri v2 / Rust + TypeScript）
+  - 源码 / 下载：<https://github.com/CenryWang/AIToolsChain>
+
 ## 关于游戏
 
 `merge-quest.html` 由 [Merge Quest](../../ZcodeWorkspace/Pro01) 项目用 Vite 单文件构建生成

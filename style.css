@@ -319,6 +319,10 @@ body {
 .project--featured {
   border-color: rgba(62, 184, 100, 0.35);
 }
+/* AI 工具链项目缩略图：靛蓝 → 品红 → 青色,呼应 AI / 科技感 */
+.project-thumb--aitools {
+  background: linear-gradient(135deg, #4f46e5 0%, #d946ef 50%, #06b6d4 100%);
+}
 .project h3 {
   margin: 18px 22px 8px;
   font-size: 1.2rem;
