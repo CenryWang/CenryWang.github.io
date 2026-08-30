@@ -15,6 +15,15 @@
   - 在线游玩：<https://cenrywang.github.io/merge-quest.html>（本仓库 `merge-quest.html`）
 - **AIToolsChain · AI 工具链** — Windows AI 工具安装管理器（Tauri v2 / Rust + TypeScript）
   - 源码 / 下载：<https://github.com/CenryWang/AIToolsChain>
+- **CherryStudio 工具说明书** — CherryStudio 桌面版使用说明（自整理）
+  - 文档：<https://my.feishu.cn/docx/DZvcdVzI0oZQQFxIZ8mc5h9Cnbf?from=from_parent_docx>（飞书，可能需登录）
+  - 工具官网：<https://cherry-ai.com>
+
+## 联系方式（首页已配置）
+
+- Email：cenrywang@foxmail.com
+- GitHub：<https://github.com/CenryWang>
+- 小红书：<https://xhslink.cn/o/GKuYm3zIMN>（二维码图片 `xhs-qrcode.jpg`）
 
 ## 关于游戏
 
