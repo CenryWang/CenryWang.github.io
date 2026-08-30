@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>每日简报 · Cenry</title>
-  <meta name="description" content="RSS 聚合每日简报，GitHub Actions 自动更新" />
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>每日简报 · Cenry</title>
+<meta name="description" content="RSS 聚合每日简报，GitHub Actions 自动更新" />
+<link rel="stylesheet" href="style.css" />
+<style>
+  .digest-shell { max-width: 1080px; }
+  .digest-meta { text-align: center; color: var(--muted); font-size: 0.95rem; margin: -18px 0 30px; }
+  .digest-meta a { color: var(--accent1); text-decoration: none; }
+  .digest-meta a:hover { text-decoration: underline; }
+  .digest-body h2 { margin: 44px 0 16px; font-size: 1.35rem; }
+  .digest-body h2::after {
+    content: ""; display: block; width: 44px; height: 3px; margin-top: 8px;
+    background: linear-gradient(90deg, var(--accent1), var(--accent2)); border-radius: 2px;
+  }
+  .digest-body p { color: var(--muted); font-size: 0.95rem; }
+  .table-wrap { overflow-x: auto; border: 1px solid var(--glass-border); border-radius: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 660px; }
+  th {
+    text-align: left; color: var(--muted); font-size: 0.78rem; letter-spacing: 1px;
+    padding: 12px 14px; border-bottom: 1px solid var(--glass-border); white-space: nowrap;
+  }
+  td { padding: 10px 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255, 255, 255, 0.02); }
+  td a, td a:visited { color: var(--accent1); text-decoration: none; }
+  td a:hover { text-decoration: underline; }
+  td img { width: 22px; height: 22px; border-radius: 5px; vertical-align: middle; }
+  .digest-footer { text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 50px; }
+</style>
 </head>
 <body>
+  <div class="scroll-progress" id="scrollProgress"></div>
+
   <div class="aurora" aria-hidden="true">
     <span class="blob blob-1"></span>
     <span class="blob blob-2"></span>
@@ -23,20 +50,244 @@
     </ul>
   </nav>
 
-  <section class="section">
+  <section class="section digest-shell">
     <h2 class="section-title">每日简报</h2>
-    <div class="glass" style="text-align: center;">
-      <p style="color: var(--muted); font-size: 1.05rem;">
-        页面生成中——garss 每天 06:00 抓取 RSS 生成日报，本站 07:30 自动同步至此。<br /><br />
-        若部署后长时间停留在本页，请确认 garss fork 已完成首轮构建，
-        并到本仓库 Actions 标签页手动运行一次 "Sync RSS digest"。
-      </p>
-      <p style="margin-top: 26px;">
-        <a href="/" class="btn btn-primary" style="text-decoration: none;">← 返回首页</a>
-      </p>
+    <p class="digest-meta">同步于 2026-08-30 20:57（北京时间） · 每天 07:30 自动更新 · <a href="hot.html">🔥 热榜速览</a></p>
+    <div class="glass digest-body">
+<blockquote>
+<p>精选 RSS 订阅聚合 · 每天 06:00 由 GitHub Actions 自动更新 · 当天新文章带 🌈 标志</p>
+</blockquote>
+<h2>科技资讯</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>名称</th>
+<th>描述</th>
+<th>最新内容</th>
+<th>订阅地址</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>K001</td>
+<td>少数派</td>
+<td>数字工具与效率方法</td>
+<td>-</td>
+<td><a href="https://sspai.com/feed">订阅地址</a></td>
+</tr>
+<tr>
+<td>K002</td>
+<td>36氪</td>
+<td>创投与科技资讯</td>
+<td>-</td>
+<td><a href="https://36kr.com/feed">订阅地址</a></td>
+</tr>
+<tr>
+<td>K003</td>
+<td>爱范儿</td>
+<td>消费科技与新品</td>
+<td>-</td>
+<td><a href="https://www.ifanr.com/feed">订阅地址</a></td>
+</tr>
+<tr>
+<td>K004</td>
+<td>Solidot</td>
+<td>开源与极客新闻</td>
+<td>-</td>
+<td><a href="https://www.solidot.org/index.rss">订阅地址</a></td>
+</tr>
+<tr>
+<td>K005</td>
+<td>The Verge</td>
+<td>英文科技媒体</td>
+<td>-</td>
+<td><a href="https://www.theverge.com/rss/index.xml">订阅地址</a></td>
+</tr>
+<tr>
+<td>K006</td>
+<td>Ars Technica</td>
+<td>英文科技深度报道</td>
+<td>-</td>
+<td><a href="https://feeds.arstechnica.com/arstechnica/index">订阅地址</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2>技术博客</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>名称</th>
+<th>描述</th>
+<th>最新内容</th>
+<th>订阅地址</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B001</td>
+<td>阮一峰的网络日志</td>
+<td>科技爱好者周刊，中文技术圈必读</td>
+<td>-</td>
+<td><a href="http://www.ruanyifeng.com/blog/atom.xml">订阅地址</a></td>
+</tr>
+<tr>
+<td>B002</td>
+<td>美团技术团队</td>
+<td>大厂工程实践</td>
+<td>-</td>
+<td><a href="https://tech.meituan.com/feed/">订阅地址</a></td>
+</tr>
+<tr>
+<td>B003</td>
+<td>云风的心灵时光</td>
+<td>游戏开发与编程随想</td>
+<td>-</td>
+<td><a href="https://blog.codingnow.com/atom.xml">订阅地址</a></td>
+</tr>
+<tr>
+<td>B004</td>
+<td>GitHub Blog</td>
+<td>平台动态与新功能</td>
+<td>-</td>
+<td><a href="https://github.blog/feed/">订阅地址</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2>开发者社区</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>名称</th>
+<th>描述</th>
+<th>最新内容</th>
+<th>订阅地址</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D001</td>
+<td>GitHub Trending</td>
+<td>每日热门开源项目（全语言）</td>
+<td>-</td>
+<td><a href="http://rsshub:1200/github/trending/daily/any">订阅地址</a></td>
+</tr>
+<tr>
+<td>D002</td>
+<td>V2EX 热门</td>
+<td>开发者社区热议</td>
+<td>-</td>
+<td><a href="http://rsshub:1200/v2ex/topics/hot">订阅地址</a></td>
+</tr>
+<tr>
+<td>D003</td>
+<td>Hacker News</td>
+<td>英文技术社区头版</td>
+<td>-</td>
+<td><a href="https://hnrss.org/frontpage">订阅地址</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2>热榜快讯（当日快照进简报；每小时更新的热榜页在主页 /hot.html）</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>名称</th>
+<th>描述</th>
+<th>最新内容</th>
+<th>订阅地址</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>H001</td>
+<td>微博热搜</td>
+<td>全网热点风向标</td>
+<td>-</td>
+<td><a href="http://rsshub:1200/weibo/search/hot">订阅地址</a></td>
+</tr>
+<tr>
+<td>H002</td>
+<td>百度热搜</td>
+<td>搜索热点风向</td>
+<td>-</td>
+<td><a href="http://rsshub:1200/baidu/top">订阅地址</a></td>
+</tr>
+<tr>
+<td>H003</td>
+<td>知乎热榜</td>
+<td>深度讨论热点</td>
+<td>-</td>
+<td><a href="http://rsshub:1200/zhihu/hot">订阅地址</a></td>
+</tr>
+<tr>
+<td>H004</td>
+<td>B站排行榜</td>
+<td>全站热门视频</td>
+<td>-</td>
+<td><a href="http://rsshub:1200/bilibili/ranking">订阅地址</a></td>
+</tr>
+<tr>
+<td>H005</td>
+<td>豆瓣正在热映</td>
+<td>影讯速览</td>
+<td>-</td>
+<td><a href="http://rsshub:1200/douban/movie/playing">订阅地址</a></td>
+</tr>
+</tbody>
+</table></div>
+<h2>英文媒体</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>编号</th>
+<th>名称</th>
+<th>描述</th>
+<th>最新内容</th>
+<th>订阅地址</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E001</td>
+<td>TechCrunch</td>
+<td>创投资讯</td>
+<td>-</td>
+<td><a href="https://techcrunch.com/feed/">订阅地址</a></td>
+</tr>
+<tr>
+<td>E002</td>
+<td>MIT Technology Review</td>
+<td>技术趋势深度</td>
+<td>-</td>
+<td><a href="https://www.technologyreview.com/feed/">订阅地址</a></td>
+</tr>
+</tbody>
+</table></div>
     </div>
   </section>
 
-  <footer class="footer">© 2026 CenryWang · 本页由 GitHub Actions 自动生成</footer>
+  <footer class="digest-footer">© 2026 CenryWang · 内容来自 RSS 订阅源，GitHub Actions 自动生成</footer>
+
+  <script>
+    (function () {
+      var bar = document.getElementById("scrollProgress");
+      window.addEventListener("scroll", function () {
+        var h = document.documentElement;
+        bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + "%";
+      });
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting) e.target.classList.add("visible"); });
+        }, { threshold: 0.05 });
+        document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+      } else {
+        document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("visible"); });
+      }
+    })();
+  </script>
 </body>
 </html>
