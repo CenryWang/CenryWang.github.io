@@ -158,7 +158,7 @@ body {
   letter-spacing: 2px;
 }
 .hero-name {
-  font-size: clamp(3rem, 11vw, 7.5rem);
+  font-size: clamp(2.4rem, 10vw, 7.5rem);
   font-weight: 800;
   line-height: 1.05;
   margin: 10px 0;
@@ -377,6 +377,12 @@ body {
   color: var(--muted);
   font-size: 0.85rem;
   margin-top: 50px;
+}
+/* 访问量统计(不蒜子) */
+.visit-stats {
+  margin-top: 8px;
+  font-size: 0.78rem;
+  opacity: 0.85;
 }
 
 /* 滚动揭示动画 */

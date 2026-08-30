@@ -19,6 +19,10 @@
   - 文档：<https://my.feishu.cn/docx/DZvcdVzI0oZQQFxIZ8mc5h9Cnbf?from=from_parent_docx>（飞书，可能需登录）
   - 工具官网：<https://cherry-ai.com>
 
+## 访问量统计
+
+首页页脚集成了[不蒜子](https://busuanzi.ibruce.info/)（busuanzi）计数器，显示「本站总访问量 / 访客数」。纯前端接入，无需注册；脚本异步加载，服务不可用时统计行自动隐藏。数据按域名 `cenrywang.github.io` 累计，正式上线后从 0 开始计数。
+
 ## 联系方式（首页已配置）
 
 - Email：cenrywang@foxmail.com

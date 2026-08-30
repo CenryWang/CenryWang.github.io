@@ -83,7 +83,7 @@ window.addEventListener("resize", () => {
 
 // ===== 打字机 =====
 const typedEl = document.getElementById("typed");
-const words = ["浙大26届", "农业具身智能", "农业机器人", "ENTJ"];
+const words = ["创作者", "开发者", "开拓者"];
 let wi = 0;
 let ci = 0;
 let deleting = false;
