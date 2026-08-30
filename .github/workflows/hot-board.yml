@@ -1,0 +1,55 @@
+name: Update hot board
+
+on:
+  schedule:
+    # 每小时第 17 分钟（UTC）跑一次，错开整点高峰
+    # GitHub 定时任务有延迟（几分钟到几十分钟），热榜场景可接受
+    - cron: '17 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+# 与 sync-digest 共用一个组，避免两个工作流同时 push 冲突
+concurrency:
+  group: content-update
+
+jobs:
+  hot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout homepage repo
+        uses: actions/checkout@v4
+
+      - name: Start RSSHub container
+        run: |
+          docker run -d --name rsshub -p 127.0.0.1:1200:1200 diygod/rsshub:latest
+          # 最多等 3 分钟，端口返回任意 HTTP 状态码即视为就绪
+          for i in $(seq 1 36); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:1200/ || true)
+            if [ -n "$code" ] && [ "$code" != "000" ]; then
+              echo "RSSHub is up (HTTP $code)"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::RSSHub 未在 3 分钟内启动"
+          docker logs rsshub 2>&1 | tail -50
+          exit 1
+
+      - name: Build hot.html
+        run: |
+          python3 -m pip install --user feedparser
+          python3 scripts/build_hot.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add hot.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update hot board $(date -u +'%Y-%m-%d %H:%M') UTC"
+            git push
+          fi

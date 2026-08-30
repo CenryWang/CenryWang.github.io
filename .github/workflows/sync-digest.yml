@@ -1,0 +1,45 @@
+name: Sync RSS digest
+
+on:
+  schedule:
+    # UTC 23:30 = 北京时间 07:30，在 garss 每天 06:00 构建之后
+    # GitHub 定时任务有延迟；同步到前一天内容时次日自愈，或手动 Run
+    - cron: '30 23 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+# 与 hot-board 共用一个组，避免两个工作流同时 push 冲突
+concurrency:
+  group: content-update
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout homepage repo
+        uses: actions/checkout@v4
+
+      - name: Checkout garss fork (daily digest source)
+        uses: actions/checkout@v4
+        with:
+          repository: CenryWang/garss
+          path: garss
+
+      - name: Build digest.html
+        run: |
+          python3 -m pip install --user markdown
+          python3 scripts/build_digest.py garss/README.md digest.html
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add digest.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update RSS digest $(date -u +'%Y-%m-%d')"
+            git push
+          fi

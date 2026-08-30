@@ -8,6 +8,11 @@
 - `style.css` — 首页样式
 - `script.js` — 首页交互（粒子背景 / 打字机 / 滚动进度条等）
 - `merge-quest.html` — **合成大冒险 · Merge Quest** 游戏页，单文件自包含，开箱即玩
+- `digest.html` — **每日简报**（RSS 聚合日报，Actions 每日自动生成，勿手改；首次生成前为占位页）
+- `hot.html` — **热榜速览**（全网热榜聚合，Actions 每小时自动生成，勿手改；首次生成前为占位页）
+- `scripts/` — 上述两个页面的生成脚本
+- `.github/workflows/` — 定时生成工作流（sync-digest / hot-board）
+- `.nojekyll` — 禁用 GitHub Pages 的 Jekyll 处理（本站纯静态；防止生成页内容被 Liquid 误解析）
 
 ## 作品列表
 
@@ -18,6 +23,15 @@
 - **CherryStudio 工具说明书** — CherryStudio 桌面版使用说明（自整理）
   - 文档：<https://my.feishu.cn/docx/DZvcdVzI0oZQQFxIZ8mc5h9Cnbf?from=from_parent_docx>（飞书，可能需登录）
   - 工具官网：<https://cherry-ai.com>
+
+## 信息简报与热榜（GitHub Actions 自动生成）
+
+首页导航的「简报」「热榜」两个入口由 Actions 定时生成，页脚均标注生成时间：
+
+- **每日简报**（`digest.html`）：数据来自 garss fork（<https://github.com/CenryWang/garss>，每天北京时间 06:00 抓取 RSS 生成日报并发邮件），本仓库 `sync-digest` 工作流每天 07:30 把它渲染成站点风格的页面
+- **热榜速览**（`hot.html`）：`hot-board` 工作流每小时起一个 RSSHub 容器，抓微博 / 百度 / 知乎 / B站 / 豆瓣六个榜生成
+- 想调整热榜源改 `scripts/build_hot.py` 顶部的 `FEEDS`；想调整日报订阅改 garss fork 的 `EditREADME.md`
+- 两个工作流共用 `concurrency: content-update` 组，避免同时 push 冲突；都用自带 `GITHUB_TOKEN`，无需任何额外密钥
 
 ## 访问量统计
 

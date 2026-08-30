@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>热榜速览 · Cenry</title>
+  <meta name="description" content="全网热榜聚合，GitHub Actions 每小时自动更新" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="aurora" aria-hidden="true">
+    <span class="blob blob-1"></span>
+    <span class="blob blob-2"></span>
+    <span class="blob blob-3"></span>
+  </div>
+
+  <nav class="nav">
+    <a href="/" class="nav-logo">Cenry</a>
+    <ul class="nav-links">
+      <li><a href="digest.html">简报</a></li>
+      <li><a href="hot.html">热榜</a></li>
+      <li><a href="/">首页</a></li>
+    </ul>
+  </nav>
+
+  <section class="section">
+    <h2 class="section-title">🔥 热榜速览</h2>
+    <div class="glass" style="text-align: center;">
+      <p style="color: var(--muted); font-size: 1.05rem;">
+        页面生成中——首次部署后，GitHub Actions 会每小时自动抓取
+        微博 / 百度 / 知乎 / B站 / 豆瓣热榜并替换本页。<br /><br />
+        若部署后长时间停留在本页，请到仓库 Actions 标签页手动运行一次
+        "Update hot board"。
+      </p>
+      <p style="margin-top: 26px;">
+        <a href="/" class="btn btn-primary" style="text-decoration: none;">← 返回首页</a>
+      </p>
+    </div>
+  </section>
+
+  <footer class="footer">© 2026 CenryWang · 本页由 GitHub Actions 自动生成</footer>
+</body>
+</html>
