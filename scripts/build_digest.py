@@ -106,6 +106,11 @@ def main():
     lines = text.splitlines()
     if lines and lines[0].startswith("# "):
         lines = lines[1:]
+    # 丢弃抓取失败的占位行。上游 garss 对反爬源（36氪 / 美团技术团队）以及
+    # 内网 RSSHub 源（订阅地址形如 http://rsshub:1200/...，Actions runner 上
+    # 永远解析不了）都会输出「暂无法通过爬虫获取信息, 点击进入源网站主页」，
+    # 这类行只有占位价值，直接整行剔除；将来上游修好某个源后它会自动回来。
+    lines = [ln for ln in lines if "暂无法通过爬虫获取信息" not in ln]
     text = "\n".join(lines).strip()
 
     body = markdown.markdown(text, extensions=["tables"])
