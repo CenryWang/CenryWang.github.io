@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>机器人文献 · Cenry</title>
+  <link>https://cenrywang.github.io/robotics.html</link>
+  <description>每日精选 arXiv 机器人论文（cs.RO + 副分类关键词命中）</description>
+  <language>zh-CN</language>
+  <lastBuildDate>2026-09-06T08:17:43+08:00</lastBuildDate>
+  <item>
+    <title>DexVLA: Vision-Language-Action Models with Dexterous In-Hand Manipulation</title>
+    <link>https://arxiv.org/abs/2509.04218</link>
+    <guid isPermaLink="false">2509.04218</guid>
+    <pubDate>2026-09-05T18:24:11Z</pubDate>
+    <description><![CDATA[We present DexVLA, a unified vision-language-action framework that scales to dexterous in-hand manipulation tasks across 7-DoF robotic hands. The model combines a pretrained vision-language backbone with a flow-matching action head trained on 240 hours of teleoperated demonstrations. We evaluate on three benchmark suites including bin picking, tool use, and bimanual handover, where DexVLA outperforms prior VLA baselines by 14.7% success rate on long-horizon tasks. Our analysis reveals that tactile sensing augmentation further boosts stability on contact-rich primitives.]]></description>
+  </item>
+  <item>
+    <title>Bipedal Locomotion across Granular Terrains via Vision-Based Proprioception</title>
+    <link>https://arxiv.org/abs/2509.03841</link>
+    <guid isPermaLink="false">2509.03841</guid>
+    <pubDate>2026-09-05T11:42:08Z</pubDate>
+    <description><![CDATA[We study bipedal locomotion on granular substrates (sand, gravel, snow) using only onboard RGB cameras and joint proprioception. Our approach couples a learned terrain stiffness estimator with a model-predictive controller and demonstrates 2.3 km autonomous traversal across mixed terrain at human walking speed. Sim-to-real transfer is achieved without real-world fine-tuning.]]></description>
+  </item>
+  <item>
+    <title>Soft Gripper Design and Policy Learning for Strawberry Harvesting under Occlusion</title>
+    <link>https://arxiv.org/abs/2509.03502</link>
+    <guid isPermaLink="false">2509.03502</guid>
+    <pubDate>2026-09-04T22:08:51Z</pubDate>
+    <description><![CDATA[We present an agricultural robot equipped with a soft gripper designed for strawberry harvesting under foliage occlusion. The system combines a fin-ray compliant gripper with a diffusion policy trained on 60 hours of field demonstrations. Real-world trials across two greenhouse sites yield a 78% success rate on first-pick, outperforming rigid parallel-jaw baselines by 22 points while reducing fruit bruising.]]></description>
+  </item>
+  <item>
+    <title>Tactile-Driven Grasping with Vision Transformers for Unseen Object Categories</title>
+    <link>https://arxiv.org/abs/2509.03155</link>
+    <guid isPermaLink="false">2509.03155</guid>
+    <pubDate>2026-09-05T03:15:39Z</pubDate>
+    <description><![CDATA[A vision-language-action system that fuses high-resolution tactile sensing with RGB to grasp previously unseen object categories. Trained on 18 object classes and evaluated zero-shot on 12 novel categories, the policy achieves 84% grasp success versus 61% for a vision-only baseline. Tactile signals are most informative in the moment of first contact, which our ablations confirm.]]></description>
+  </item>
+  <item>
+    <title>World Models for Long-Horizon Mobile Manipulation in Cluttered Indoor Scenes</title>
+    <link>https://arxiv.org/abs/2509.02984</link>
+    <guid isPermaLink="false">2509.02984</guid>
+    <pubDate>2026-09-04T15:51:12Z</pubDate>
+    <description><![CDATA[We learn a world model over a unified state-action representation spanning navigation, grasping, and articulated-object manipulation. The model is trained on 1.2M trajectories collected in 6 homes and serves as a simulator for policy learning. Downstream behavior cloning achieves 72% success on 8 long-horizon household tasks, doubling the success of a no-world-model baseline.]]></description>
+  </item>
+  <item>
+    <title>Sim-to-Real Diffusion Policy for Pick-and-Place Assembly with Force Feedback</title>
+    <link>https://arxiv.org/abs/2509.02471</link>
+    <guid isPermaLink="false">2509.02471</guid>
+    <pubDate>2026-09-03T19:33:02Z</pubDate>
+    <description><![CDATA[We present a diffusion policy for precision pick-and-place assembly using force-controlled impedance. Domain randomization on friction and payload closes the sim-to-real gap: trained purely in simulation, the policy achieves 91% insertion success on a 12-piece snap-fit assembly task, requiring no real-world demonstrations.]]></description>
+  </item>
+</channel>
+</rss>

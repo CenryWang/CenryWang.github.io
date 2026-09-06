@@ -57,14 +57,13 @@ PAGE = """<!DOCTYPE html>
     <a href="/" class="nav-logo">Cenry</a>
     <ul class="nav-links">
       <li><a href="digest.html">简报</a></li>
-      <li><a href="hot.html">热榜</a></li>
       <li><a href="/">首页</a></li>
     </ul>
   </nav>
 
   <section class="section digest-shell">
     <h2 class="section-title">每日简报</h2>
-    <p class="digest-meta">同步于 __TIME__（北京时间） · 每天 07:30 自动更新 · <a href="hot.html">🔥 热榜速览</a></p>
+    <p class="digest-meta">同步于 __TIME__（北京时间） · 每天 07:30 自动更新</p>
     <div class="glass digest-body">
 __BODY__
     </div>

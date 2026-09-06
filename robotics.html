@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="40PF3GYwGt5fz600IF9D4R">
+<head data-page-node-id="JIeInBDKiGv6s29YbYKWpc">
+<meta charset="UTF-8" data-page-node-id="Z879DibddUd3hfNa5MKPmt" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="hObk9k1UNLHeIq6n8FBeo6" />
+<title>机器人文献 · Cenry</title>
+<meta name="description" content="每日精选 arXiv 机器人论文，GitHub Actions 自动更新" data-page-node-id="vEu4wWNDe6WQh8ZEqhthsN" />
+<link rel="alternate" type="application/rss+xml" title="机器人文献 RSS" href="robotics.xml" data-page-node-id="fYiEMEizWNQoc4k2VX8sHk" />
+<link rel="stylesheet" href="style.css" data-page-node-id="NYwkpTUUnjbGkGz6BNx3ec" />
+<style>
+  .robo-shell { max-width: 1080px; }
+  .robo-meta { text-align: center; color: var(--muted); font-size: 0.95rem; margin: -18px 0 30px; }
+  .robo-meta a { color: var(--accent1); text-decoration: none; }
+  .robo-meta a:hover { text-decoration: underline; }
+  .robo-body h2 { margin: 44px 0 16px; font-size: 1.35rem; }
+  .robo-body h2::after {
+    content: ""; display: block; width: 44px; height: 3px; margin-top: 8px;
+    background: linear-gradient(90deg, var(--accent1), var(--accent2)); border-radius: 2px;
+  }
+  .paper-list { display: flex; flex-direction: column; gap: 18px; margin-top: 12px; }
+  .paper {
+    border: 1px solid var(--glass-border); border-radius: 14px;
+    padding: 20px 22px; background: rgba(255, 255, 255, 0.02);
+    transition: transform .15s ease, border-color .15s ease;
+  }
+  .paper:hover { border-color: var(--accent1); transform: translateY(-2px); }
+  .paper-title { font-size: 1.05rem; font-weight: 600; margin: 0 0 6px; }
+  .paper-title a { color: var(--accent1); text-decoration: none; }
+  .paper-title a:hover { text-decoration: underline; }
+  .paper-authors { font-size: 0.82rem; color: var(--muted); margin-bottom: 8px; }
+  .paper-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; font-size: 0.72rem; }
+  .tag-conf {
+    padding: 2px 9px; border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    color: #fff; font-weight: 500;
+  }
+  .tag-dir {
+    padding: 2px 9px; border-radius: 999px;
+    border: 1px solid var(--accent1); color: var(--accent1);
+    font-weight: 500; font-size: 0.7rem;
+  }
+  .tag-quant {
+    padding: 2px 9px; border-radius: 999px;
+    border: 1px solid var(--accent2); color: var(--accent2);
+    font-family: var(--font-mono); font-size: 0.7rem;
+  }
+  .tag-cat {
+    padding: 2px 9px; border-radius: 999px;
+    border: 1px solid var(--glass-border); color: var(--muted);
+  }
+  .tag-score {
+    padding: 2px 9px; border-radius: 999px;
+    border: 1px solid var(--accent1); color: var(--accent1);
+  }
+  .paper-summary { color: var(--muted); font-size: 0.88rem; line-height: 1.7; margin: 0 0 10px; }
+  .paper-links { font-size: 0.8rem; }
+  .paper-links a { color: var(--accent1); text-decoration: none; margin-right: 14px; }
+  .paper-links a:hover { text-decoration: underline; }
+  .paper-id { color: var(--muted); font-size: 0.74rem; margin-left: 4px; }
+  details.more { margin-top: 12px; }
+  details.more > summary {
+    cursor: pointer; color: var(--muted); font-size: 0.9rem;
+    padding: 10px 14px; border: 1px solid var(--glass-border); border-radius: 10px;
+    list-style: none;
+  }
+  details.more > summary::-webkit-details-marker { display: none; }
+  details.more > summary::before { content: "▸ "; color: var(--accent1); }
+  details.more[open] > summary::before { content: "▾ "; }
+  details.more > ul { margin: 12px 0 0 8px; color: var(--muted); font-size: 0.9rem; line-height: 1.85; list-style: none; padding: 0; }
+  details.more > ul li { padding: 4px 0; }
+  details.more > ul a { color: var(--accent1); text-decoration: none; }
+  details.more > ul a:hover { text-decoration: underline; }
+  details.more > ul .conf { color: var(--muted); font-size: 0.78rem; margin-left: 6px; }
+  .archive-list {
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 14px 18px; border: 1px solid var(--glass-border); border-radius: 12px;
+    font-size: 0.9rem;
+  }
+  .archive-list a { color: var(--accent1); text-decoration: none; }
+  .archive-list a:hover { text-decoration: underline; }
+  .archive-empty { color: var(--muted); font-size: 0.9rem; }
+  .robo-footer { text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 50px; }
+  .robo-empty {
+    text-align: center; color: var(--muted); padding: 40px 20px;
+    border: 1px dashed var(--glass-border); border-radius: 12px;
+  }
+</style>
+</head>
+<body data-page-node-id="uzPrA5VLLw7p2luiNMiM6r">
+  <div class="scroll-progress" id="scrollProgress" data-page-node-id="MxLo5y2ActsuNm6WQegMuC"></div>
+
+  <div class="aurora" aria-hidden="true" data-page-node-id="JTRLYT7o7jy1G87cPLudVZ">
+    <span class="blob blob-1" data-page-node-id="so3kgfkg82RjFHYlTFRhZu"></span>
+    <span class="blob blob-2" data-page-node-id="QMuUaUysvC5xxv9e4GcF5B"></span>
+    <span class="blob blob-3" data-page-node-id="yphGi1M7CQu4S0uDAanfaf"></span>
+  </div>
+
+  <nav class="nav" data-page-node-id="j6Pj5It7T1J4XQhyY2fDKe">
+    <a href="/" class="nav-logo" data-page-node-id="DONX50jOVyN39AjoLnDrZn">Cenry</a>
+    <ul class="nav-links" data-page-node-id="3LI8NbFWabFOM54bHF6fI4">
+      <li data-page-node-id="VXvMCAq5M5KTqoGKLPlQ2r"><a href="robotics.html" data-page-node-id="Y6cvsUBGpBmXw4pmSczeJ3">文献</a></li>
+      <li data-page-node-id="Qt3TgQDLyqy88I0ZhNpdcO"><a href="digest.html" data-page-node-id="7ntP7YVl0EGEoMVUL1e4ga">简报</a></li>
+      <li data-page-node-id="B7x4S2ycTgLfH0Ns3Ta9kU"><a href="/" data-page-node-id="CNWxrByqUekEAVb3uEnF8q">首页</a></li>
+    </ul>
+  </nav>
+
+  <section class="section robo-shell" data-page-node-id="tQav0lIlb7kYb7qf8fAWcl">
+    <h2 class="section-title" data-page-node-id="AT3Q7Iau4EGlBE3NW7cgUg">机器人文献</h2>
+    <p class="robo-meta" data-page-node-id="IQWaEEBmRlAoGB2CFriIz3">同步于 2026-09-06 20:46（北京时间） · 命中 6 篇 · 每日北京时间 08:17 自动更新 · <a href="robotics.xml" data-page-node-id="FHdI1tg399MFNae2D1H6ui">RSS 订阅</a></p>
+    <div class="glass robo-body" data-page-node-id="tUdXlNICiFNwTtQeieBvT8">
+<h2 data-page-node-id="0WHeiCHLR2zQ4wohuGMg2O">今日精选 · 2026-09-06</h2>
+<div class="paper-list" data-page-node-id="lYumQWIrKaSf9SESpTnxrt">
+<article class="paper" data-page-node-id="OhT0CJGpuizHG7pb36wMl6">
+<h3 class="paper-title" data-page-node-id="hK0YDP5VntrxOHyXzQUEGA"><a href="https://arxiv.org/abs/2509.04218" target="_blank" rel="noopener" data-page-node-id="7c1McelkFvFGAC4kCV3FNN">DexVLA: Vision-Language-Action Models with Dexterous In-Hand Manipulation</a></h3>
+<div class="paper-authors" data-page-node-id="4zT6lsW80UtdOtCy1paxNr">Aiko Tanaka, Mateo Reyes, Yifan Lu, Priya Nair 等 5 人</div>
+<div class="paper-tags" data-page-node-id="QOr8lyiyjl1p3pn04M0LXJ"><span class="tag-conf" data-page-node-id="FoZpO2514q9d8Y1NyCjtlg">CoRL</span><span class="tag-dir" data-page-node-id="nmG38FumDUnep1SZvqmvJD">VLA</span><span class="tag-dir" data-page-node-id="SFA3RDwzQEV8LLVwBlFrkZ">TACTILE</span><span class="tag-quant" data-page-node-id="ZhWp86vTRQns1sG3OE5wRV">240H</span><span class="tag-cat" data-page-node-id="ZTQdjNZMMB9iejN2RAsnbm">cs.RO</span><span class="tag-score" data-page-node-id="sw8CTMNVpJcWthy6xZiVgU">+18</span></div>
+<p class="paper-summary" data-page-node-id="FAxNVKRpBPwoKF2ynKaVdg">We present DexVLA, a unified vision-language-action framework that scales to dexterous in-hand manipulation tasks across 7-DoF robotic hands. The model combines a pretrained vision-language backbone with a flow-matching action head trained on 240 hours of teleoperated demonstrations. We evaluate on three benchmark…</p>
+<div class="paper-links" data-page-node-id="Js8z40Pesy9LlTGdc8PhgT">
+  <a href="https://arxiv.org/abs/2509.04218" target="_blank" rel="noopener" data-page-node-id="fHeBpwYLqBsPT0dAM09n0I">arXiv</a>
+  <a href="https://arxiv.org/pdf/2509.04218" target="_blank" rel="noopener" data-page-node-id="eMdMI5pH0e6F4vdPlT0SXA">PDF</a>
+  <span class="paper-id" data-page-node-id="WgszewOWcePOu3D8RxAaRP">2509.04218</span>
+</div>
+</article>
+<article class="paper" data-page-node-id="FQjwDnMig8kcybBEyq0CO3">
+<h3 class="paper-title" data-page-node-id="JmbdDmvKX8nROhuvuu2KF8"><a href="https://arxiv.org/abs/2509.03841" target="_blank" rel="noopener" data-page-node-id="Za0yxj1euZJuusp8kC8Lb3">Bipedal Locomotion across Granular Terrains via Vision-Based Proprioception</a></h3>
+<div class="paper-authors" data-page-node-id="jJOUvo9xl914JNb7vb7RO5">Hiroshi Yamada, Elena Costa, Marcus Webb</div>
+<div class="paper-tags" data-page-node-id="2gizJUIZBAuRISft2PwBHM"><span class="tag-conf" data-page-node-id="xBPuwWRKbhQs4nJFaR6NAh">RSS</span><span class="tag-dir" data-page-node-id="Wt8H6kQeDe93fB6giserSh">HUMANOID</span><span class="tag-cat" data-page-node-id="N8NyUWq4c4DLdhzpTAKDdH">cs.RO</span><span class="tag-score" data-page-node-id="JBkVkVDQofaB90H2hnAQxm">+13</span></div>
+<p class="paper-summary" data-page-node-id="hbHw6EOgbKwc9c0ymDvc18">We study bipedal locomotion on granular substrates (sand, gravel, snow) using only onboard RGB cameras and joint proprioception. Our approach couples a learned terrain stiffness estimator with a model-predictive controller and demonstrates 2.3 km autonomous traversal across mixed terrain at human walking speed.…</p>
+<div class="paper-links" data-page-node-id="2Ucd4fjeLSy61GSASzM9AV">
+  <a href="https://arxiv.org/abs/2509.03841" target="_blank" rel="noopener" data-page-node-id="7Ksga6Be6kOfnxB60XAxgK">arXiv</a>
+  <a href="https://arxiv.org/pdf/2509.03841" target="_blank" rel="noopener" data-page-node-id="Hg2nEZefYZpCfhT8iwjb2Q">PDF</a>
+  <span class="paper-id" data-page-node-id="eSpgsvshaClUWDllkIxtoR">2509.03841</span>
+</div>
+</article>
+<article class="paper" data-page-node-id="C1CXCzRX8oEFC4auwfea0q">
+<h3 class="paper-title" data-page-node-id="F68TvajZrMfuWwAcD0met1"><a href="https://arxiv.org/abs/2509.03502" target="_blank" rel="noopener" data-page-node-id="snXglLknCUGE4AlGDKTwoJ">Soft Gripper Design and Policy Learning for Strawberry Harvesting under Occlusion</a></h3>
+<div class="paper-authors" data-page-node-id="5falhxWeHhxjk9PS9dKP2f">Liu Wenjie, Sara Holmberg, Diego Alvarez, Kenji Sato</div>
+<div class="paper-tags" data-page-node-id="Z4BFxvbcAgil08AgSZoOSR"><span class="tag-conf" data-page-node-id="3MoGZCMiC9eAvg2yzPkRPv">RA-L</span><span class="tag-dir" data-page-node-id="lwLuDcJLQjiLvM4CX4nTCq">TACTILE</span><span class="tag-dir" data-page-node-id="SwKlpy7kpay0JM7FiGoisl">VLA</span><span class="tag-quant" data-page-node-id="GjFhg8D0EmPBCqNcARR9Uy">60H</span><span class="tag-cat" data-page-node-id="GRQXlRPA9zyG5zFOCD2eDt">cs.RO</span><span class="tag-score" data-page-node-id="2S4iNNZkdZ2jBWej2JIoin">+11</span></div>
+<p class="paper-summary" data-page-node-id="f2DV15NBB8y5FpUoWCctWh">We present an agricultural robot equipped with a soft gripper designed for strawberry harvesting under foliage occlusion. The system combines a fin-ray compliant gripper with a diffusion policy trained on 60 hours of field demonstrations. Real-world trials across two greenhouse sites yield a 78% success rate on…</p>
+<div class="paper-links" data-page-node-id="jvfB7DhKq1LqGyo4poudoU">
+  <a href="https://arxiv.org/abs/2509.03502" target="_blank" rel="noopener" data-page-node-id="4SYrus9qt1eDxlCDD9Y1uP">arXiv</a>
+  <a href="https://arxiv.org/pdf/2509.03502" target="_blank" rel="noopener" data-page-node-id="ylF6u60x2GSGH3MuWQxmq3">PDF</a>
+  <span class="paper-id" data-page-node-id="5U8BBL2SGSrWC0QBLPWnDJ">2509.03502</span>
+</div>
+</article>
+<article class="paper" data-page-node-id="NMgyy3ePWyfyWfVyWAOMBL">
+<h3 class="paper-title" data-page-node-id="236GZ8z7U2EFqoIKKtTppS"><a href="https://arxiv.org/abs/2509.03155" target="_blank" rel="noopener" data-page-node-id="3qBvtSUdbgjkJRUTCvZmEQ">Tactile-Driven Grasping with Vision Transformers for Unseen Object Categories</a></h3>
+<div class="paper-authors" data-page-node-id="vL4CWPsWff2TGHOuB2ZZ4C">Rohan Patel, Min-jun Kim</div>
+<div class="paper-tags" data-page-node-id="CDul1t4VVPJNINLf13CUPu"><span class="tag-dir" data-page-node-id="xrlqhZc3ejEEteefnnoZED">VLA</span><span class="tag-dir" data-page-node-id="AFHrPeWsXlED4i4kekuR2z">TACTILE</span><span class="tag-cat" data-page-node-id="KHcPd5wnBJK6PLP6YLEt0O">cs.RO</span><span class="tag-score" data-page-node-id="fOmfpxelU9tsdBBuKX3KIG">+9</span></div>
+<p class="paper-summary" data-page-node-id="JxJxTChlkoKEzaEkKXlCwY">A vision-language-action system that fuses high-resolution tactile sensing with RGB to grasp previously unseen object categories. Trained on 18 object classes and evaluated zero-shot on 12 novel categories, the policy achieves 84% grasp success versus 61% for a vision-only baseline. Tactile signals are most…</p>
+<div class="paper-links" data-page-node-id="DP96HhohyCtR6artGPZzOo">
+  <a href="https://arxiv.org/abs/2509.03155" target="_blank" rel="noopener" data-page-node-id="uC3duowLCs6CbGpaQ9lYqQ">arXiv</a>
+  <a href="https://arxiv.org/pdf/2509.03155" target="_blank" rel="noopener" data-page-node-id="KnpVXyGOP0uT2Foi4msyKF">PDF</a>
+  <span class="paper-id" data-page-node-id="7DWfQYDP7U0r5y51bswrm6">2509.03155</span>
+</div>
+</article>
+<article class="paper" data-page-node-id="Uc9HZ4NzlH0UmgNKTs8rBR">
+<h3 class="paper-title" data-page-node-id="hlVO2kyc2rSpQJn4TTABDL"><a href="https://arxiv.org/abs/2509.02984" target="_blank" rel="noopener" data-page-node-id="NMW8iiPhUnzHtK41hO3ADB">World Models for Long-Horizon Mobile Manipulation in Cluttered Indoor Scenes</a></h3>
+<div class="paper-authors" data-page-node-id="BNfXacLcGF1565rBuqtGd4">Anna Volkov, Hao Zhang, James O'Connor, Yuki Tanaka</div>
+<div class="paper-tags" data-page-node-id="EluntKPioAkhlamawY0TWE"><span class="tag-dir" data-page-node-id="r4NAHbByyu6vB4IJuKfUrU">WAM</span><span class="tag-dir" data-page-node-id="W64ycpkdyczfiAGuUDbXCz">TACTILE</span><span class="tag-quant" data-page-node-id="BFZiVHCClv76giWPfoUiqA">1.2M TRAJ</span><span class="tag-cat" data-page-node-id="uK2dPdl3aTOaX8VQHFyVih">cs.RO</span><span class="tag-score" data-page-node-id="eMmM7rlhR80V4Z5Ba2Nylw">+6</span></div>
+<p class="paper-summary" data-page-node-id="hf7VHxuNhRKz4H6H1Fk9ZC">We learn a world model over a unified state-action representation spanning navigation, grasping, and articulated-object manipulation. The model is trained on 1.2M trajectories collected in 6 homes and serves as a simulator for policy learning. Downstream behavior cloning achieves 72% success on 8 long-horizon…</p>
+<div class="paper-links" data-page-node-id="jzc5wWPgyFcFFDSdA7dVkC">
+  <a href="https://arxiv.org/abs/2509.02984" target="_blank" rel="noopener" data-page-node-id="c2zZVDS3Lv8xUBEhwinCkp">arXiv</a>
+  <a href="https://arxiv.org/pdf/2509.02984" target="_blank" rel="noopener" data-page-node-id="lSpfWE26UlFnCwNPo7ivLl">PDF</a>
+  <span class="paper-id" data-page-node-id="t2cfYpFGNitR5SE2GK2yup">2509.02984</span>
+</div>
+</article>
+</div>
+<details class="more" data-page-node-id="LN1SU1YClsv9ClYKv08gL7">
+<summary data-page-node-id="tpGAHcwDGRgoBuE2Dh1OLR">其余 1 篇（折叠）</summary>
+<ul data-page-node-id="9hUK5ELBxufynbBzKj4vDL">
+<li data-page-node-id="p9zWwAlfc2ZBplK79nhJDQ"><a href="https://arxiv.org/abs/2509.02471" target="_blank" rel="noopener" data-page-node-id="CaCLHu09GlsRrVB4HmcyFx">Sim-to-Real Diffusion Policy for Pick-and-Place Assembly with Force Feedback</a></li>
+</ul>
+</details>
+<h2 data-page-node-id="jXRVkKDjrQKNqOyA1NrcB9">历史归档</h2>
+<p class="archive-empty" data-page-node-id="Rm3hNpciBC8wNAUu5kzQFl">尚无历史归档</p>
+    </div>
+  </section>
+
+  <footer class="robo-footer" data-page-node-id="WQfqkrnV4m4joEG5p7jHhf">© 2026 CenryWang · 数据来自 arXiv，GitHub Actions 自动生成</footer>
+
+  <script>
+    (function () {
+      var bar = document.getElementById("scrollProgress");
+      window.addEventListener("scroll", function () {
+        var h = document.documentElement;
+        bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + "%";
+      });
+      if ("IntersectionObserver" in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting) e.target.classList.add("visible"); });
+        }, { threshold: 0.05 });
+        document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+      } else {
+        document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("visible"); });
+      }
+    })();
+  </script>
+</body>
+</html>

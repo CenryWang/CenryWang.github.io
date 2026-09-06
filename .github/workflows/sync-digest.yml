@@ -10,7 +10,7 @@ on:
 permissions:
   contents: write
 
-# 与 hot-board 共用一个组，避免两个工作流同时 push 冲突
+# 避免并发 push 冲突
 concurrency:
   group: content-update
 
@@ -19,13 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout homepage repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: Checkout garss fork (daily digest source)
-        uses: actions/checkout@v4
-        with:
-          repository: CenryWang/garss
-          path: garss
+      - name: Clone garss fork (daily digest source)
+        # garss 是公开仓库，匿名 clone 即可；不携带 GITHUB_TOKEN 可避免跨仓库 403
+        run: git clone --depth 1 https://github.com/CenryWang/garss.git garss
 
       - name: Build digest.html
         run: |

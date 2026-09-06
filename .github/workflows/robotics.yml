@@ -1,0 +1,52 @@
+name: Sync robotics daily
+
+on:
+  schedule:
+    # UTC 00:17 = 北京时间 08:17，避开 sync-digest 的 23:30（次日 07:30 北京时间）
+    - cron: '17 0 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+# 与 sync-digest 共用一个并发组，避免两个 push 同时撞车
+concurrency:
+  group: content-update
+
+jobs:
+  robotics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout homepage repo
+        uses: actions/checkout@v7
+
+      - name: Fetch arXiv papers
+        run: python3 scripts/fetch_robotics.py
+
+      - name: Build HTML + RSS + archive
+        run: |
+          DATE=$(date -d '+8 hours' +%Y-%m-%d)
+          if [ ! -f "cache/robotics/$DATE.json" ]; then
+            echo "::error::fetch produced no cache file for $DATE"
+            exit 1
+          fi
+          python3 scripts/build_robotics.py "cache/robotics/$DATE.json" .
+
+      - name: Trim cache to last 14 days
+        # 缓存进 git 但避免无限膨胀：保留最近 14 天 JSON，每天 50 篇约 100KB，14 天约 1.4MB
+        run: |
+          cd cache/robotics
+          ls -1t *.json 2>/dev/null | grep -v '^_' | tail -n +15 | xargs -r rm -f --
+          cd ../..
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add robotics.html robotics.xml papers/ cache/robotics/*.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update robotics $(date -d '+8 hours' +'%Y-%m-%d')"
+            git push
+          fi
