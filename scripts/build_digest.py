@@ -6,9 +6,21 @@
 style.css（极光背景 / 玻璃卡片 / 导航），纯静态输出，不依赖 Jekyll。
 """
 import datetime
+import re
 import sys
 
 import markdown
+
+# 源数据允许的最大年龄（天）。garss 每天 06:00 重新抓取，本工作流 07:30 同步，
+# 正常情况下源数据不超过 1 天；超过这个阈值说明上游已停更或抓取失败，
+# 此时必须让 workflow 变红，而不是把旧内容再渲染一遍发布出去。
+MAX_SOURCE_AGE_DAYS = 3
+
+# garss README 头部形如：
+#   > 精选 RSS 订阅聚合 · 已收录 20 个源 · 生成时间 2026-10-06 10:04:40 · ...
+_SRC_TIME_RE = re.compile(
+    r"生成时间\s+(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2})(?::(\d{2}))?)?"
+)
 
 PAGE = """<!DOCTYPE html>
 <html lang="zh-CN">
@@ -56,20 +68,21 @@ PAGE = """<!DOCTYPE html>
   <nav class="nav">
     <a href="/" class="nav-logo">Cenry</a>
     <ul class="nav-links">
-      <li><a href="digest.html">简报</a></li>
       <li><a href="/">首页</a></li>
+      <li><a href="digest.html">简报</a></li>
+      <li><a href="merge-quest.html">游戏</a></li>
     </ul>
   </nav>
 
   <section class="section digest-shell">
     <h2 class="section-title">每日简报</h2>
-    <p class="digest-meta">同步于 __TIME__（北京时间） · 每天 07:30 自动更新</p>
+    <p class="digest-meta">源数据 __SRC_TIME__ · 同步于 __TIME__（北京时间） · 每天 07:30 自动更新</p>
     <div class="glass digest-body">
 __BODY__
     </div>
   </section>
 
-  <footer class="digest-footer">© 2026 CenryWang · 内容来自 RSS 订阅源，GitHub Actions 自动生成</footer>
+  <footer class="digest-footer">© __YEAR__ CenryWang · 内容来自 RSS 订阅源，GitHub Actions 自动生成</footer>
 
   <script>
     (function () {
@@ -93,6 +106,22 @@ __BODY__
 """
 
 
+def parse_source_time(text):
+    """从 garss README 头部提取「生成时间」，返回带时区的 datetime；失败返回 None。"""
+    tz = datetime.timezone(datetime.timedelta(hours=8))
+    m = _SRC_TIME_RE.search(text)
+    if not m:
+        return None
+    y, mo, d = int(m.group(1)), int(m.group(2)), int(m.group(3))
+    hh = int(m.group(4) or 0)
+    mm = int(m.group(5) or 0)
+    ss = int(m.group(6) or 0)
+    try:
+        return datetime.datetime(y, mo, d, hh, mm, ss, tzinfo=tz)
+    except ValueError:
+        return None
+
+
 def main():
     if len(sys.argv) != 3:
         print("usage: build_digest.py <garss README.md> <output.html>", file=sys.stderr)
@@ -101,6 +130,26 @@ def main():
 
     with open(src, encoding="utf-8") as f:
         text = f.read()
+
+    # 新鲜度校验：源数据缺失时间标记或已过期，直接失败退出。
+    # 这里绝不能静默降级——否则上游停更时会一直把旧日报当新内容发布出去，
+    # 页面上看起来「一切正常」，实际已经停摆（robotics 功能就是这么死的）。
+    tz = datetime.timezone(datetime.timedelta(hours=8))
+    src_time = parse_source_time(text)
+    if src_time is None:
+        print(
+            f"ERROR: 源 README 里找不到「生成时间」标记，上游格式可能已变化：{src}",
+            file=sys.stderr,
+        )
+        return 1
+    age = datetime.datetime.now(tz) - src_time
+    if age > datetime.timedelta(days=MAX_SOURCE_AGE_DAYS):
+        print(
+            f"ERROR: 源数据已过期 {age.days} 天（生成于 {src_time:%Y-%m-%d %H:%M}，"
+            f"阈值 {MAX_SOURCE_AGE_DAYS} 天），上游 garss 可能已停更",
+            file=sys.stderr,
+        )
+        return 1
 
     # 去掉源文件首行 H1（页面已有自己的标题），避免重复
     lines = text.splitlines()
@@ -119,9 +168,13 @@ def main():
         "</table>", "</table></div>"
     )
 
-    tz = datetime.timezone(datetime.timedelta(hours=8))
     now = datetime.datetime.now(tz).strftime("%Y-%m-%d %H:%M")
-    page = PAGE.replace("__TIME__", now).replace("__BODY__", body)
+    page = (
+        PAGE.replace("__SRC_TIME__", src_time.strftime("%Y-%m-%d %H:%M"))
+        .replace("__TIME__", now)
+        .replace("__YEAR__", str(now[:4]))
+        .replace("__BODY__", body)
+    )
 
     with open(dst, "w", encoding="utf-8") as f:
         f.write(page)

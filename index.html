@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cenry · 个人主页</title>
   <meta name="description" content="一个用纯前端打造的炫酷个人主页" />
+  <!-- 内联 SVG favicon：省掉一个外部文件，也避免浏览器请求 /favicon.ico 报 404 -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2306060d'/%3E%3Ctext x='32' y='46' font-family='Segoe UI,Arial,sans-serif' font-size='40' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -27,7 +29,6 @@
       <li><a href="#skills">技能</a></li>
       <li><a href="#projects">作品</a></li>
       <li><a href="digest.html">简报</a></li>
-      <li><a href="robotics.html">文献</a></li>
       <li><a href="#contact">联系</a></li>
     </ul>
   </nav>
@@ -115,7 +116,7 @@
       <a href="https://xhslink.cn/o/GKuYm3zIMN" class="social" target="_blank" rel="noopener">小红书</a>
     </div>
     <footer class="footer">
-      <div>© 2026 CenryWang · Built with vanilla JS</div>
+      <div>© <span id="year">2026</span> CenryWang · Built with vanilla JS</div>
       <div class="visit-stats">
         <span id="busuanzi_container_site_pv" style="display:none">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次</span>
         <span id="busuanzi_container_site_uv" style="display:none"> · 访客数 <span id="busuanzi_value_site_uv"></span> 人</span>

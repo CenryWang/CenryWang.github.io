@@ -115,6 +115,10 @@ window.addEventListener("scroll", () => {
   document.getElementById("scrollProgress").style.width = scrolled + "%";
 });
 
+// ===== 页脚年份自动更新（跨年不用手工改）=====
+const yearEl = document.getElementById("year");
+if (yearEl) yearEl.textContent = new Date().getFullYear();
+
 // ===== 滚动揭示动画 =====
 const io = new IntersectionObserver(
   (entries) => {

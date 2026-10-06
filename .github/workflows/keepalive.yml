@@ -1,0 +1,43 @@
+name: Keepalive scheduled workflows
+
+# GitHub 会在公开仓库连续 60 天没有任何提交时，自动禁用所有 schedule 触发的
+# 工作流（只发一封邮件，页面上没有任何提示）。本仓库的每日简报依赖 bot 自动
+# 提交来维持「活跃」状态——一旦上游 garss 停更，digest 就不再产生新 commit，
+# 60 天后定时任务会被静默关闭。
+#
+# 这里每月检查一次：只有最近一次提交已超过 45 天，才补一个空 commit 把仓库
+# 唤醒。正常运行时永远不会触发，也就不会污染提交历史。
+on:
+  schedule:
+    # 每月 1 号 UTC 03:17（北京时间 11:17）
+    - cron: '17 3 1 * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: content-update
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout homepage repo
+        uses: actions/checkout@v7
+
+      - name: Commit empty change if repo has been idle
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          last=$(git log -1 --format=%ct)
+          now=$(date +%s)
+          age=$(( (now - last) / 86400 ))
+          echo "last commit was ${age} days ago"
+          if [ "$age" -ge 45 ]; then
+            git commit --allow-empty -m "chore: keepalive (repo idle ${age}d, keep scheduled workflows enabled)"
+            git push
+            echo "keepalive commit pushed"
+          else
+            echo "repo is active, nothing to do"
+          fi

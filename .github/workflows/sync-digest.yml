@@ -26,8 +26,10 @@ jobs:
         run: git clone --depth 1 https://github.com/CenryWang/garss.git garss
 
       - name: Build digest.html
+        # 源数据过期或格式异常时 build_digest.py 会以非零码退出，让本步失败、
+        # 工作流变红——绝不静默发布旧内容。
         run: |
-          python3 -m pip install --user markdown
+          python3 -m pip install --user --quiet markdown
           python3 scripts/build_digest.py garss/README.md digest.html
 
       - name: Commit and push
@@ -39,5 +41,8 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Update RSS digest $(date -u +'%Y-%m-%d')"
+            # 推送前先接到远端最新：手工提交或并发任务抢先 push 时，
+            # 否则 push 会被 rejected（fast-forward 检查失败）
+            git pull --rebase origin main
             git push
           fi
