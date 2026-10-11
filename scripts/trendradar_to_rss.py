@@ -20,6 +20,7 @@ import argparse
 import datetime
 import html
 import os
+import re
 import sqlite3
 import sys
 
@@ -34,8 +35,13 @@ except Exception:  # pragma: no cover
 TZ = datetime.timezone(datetime.timedelta(hours=8))
 
 
-def parse_dt(s):
-    """尽量宽容地解析 TrendRadar 存的 TEXT 时间，返回带时区 datetime；失败返回 None。"""
+def parse_dt(s, base_date=None):
+    """尽量宽容地解析 TrendRadar 存的 TEXT 时间，返回带时区 datetime；失败返回 None。
+
+    TrendRadar 的 intraday 抓取时间只存 'HH-MM'（如 '23-32'），**不含日期**——日期
+    由 db 文件名（output/news/YYYY-MM-DD.db）提供，通过 base_date 传入。不处理这
+    个格式的话所有条目都会被时间过滤掉，RSS 会是空的（踩过）。
+    """
     if not s:
         return None
     s = s.strip()
@@ -51,6 +57,24 @@ def parse_dt(s):
             return datetime.datetime.strptime(s, fmt).replace(tzinfo=TZ)
         except Exception:
             continue
+    today = datetime.datetime.now(TZ).date()
+    d = base_date or today
+    # 'HH-MM'：当天（或 base_date 那天）的时:分
+    m = re.fullmatch(r"(\d{1,2})-(\d{1,2})", s)
+    if m:
+        hh, mm = int(m.group(1)), int(m.group(2))
+        try:
+            return datetime.datetime(d.year, d.month, d.day, hh, mm, tzinfo=TZ)
+        except ValueError:
+            return None
+    # 'MM-DD HH-MM'：月-日 时-分，年份用 base_date 的年份
+    m2 = re.fullmatch(r"(\d{1,2})-(\d{1,2})\s+(\d{1,2})-(\d{1,2})", s)
+    if m2:
+        mo, dy, hh, mm = (int(x) for x in m2.groups())
+        try:
+            return datetime.datetime(d.year, mo, dy, hh, mm, tzinfo=TZ)
+        except ValueError:
+            return None
     return None
 
 
@@ -79,6 +103,16 @@ def find_latest_db(directory):
 def db_to_rss(db_path, limit=30, days=2, site_title="热搜雷达 · TrendRadar",
               site_link="https://aihot.news/"):
     """读取一份 TrendRadar SQLite，返回 RSS 2.0 字符串。任何异常都抛出让调用方处理。"""
+    # 日期兜底来源：db 文件名形如 output/news/2026-10-11.db。
+    # TrendRadar 的 last_crawl_time 只有 'HH-MM'，必须靠文件名补上日期。
+    db_date = None
+    m = re.search(r"(\d{4})-(\d{2})-(\d{2})", os.path.basename(db_path or ""))
+    if m:
+        try:
+            db_date = datetime.date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+        except ValueError:
+            db_date = None
+
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     try:
@@ -100,7 +134,7 @@ def db_to_rss(db_path, limit=30, days=2, site_title="热搜雷达 · TrendRadar"
             link = row["url"] or row["mobile_url"] or ""
             if not link:
                 continue
-            dt = parse_dt(row["crawl_time"])
+            dt = parse_dt(row["crawl_time"], db_date)
             if dt is None or dt < cutoff:
                 continue
             if link in seen:
