@@ -327,6 +327,10 @@ body {
 .project-thumb--docs {
   background: linear-gradient(135deg, #14b8a6 0%, #0ea5e9 50%, #6366f1 100%);
 }
+/* 推荐卡缩略图：品红 → 橙 → 青，呼应 AI 资讯热度 */
+.project-thumb--aihot {
+  background: linear-gradient(135deg, #ec4899 0%, #f59e0b 50%, #06b6d4 100%);
+}
 .project h3 {
   margin: 18px 22px 8px;
   font-size: 1.2rem;

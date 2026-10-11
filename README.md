@@ -4,7 +4,7 @@
 
 ## 目录结构
 
-- `index.html` — 首页（关于 / 技能 / 作品 / 联系）
+- `index.html` — 首页（关于 / 技能 / 作品 / 推荐 / 联系）
 - `style.css` — 首页样式
 - `script.js` — 首页交互（粒子背景 / 打字机 / 滚动进度条等）
 - `merge-quest.html` — **合成大冒险 · Merge Quest** 游戏页，单文件自包含，开箱即玩
@@ -24,13 +24,22 @@
   - 文档：<https://my.feishu.cn/docx/DZvcdVzI0oZQQFxIZ8mc5h9Cnbf?from=from_parent_docx>（飞书，可能需登录）
   - 工具官网：<https://cherry-ai.com>
 
+## 推荐 / 友链
+
+首页导航「推荐」区块放外部优质信源卡片（非本人作品，纯友链性质）：
+
+- **数字生命卡兹克 · AIHOT** — AI 资讯聚合站（每天抓取 168 个精选信源，用 AI 筛掉噪声）：<https://aihot.news/>
+  - RSS：<https://aihot.news/feed.xml>（已换到新域名，旧 `aihot.virxact.com` 2026-10-31 停用）
+
 ## 每日简报（GitHub Actions 自动生成）
 
 首页导航的「简报」入口由 Actions 定时生成，页头同时标注「源数据生成时间」和「本站同步时间」：
 
 - 数据来自 garss fork（<https://github.com/CenryWang/garss>，每天北京时间 06:00 抓取 RSS 生成日报并发邮件），本仓库 `sync-digest` 工作流每天 07:30 把它渲染成站点风格的页面
+- 简报同时合并 **AIHOT**（数字生命卡兹克的 AI 资讯聚合站）作为附加源：工作流额外抓取 `https://aihot.news/feed.xml`，取近 3 天精选（上限 20 条）渲染为「AIHOT 精选 · 数字生命卡兹克」区块，标注来源与版权。AIHOT 抓取失败或最新条目超过 7 天（疑似停更）时自动跳过该区块，不影响 garss 主源
+- 简报还合并 **热搜雷达 · TrendRadar**：TrendRadar 跑在你的轻量服务器上（聚合微博/知乎/抖音等热榜，存进 SQLite），由 `scripts/trendradar_to_rss.py` 适配器把最新 SQLite 转成 RSS，GA 再当作第二个附加源抓进来，渲染为「热搜雷达 · TrendRadar」区块。服务器不可达或抓取失败时该区块自动跳过，不影响主源
 - 想调整日报订阅改 garss fork 的 `EditREADME.md`
-- 用自带 `GITHUB_TOKEN`，无需任何额外密钥
+- 用自带 `GITHUB_TOKEN` 即可跑；**仅当接入 TrendRadar 时**需要额外配置仓库密钥 `TRENDRADAR_RSS_URL`（值为你服务器上适配器的带 token 访问地址，如 `https://你的域名:8088/rss.xml?token=xxx`）。不接 TrendRadar 时忽略此密钥，工作流照常运行
 - **源数据过期会让工作流变红**：`build_digest.py` 会解析源 README 的「生成时间」，超过 3 天或非预期格式就直接退出（而不是把旧日报再发一遍）。上游停更时你看 Actions 是红的，而不是页面上看到一份一个月前的日报却毫无察觉
 
 ## 定时任务维护

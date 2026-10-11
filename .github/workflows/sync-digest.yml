@@ -28,9 +28,16 @@ jobs:
       - name: Build digest.html
         # 源数据过期或格式异常时 build_digest.py 会以非零码退出，让本步失败、
         # 工作流变红——绝不静默发布旧内容。
+        # 附加源通过 --feed 传入（可重复）：AIHOT 是公开 RSS；TrendRadar 来自你
+        # 的轻量服务器（TRENDRADAR_RSS_URL 仓库密钥，含 token）。任一附加源抓取
+        # 失败时只跳过对应区块并告警，绝不连累 garss 主源（详见 scripts/build_digest.py）。
+        env:
+          TRENDRADAR_RSS_URL: ${{ secrets.TRENDRADAR_RSS_URL }}
         run: |
           python3 -m pip install --user --quiet markdown
-          python3 scripts/build_digest.py garss/README.md digest.html
+          python3 scripts/build_digest.py garss/README.md digest.html \
+            --feed "AIHOT 精选 · 数字生命卡兹克|https://aihot.news/feed.xml" \
+            --feed "热搜雷达 · TrendRadar|${TRENDRADAR_RSS_URL}|来自你的轻量服务器 TrendRadar 实时热搜聚合；内容版权归各平台与作者所有。"
 
       - name: Commit and push
         run: |
