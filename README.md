@@ -4,13 +4,17 @@
 
 ## 目录结构
 
-- `index.html` — 首页（关于 / 技能 / 作品 / 推荐 / 联系）
-- `style.css` — 首页样式
-- `script.js` — 首页交互（粒子背景 / 打字机 / 滚动进度条等）
+- `index.html` — 首页（关于 / 技能 / 作品 / 推荐 / 工具 / 简报 / 现在 / 博客 / 留言 / 联系）
+- `style.css` — 首页样式（含亮/暗双主题变量）
+- `script.js` — 首页交互（粒子背景 / 打字机 / 滚动进度条 / 主题切换）
 - `merge-quest.html` — **合成大冒险 · Merge Quest** 游戏页，单文件自包含，开箱即玩
+- `now.html` — **现在在做什么** 页面（nownownow 风格，记录当前重心，文案自行更新）
+- `guestbook.html` — **访客留言墙**（基于 giscus / GitHub Discussions，需先完成下方配置）
+- `tools.html` — **工具严选**：分类展示精选工具（AI 助手 / 开发 / Windows 效率 / 学习科研 / 设计素材 / 我做的），每张卡片带 👍 点赞（countapi.xyz 计数，localStorage 防重复）
 - `digest.html` — **每日简报**（RSS 聚合日报，Actions 每日自动生成，**勿手改、勿从本地覆盖**）
 - `404.html` — 自定义 404 页（GitHub Pages 会自动使用它；承接已下线的 hot / robotics 旧链接）
-- `scripts/` — 上述页面的生成脚本
+- `blog/` — **博客**：`posts/*.md` 是文章源（Markdown + frontmatter），`index.html` 与 `<slug>.html` 由 `scripts/build_blog.py` 构建生成（**勿手改生成的 html**）
+- `scripts/` — 页面生成脚本（`build_digest.py` 简报、`build_blog.py` 博客）
 - `.github/workflows/` — 定时任务（`sync-digest` 每日同步简报、`keepalive` 防止定时任务被自动禁用）
 - `.nojekyll` — 禁用 GitHub Pages 的 Jekyll 处理（本站纯静态；防止生成页内容被 Liquid 误解析）
 
@@ -50,6 +54,49 @@
 ## 访问量统计
 
 首页页脚集成了[不蒜子](https://busuanzi.ibruce.info/)（busuanzi）计数器，显示「本站总访问量 / 访客数」。纯前端接入，无需注册；脚本异步加载，服务不可用时统计行自动隐藏。数据按域名 `cenrywang.github.io` 累计，正式上线后从 0 开始计数。
+
+## 主题切换（亮 / 暗）
+
+首页、`now.html`、`guestbook.html` 右上角有明暗切换按钮，选择写入 `localStorage`，刷新保持；首屏在 `<head>` 内联脚本提前应用，避免闪烁。亮色主题通过 `style.css` 的 `[data-theme="light"]` 变量覆盖实现，不影响默认暗色科技风。
+
+## 访客留言（giscus）
+
+`guestbook.html` 用 [giscus](https://giscus.app)（基于 GitHub Discussions，免费、无需额外注册）承载留言。首次使用前需在 GitHub 侧完成一次性配置，然后把 `guestbook.html` 里的两处占位替换掉：
+
+1. 仓库 `CenryWang/CenryWang.github.io` 必须是 **Public**，并在仓库 `Settings → General → Features` 开启 **Discussions**
+2. 安装 giscus App：<https://github.com/apps/giscus>（授权该仓库）
+3. 打开 <https://giscus.app>，填入仓库、选好分类（如「留言」），复制生成的 `data-repo-id` 与 `data-category-id`
+4. 把 `guestbook.html` 中 `data-repo-id="REPO_ID"` 与 `data-category-id="CATEGORY_ID"` 两处占位替换成真实值即可
+
+主题切换会自动通过 `postMessage` 同步给 giscus 评论区（暗色↔亮色）。
+
+## 博客（内容管线）
+
+零依赖纯静态博客，文章用 Markdown 写、Python 标准库构建，**无需任何第三方包**：
+
+1. 在 `blog/posts/` 新建一个 `.md` 文件，头部写 frontmatter：
+
+   ```markdown
+   ---
+   title: 文章标题
+   date: 2026-10-24
+   description: 一句话简介
+   tags: 标签1, 标签2
+   slug: my-post
+   ---
+
+   正文用普通 Markdown（标题 / 列表 / 引用 / 行内代码 / 代码块 / 链接 / 加粗 / 斜体）。
+   ```
+
+2. 运行构建，自动生成 `blog/index.html` 与 `blog/<slug>.html`：
+
+   ```bash
+   python scripts/build_blog.py
+   ```
+
+3. 生成的 `blog/*.html` 复用首页 `style.css` 与 `script.js`（粒子背景、明暗主题、滚动揭示自动带上）。文章页已预留 giscus 评论位，可后续接入。
+
+> 构建产物是生成文件，提交前重新跑一遍脚本即可；不要手工改 `blog/index.html` 与 `<slug>.html`，改 `posts/*.md` 源文件。
 
 ## 联系方式（首页已配置）
 

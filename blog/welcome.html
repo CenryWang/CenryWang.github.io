@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>欢迎来到我的博客 · Cenry 博客</title>
+  <meta name="description" content="这个博客用来沉淀我在农业具身智能、机器人与日常折腾中的随笔与笔记。" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2306060d'/%3E%3Ctext x='32' y='46' font-family='Segoe UI,Arial,sans-serif' font-size='40' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="../style.css" />
+  <script>
+    (function () {
+      try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <div class="aurora" aria-hidden="true">
+    <span class="blob blob-1"></span><span class="blob blob-2"></span><span class="blob blob-3"></span>
+  </div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <nav class="nav">
+    <a href="../index.html" class="nav-logo">Cenry</a>
+    <ul class="nav-links">
+      <li><a href="../index.html#about">关于</a></li>
+      <li><a href="../index.html#projects">作品</a></li>
+      <li><a href="index.html">博客</a></li>
+      <li><a href="../digest.html">简报</a></li>
+      <li><a href="../now.html">现在</a></li>
+      <li><a href="../index.html#contact">联系</a></li>
+    </ul>
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="切换明暗主题">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </nav>
+
+
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="hero-greeting reveal">博客</p>
+      <h1 class="hero-name reveal" style="font-size:clamp(1.8rem,6vw,3.4rem)">欢迎来到我的博客</h1>
+      <p class="hero-typed"><span>2026-10-24　&lt;span class=&quot;gh-label&quot;&gt;随笔&lt;/span&gt; · &lt;span class=&quot;gh-label&quot;&gt;站点更新&lt;/span&gt;</span></p>
+    </div>
+  </header>
+  <section class="section">
+    <article class="about-card glass reveal" style="max-width:760px;margin:0 auto">
+<h2>为什么开这个博客</h2>
+<p>主页已经聚合了每日 AI 简报，但我自己读到的、想到的东西，值得有个能慢慢写的地方。</p>
+<p>这里会放：</p>
+<ul><li><strong>研究碎片</strong>：农业具身智能、灵巧手、机器人相关的读书/实验笔记</li><li><strong>折腾记录</strong>：桌面应用、自动化脚本、服务器运维踩坑</li><li><strong>随便写写</strong>：一些不成熟的想法</li></ul>
+<h2>怎么写新文章</h2>
+<p>每篇文章就是一个 Markdown 文件，放在 <code>blog/posts/</code> 目录，头部用 frontmatter 写元数据：</p>
+<pre><code>---
+title: 文章标题
+date: 2026-10-24
+description: 一句话简介
+tags: 标签1, 标签2
+slug: my-post
+---
+
+正文用普通 Markdown 即可……</code></pre>
+<p>然后跑一句构建命令，自动生成索引和文章页：</p>
+<pre><code>python scripts/build_blog.py</code></pre>
+<p>样式和首页共用，主题切换、粒子背景都自动带上。</p>
+<blockquote>先写到这里，后面慢慢填。</blockquote>
+      <p style="margin-top:28px"><a href="index.html" style="color:var(--accent1)">← 返回博客列表</a></p>
+    </article>
+  </section>
+
+  <footer class="footer">
+    <div>© <span id="year">2026</span> CenryWang · <a href="../index.html" style="color:var(--muted)">返回首页</a></div>
+  </footer>
+  <script src="../script.js"></script>
+</body>
+</html>

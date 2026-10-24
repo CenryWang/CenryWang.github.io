@@ -7,6 +7,26 @@
   --accent3: #ec4899; /* pink */
   --glass: rgba(255, 255, 255, 0.04);
   --glass-border: rgba(255, 255, 255, 0.10);
+  --nav-bg: rgba(6, 6, 13, 0.5);
+  --nav-border: rgba(255, 255, 255, 0.10);
+  --particle: rgba(120, 180, 255, 0.7);
+  --blob-opacity: 0.5;
+}
+
+/* 亮色主题：覆盖核心变量，保持暗色科技风为默认 */
+[data-theme="light"] {
+  --bg: #f4f6fb;
+  --text: #15171f;
+  --muted: #5b6172;
+  --accent1: #0e7490; /* 深青，亮底上保证对比度 */
+  --accent2: #7c3aed;
+  --accent3: #db2777;
+  --glass: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(0, 0, 0, 0.10);
+  --nav-bg: rgba(244, 246, 251, 0.72);
+  --nav-border: rgba(0, 0, 0, 0.08);
+  --particle: rgba(20, 60, 120, 0.45);
+  --blob-opacity: 0.26;
 }
 
 * {
@@ -50,7 +70,7 @@ body {
   position: absolute;
   border-radius: 50%;
   filter: blur(90px);
-  opacity: 0.5;
+  opacity: var(--blob-opacity);
   animation: float 18s ease-in-out infinite;
 }
 .blob-1 {
@@ -100,8 +120,8 @@ body {
   justify-content: space-between;
   padding: 18px 6vw;
   backdrop-filter: blur(12px);
-  background: rgba(6, 6, 13, 0.5);
-  border-bottom: 1px solid var(--glass-border);
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
 }
 .nav-logo {
   font-weight: 700;
@@ -282,7 +302,7 @@ body {
   transform: translateY(-4px);
   border-color: var(--accent1);
   box-shadow: 0 0 22px rgba(34, 211, 238, 0.25);
-  color: #fff;
+  color: var(--text);
 }
 
 /* 作品 */
@@ -412,6 +432,151 @@ body {
   z-index: 999;
   transition: width 0.2s, height 0.2s;
   mix-blend-mode: screen;
+}
+
+/* 主题切换按钮 */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--text);
+  cursor: pointer;
+  padding: 0;
+  margin-left: 6px;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+}
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent1);
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.25);
+}
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+.icon-moon { display: none; }
+.icon-sun { display: block; }
+[data-theme="light"] .icon-sun { display: none; }
+[data-theme="light"] .icon-moon { display: block; }
+
+/* 博客标签（gh-label 被博客复用，保留） */
+.gh-label {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-top: 6px;
+}
+
+/* 工具严选 */
+.tools-cat {
+  margin: 38px 0 18px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tools-cat:first-of-type { margin-top: 8px; }
+.tools-cat::before {
+  content: "";
+  width: 6px;
+  height: 22px;
+  border-radius: 4px;
+  background: linear-gradient(120deg, var(--accent1), var(--accent2));
+}
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+.tool {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+}
+.tool:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent1);
+  box-shadow: 0 16px 40px rgba(34, 211, 238, 0.18);
+}
+.tool-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tool-emoji {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+.tool-head h3 {
+  font-size: 1.12rem;
+  margin: 0;
+}
+.tool-cat {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 0.72rem;
+  color: var(--accent2);
+  letter-spacing: 0.04em;
+}
+.tool p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 14px 0 18px;
+  flex: 1;
+}
+.tool-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.tool-link {
+  color: var(--accent1);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.tool-link:hover { text-decoration: underline; }
+
+/* 点赞按钮 */
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--muted);
+  border-radius: 50px;
+  padding: 6px 13px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: color 0.2s, border-color 0.2s, background 0.2s, transform 0.1s;
+  user-select: none;
+}
+.like-btn:hover {
+  border-color: var(--accent3);
+  color: var(--accent3);
+}
+.like-btn:active { transform: scale(0.94); }
+.like-btn.liked {
+  color: var(--accent3);
+  border-color: var(--accent3);
+  background: rgba(236, 72, 153, 0.10);
+}
+.like-icon { font-size: 0.95rem; line-height: 1; }
+.like-count { font-variant-numeric: tabular-nums; min-width: 1ch; }
+.like-note {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-top: 34px;
 }
 
 @media (max-width: 640px) {

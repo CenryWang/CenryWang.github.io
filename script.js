@@ -17,6 +17,38 @@ document.querySelectorAll("a, .btn, .social, .skill").forEach((el) => {
   });
 });
 
+// ===== 主题切换（明暗）=====
+const themeToggle = document.getElementById("themeToggle");
+function getParticleRGB() {
+  const v = getComputedStyle(document.documentElement).getPropertyValue("--particle").trim();
+  const m = v.match(/rgba?\(([^)]+)\)/);
+  if (!m) return { r: 120, g: 180, b: 255 };
+  const p = m[1].split(",").map((s) => parseFloat(s));
+  return { r: p[0], g: p[1], b: p[2] };
+}
+let particleColor = getComputedStyle(document.documentElement).getPropertyValue("--particle").trim() || "rgba(120,180,255,0.7)";
+let PRGB = getParticleRGB();
+function updateParticleColor() {
+  particleColor = getComputedStyle(document.documentElement).getPropertyValue("--particle").trim() || particleColor;
+  PRGB = getParticleRGB();
+}
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    const isLight = document.documentElement.getAttribute("data-theme") === "light";
+    const next = isLight ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("theme", next); } catch (e) {}
+    updateParticleColor();
+    const giscus = document.querySelector("iframe.giscus-frame");
+    if (giscus) {
+      giscus.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: next === "light" ? "light" : "dark" } } },
+        "https://giscus.app"
+      );
+    }
+  });
+}
+
 // ===== 粒子背景 =====
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
@@ -52,7 +84,7 @@ function drawParticles() {
 
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(120, 180, 255, 0.7)";
+    ctx.fillStyle = particleColor;
     ctx.fill();
 
     for (let j = i + 1; j < particles.length; j++) {
@@ -64,7 +96,7 @@ function drawParticles() {
         ctx.beginPath();
         ctx.moveTo(p.x, p.y);
         ctx.lineTo(q.x, q.y);
-        ctx.strokeStyle = "rgba(120, 180, 255, " + 0.12 * (1 - dist / 120) + ")";
+        ctx.strokeStyle = "rgba(" + PRGB.r + ", " + PRGB.g + ", " + PRGB.b + ", " + 0.12 * (1 - dist / 120) + ")";
         ctx.lineWidth = 0.6;
         ctx.stroke();
       }
@@ -83,30 +115,32 @@ window.addEventListener("resize", () => {
 
 // ===== 打字机 =====
 const typedEl = document.getElementById("typed");
-const words = ["创作者", "开发者", "开拓者"];
-let wi = 0;
-let ci = 0;
-let deleting = false;
+if (typedEl) {
+  const words = ["创作者", "开发者", "开拓者"];
+  let wi = 0;
+  let ci = 0;
+  let deleting = false;
 
-function typeLoop() {
-  const w = words[wi];
-  if (!deleting) {
-    typedEl.textContent = w.slice(0, ++ci);
-    if (ci === w.length) {
-      deleting = true;
-      setTimeout(typeLoop, 1400);
-      return;
+  function typeLoop() {
+    const w = words[wi];
+    if (!deleting) {
+      typedEl.textContent = w.slice(0, ++ci);
+      if (ci === w.length) {
+        deleting = true;
+        setTimeout(typeLoop, 1400);
+        return;
+      }
+    } else {
+      typedEl.textContent = w.slice(0, --ci);
+      if (ci === 0) {
+        deleting = false;
+        wi = (wi + 1) % words.length;
+      }
     }
-  } else {
-    typedEl.textContent = w.slice(0, --ci);
-    if (ci === 0) {
-      deleting = false;
-      wi = (wi + 1) % words.length;
-    }
+    setTimeout(typeLoop, deleting ? 60 : 110);
   }
-  setTimeout(typeLoop, deleting ? 60 : 110);
+  typeLoop();
 }
-typeLoop();
 
 // ===== 顶部滚动进度条 =====
 window.addEventListener("scroll", () => {
