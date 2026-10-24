@@ -49,6 +49,22 @@ if (themeToggle) {
   });
 }
 
+// giscus 加载完成后用站点当前主题覆盖（保证与站点明暗一致，不跟随系统）
+window.addEventListener("message", (e) => {
+  if (e.origin !== "https://giscus.app") return;
+  if (e.data && e.data.giscus && e.data.giscus.loaded) {
+    const cur =
+      document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+    const f = document.querySelector("iframe.giscus-frame");
+    if (f) {
+      f.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: cur } } },
+        "https://giscus.app"
+      );
+    }
+  }
+});
+
 // ===== 粒子背景 =====
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
