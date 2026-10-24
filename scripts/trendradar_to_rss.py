@@ -44,6 +44,49 @@ except Exception:  # pragma: no cover
 # 时区：TrendRadar 默认用服务器本地时间（通常为北京时间）
 TZ = datetime.timezone(datetime.timedelta(hours=8))
 
+# ---------------------------------------------------------------------------
+# 关注方向：人工智能 / 具身智能 / 机器人 / 自动驾驶 / 新能源汽车 / 智能体 / RSI
+#
+# 用途：热搜条目按「是否命中关注方向」排序——命中的排在最前，不足 limit 条时
+# 用当天其他热点补齐。这样既突出重点，又保证区块永远有内容（不会出现"看起来
+# 正常、实则空白"的静默故障）。
+# 全局 IGNORECASE；英文词用 \b 词边界，避免 HAIR / SAID 之类误伤 \bAI\b。
+# ---------------------------------------------------------------------------
+AI_FOCUS_PATTERNS = (
+    # 人工智能 / 大模型
+    r"人工智能", r"\bAI\b", r"\bAIGC\b", r"大模型", r"大语言模型", r"\bLLM\b", r"\bGPT\b",
+    r"ChatGPT", r"DeepSeek", r"Gemini", r"\bClaude\b", r"通义", r"文心", r"混元",
+    r"\bKimi\b", r"智谱", r"\bGLM\b", r"\bQwen\b", r"生成式", r"多模态", r"算力",
+    r"\bAGI\b", r"通用人工智能", r"\bNVIDIA\b", r"英伟达", r"Transformer",
+    r"预训练", r"微调", r"推理模型", r"开源模型",
+    # 具身智能 / 机器人
+    r"具身智能", r"\bembodied\b", r"机器人", r"人形", r"机器狗", r"四足", r"机械臂",
+    r"宇树", r"\bUnitree\b", r"优必选", r"智元", r"\bAgiBot\b", r"波士顿动力",
+    r"\bhumanoid\b", r"\brobotics?\b", r"灵巧手",
+    # 自动驾驶
+    r"自动驾驶", r"无人驾驶", r"智驾", r"辅助驾驶", r"\bFSD\b", r"\bWaymo\b",
+    r"萝卜快跑", r"\bRobotaxi\b", r"\bNOA\b", r"端到端", r"\bADAS\b",
+    # 新能源汽车
+    r"新能源汽车", r"电动车", r"电车", r"比亚迪", r"特斯拉", r"蔚来", r"小鹏",
+    r"理想汽车", r"问界", r"小米汽车", r"极氪", r"固态电池", r"充电桩", r"续航",
+    r"\bBYD\b", r"\bTesla\b", r"\bNEV\b",
+    # 智能体
+    r"智能体", r"\bAgent\b", r"\bMCP\b", r"多智能体", r"\bagentic\b", r"AutoGPT",
+    r"\btool[- ]use\b", r"工作流智能体",
+    # RSI：递归自我改进（Recursive Self-Improvement）
+    r"自我改进", r"自我进化", r"自主进化", r"自主迭代", r"递归自我改进",
+    r"self[- ]?improv", r"recursive self[- ]improvement", r"self[- ]?evolving",
+    r"自主智能",
+)
+AI_FOCUS_RE = re.compile(
+    "|".join("(?:%s)" % p for p in AI_FOCUS_PATTERNS), re.IGNORECASE
+)
+
+
+def is_focus(title):
+    """标题是否命中关注方向（人工智能/具身智能/机器人/自动驾驶/新能源车/智能体/RSI）。"""
+    return bool(AI_FOCUS_RE.search(title or ""))
+
 # uv 常见安装位置（用于自动拼抓取命令；服务环境 PATH 可能不含 uv）
 _UV_CANDIDATES = (
     r"C:\Program Files\python\Scripts\uv.exe",
@@ -193,8 +236,13 @@ def db_to_rss(db_path, limit=30, days=2, site_title="热搜雷达 · TrendRadar"
         )
         now = datetime.datetime.now(TZ)
         cutoff = now - datetime.timedelta(days=days)
-        seen, items = set(), []
+        seen, focused, others = set(), [], []
+        # 扫描上限：一天的热搜通常几百条，设上限防止异常库把内存吃满。
+        # 注意不能像以前那样凑够 limit 就 break——那样会漏掉后面命中的条目。
+        scan_cap = max(limit * 20, 300)
         for row in cur:
+            if len(focused) + len(others) >= scan_cap:
+                break
             link = row["url"] or row["mobile_url"] or ""
             if not link:
                 continue
@@ -204,15 +252,19 @@ def db_to_rss(db_path, limit=30, days=2, site_title="热搜雷达 · TrendRadar"
             if link in seen:
                 continue
             seen.add(link)
-            items.append({
+            item = {
                 "title": row["title"] or "",
                 "link": link,
                 "platform": row["platform"] or "未知平台",
                 "rank": row["rank"] if row["rank"] is not None else 0,
                 "date": dt,
-            })
-            if len(items) >= limit:
-                break
+            }
+            (focused if is_focus(item["title"]) else others).append(item)
+
+        # 关注方向优先；不足 limit 条时用当天其他热点补齐，保证区块不空白。
+        items = focused[:limit]
+        if len(items) < limit:
+            items = items + others[: limit - len(items)]
     finally:
         conn.close()
 

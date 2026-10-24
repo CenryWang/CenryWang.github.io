@@ -37,7 +37,10 @@ jobs:
           python3 -m pip install --user --quiet markdown
           python3 scripts/build_digest.py garss/README.md digest.html \
             --feed "AIHOT 精选 · 数字生命卡兹克|https://aihot.news/feed.xml" \
-            --feed "热搜雷达 · TrendRadar|${TRENDRADAR_RSS_URL}|来自你的轻量服务器 TrendRadar 实时热搜聚合；内容版权归各平台与作者所有。"
+            --feed "热搜雷达 · TrendRadar|${TRENDRADAR_RSS_URL}|来自你的轻量服务器 TrendRadar 实时热搜聚合，按人工智能/具身智能/机器人/自动驾驶/新能源汽车/智能体/RSI 方向优先展示；内容版权归各平台与作者所有。" \
+            --feed "论文速递 · arXiv 人工智能|https://rss.arxiv.org/rss/cs.AI|arXiv cs.AI 每日新论文（周六周日 arXiv 不发布更新，届时本区块缺席属正常）。" \
+            --feed "论文速递 · arXiv 机器人|https://rss.arxiv.org/rss/cs.RO|arXiv cs.RO 每日新论文，覆盖具身智能、人形机器人、自动驾驶。" \
+            --feed "论文速递 · arXiv 多智能体|https://rss.arxiv.org/rss/cs.MA|arXiv cs.MA 每日新论文，覆盖智能体与多智能体系统。"
 
       - name: Commit and push
         run: |
