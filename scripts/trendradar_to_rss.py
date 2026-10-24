@@ -11,8 +11,14 @@ build_digest.py 像订阅 AIHOT 一样把热搜合并进「每日简报」。
   2) 起一个极轻量的本地 HTTP 服务，实时读 db 并带 token 鉴权（推荐，无需落盘）：
      python trendradar_to_rss.py --dir "D:/TrendRadar/output/news" --serve --port 8088 --token YOUR_SECRET
 
-本文件只依赖 Python 标准库（sqlite3 / http.server / xml），在 2GB 的 Windows
-轻量服务器上零额外依赖，配合 Task Scheduler 定时跑即可。
+常驻服务（推荐，配合 nssm / Windows 服务）：
+   python trendradar_to_rss.py --dir "C:/TrendRadar/output/news" --serve --port 8088 \
+       --token YOUR_SECRET --project "C:/TrendRadar" --crawl-interval 21600 --crawl-timeout 1800
+   上述命令会让本服务在后台每 6 小时用 `uv run --frozen python -m trendradar` 重新抓取，
+   抓取带超时（默认 30 分钟），超时/失败不影响继续提供上一份有效数据——彻底避免
+   "爬虫卡死一周导致服务假死、RSS 空白"的旧问题。
+
+本文件只依赖 Python 标准库（sqlite3 / http.server / xml / subprocess / threading）。
 
 调试：--inspect 打印库的表结构与行数，方便首次部署时确认列名/数据。
 """
@@ -21,8 +27,12 @@ import datetime
 import html
 import os
 import re
+import shutil
 import sqlite3
+import subprocess
 import sys
+import threading
+import time
 
 try:
     from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -33,6 +43,20 @@ except Exception:  # pragma: no cover
 
 # 时区：TrendRadar 默认用服务器本地时间（通常为北京时间）
 TZ = datetime.timezone(datetime.timedelta(hours=8))
+
+# uv 常见安装位置（用于自动拼抓取命令；服务环境 PATH 可能不含 uv）
+_UV_CANDIDATES = (
+    r"C:\Program Files\python\Scripts\uv.exe",
+    r"C:\Python312\Scripts\uv.exe",
+    r"C:\Python311\Scripts\uv.exe",
+)
+
+
+def detect_uv():
+    for c in _UV_CANDIDATES:
+        if os.path.isfile(c):
+            return c
+    return shutil.which("uv") or "uv"
 
 
 def parse_dt(s, base_date=None):
@@ -100,6 +124,46 @@ def find_latest_db(directory):
     return best
 
 
+def _count_items(db_path):
+    """返回该 db 中带链接的条目数（用于挑选"非空"的最新 db）。"""
+    try:
+        conn = sqlite3.connect(db_path)
+        try:
+            return conn.execute(
+                "SELECT COUNT(*) FROM news_items WHERE (url<>'' OR mobile_url<>'')"
+            ).fetchone()[0]
+        finally:
+            conn.close()
+    except Exception:
+        return 0
+
+
+def find_best_db(directory, max_check=5):
+    """选「最新且产出 >=1 条带链接条目」的 db；避免抓到空 db 时把 RSS 打成空白。
+
+    在找不到非空 db 时，退回最新一份（哪怕空），保证服务不因一次失败抓取而整体空白。
+    """
+    if not os.path.isdir(directory):
+        return None
+    dbs = []
+    for root, _dirs, files in os.walk(directory):
+        for fn in files:
+            if fn.endswith(".db"):
+                p = os.path.join(root, fn)
+                try:
+                    t = os.path.getmtime(p)
+                except OSError:
+                    continue
+                dbs.append((t, p))
+    if not dbs:
+        return None
+    dbs.sort(key=lambda x: x[0], reverse=True)
+    for _t, p in dbs[:max_check]:
+        if _count_items(p) > 0:
+            return p
+    return dbs[0][1]
+
+
 def db_to_rss(db_path, limit=30, days=2, site_title="热搜雷达 · TrendRadar",
               site_link="https://aihot.news/"):
     """读取一份 TrendRadar SQLite，返回 RSS 2.0 字符串。任何异常都抛出让调用方处理。"""
@@ -152,9 +216,6 @@ def db_to_rss(db_path, limit=30, days=2, site_title="热搜雷达 · TrendRadar"
     finally:
         conn.close()
 
-    if not items:
-        items = []
-
     def rfc822(dt):
         return datetime.datetime.strftime(dt.astimezone(TZ), "%a, %d %b %Y %H:%M:%S %z")
 
@@ -204,10 +265,40 @@ def inspect(db_path):
         conn.close()
 
 
+def run_crawl(project, crawl_cmd, timeout):
+    """在 project 目录下运行抓取子进程；超时则杀掉。返回 (ok, msg)。
+
+    crawl_cmd 为 None 时使用默认命令：`uv run --frozen python -m trendradar`
+    （uv 会自动用项目里已同步好的托管环境，不再走网络装依赖）。
+    """
+    if not crawl_cmd:
+        # 优先用项目内独立 venv（最稳，抓取时不走网络装依赖）；否则退回 uv run
+        venv_py = os.path.join(project, ".venv", "Scripts", "python.exe")
+        if os.path.isfile(venv_py):
+            crawl_cmd = [venv_py, "-m", "trendradar"]
+        else:
+            uv = detect_uv()
+            crawl_cmd = [uv, "run", "--frozen", "python", "-m", "trendradar"]
+    try:
+        proc = subprocess.run(
+            crawl_cmd,
+            cwd=project,
+            timeout=timeout,
+            capture_output=True,
+            text=True,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
+        return (proc.returncode == 0, f"rc={proc.returncode}")
+    except subprocess.TimeoutExpired:
+        return (False, f"timeout>{timeout}s")
+    except Exception as e:
+        return (False, str(e))
+
+
 def main():
     ap = argparse.ArgumentParser(description="TrendRadar SQLite -> RSS 适配器")
     ap.add_argument("--db", help="指定单个 .db 文件（优先于 --dir）")
-    ap.add_argument("--dir", help="output/{type} 目录，自动选最新 .db")
+    ap.add_argument("--dir", help="output/{type} 目录，自动选最新且非空的 .db")
     ap.add_argument("--out", help="输出 RSS 文件路径（写文件模式）")
     ap.add_argument("--limit", type=int, default=30, help="最多条目数（默认 30）")
     ap.add_argument("--days", type=int, default=2, help="只取最近 N 天抓取到的条目（默认 2）")
@@ -218,13 +309,22 @@ def main():
     ap.add_argument("--port", type=int, default=8088)
     ap.add_argument("--host", default="0.0.0.0")
     ap.add_argument("--token", default="", help="--serve 时的访问令牌（URL ?token=）")
+    # 常驻抓取相关
+    ap.add_argument("--project", default="C:\\TrendRadar",
+                    help="TrendRadar 项目根目录（抓取子进程的工作目录，默认 C:\\TrendRadar）")
+    ap.add_argument("--crawl-cmd", default=None,
+                    help="自定义抓取命令（字符串，空格分隔）；缺省自动用 uv run --frozen python -m trendradar")
+    ap.add_argument("--crawl-interval", type=int, default=0,
+                    help="后台自动抓取间隔（秒，0=不自动抓取；默认 0）")
+    ap.add_argument("--crawl-timeout", type=int, default=1800,
+                    help="单次抓取超时（秒，默认 1800=30 分钟）")
     args = ap.parse_args()
 
-    db = args.db or find_latest_db(args.dir or "")
-    if not db or not os.path.isfile(db):
-        print(f"ERROR: 找不到可用的 TrendRadar db（--db={args.db} --dir={args.dir}）", file=sys.stderr)
-        return 2
+    db = args.db or find_best_db(args.dir or "")
     if args.inspect:
+        if not db or not os.path.isfile(db):
+            print(f"ERROR: 找不到可用的 TrendRadar db（--db={args.db} --dir={args.dir}）", file=sys.stderr)
+            return 2
         inspect(db)
         return 0
 
@@ -232,9 +332,12 @@ def main():
         if not _HTTP_OK:
             print("ERROR: 当前环境不支持 http.server", file=sys.stderr)
             return 2
+        # 允许启动时暂无 db：后台抓取线程会补齐，服务先起、抓取完即有数据
         return _serve(db, args)
 
-    # 默认：写文件
+    if not db or not os.path.isfile(db):
+        print(f"ERROR: 找不到可用的 TrendRadar db（--db={args.db} --dir={args.dir}）", file=sys.stderr)
+        return 2
     out = args.out
     if not out:
         print("ERROR: 非 --serve 模式需要 --out 指定输出文件", file=sys.stderr)
@@ -248,8 +351,26 @@ def main():
     return 0
 
 
-def _serve(db, args):
-    source_db = db
+def _serve(initial_db, args):
+    project = args.project
+    crawl_cmd = None
+    if args.crawl_cmd:
+        import shlex
+        crawl_cmd = shlex.split(args.crawl_cmd)
+
+    def crawler_loop():
+        # 首次立即抓一份（若启动时就缺数据），之后按间隔循环；任何异常都不影响服务
+        while True:
+            try:
+                ok, msg = run_crawl(project, crawl_cmd, args.crawl_timeout)
+                print(f"[crawl] {datetime.datetime.now(TZ)} ok={ok} {msg}", flush=True)
+            except Exception as e:
+                print(f"[crawl] exception {e}", flush=True)
+            time.sleep(max(1, args.crawl_interval))
+
+    if args.crawl_interval and args.crawl_interval > 0:
+        threading.Thread(target=crawler_loop, daemon=True).start()
+
     token = args.token
 
     class Handler(BaseHTTPRequestHandler):
@@ -270,8 +391,13 @@ def _serve(db, args):
                 if not got or not _const_eq(got, token):
                     self._send(403, b"forbidden")
                     return
+            # 每次请求动态选最新且非空的 db（抓取完成后自动生效，无需重启）
+            db = find_best_db(args.dir or "") or initial_db
+            if not db or not os.path.isfile(db):
+                self._send(500, b"no usable db yet")
+                return
             try:
-                rss = db_to_rss(source_db, limit=args.limit, days=args.days,
+                rss = db_to_rss(db, limit=args.limit, days=args.days,
                                 site_title=args.site_title, site_link=args.site_link).encode("utf-8")
                 self._send(200, rss)
             except Exception as e:  # 读库失败：500，让 GA 侧优雅跳过
@@ -281,7 +407,8 @@ def _serve(db, args):
             pass
 
     print(f"Serving TrendRadar RSS at http://{args.host}:{args.port}/rss.xml"
-          + (f" (token required)" if token else ""))
+          + (f" (token required)" if token else "")
+          + (f" | auto-crawl every {args.crawl_interval}s" if args.crawl_interval > 0 else ""))
     HTTPServer((args.host, args.port), Handler).serve_forever()
 
 
