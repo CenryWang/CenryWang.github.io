@@ -35,7 +35,7 @@ import threading
 import time
 
 try:
-    from http.server import BaseHTTPRequestHandler, HTTPServer
+    from http.server import BaseHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
     from urllib.parse import urlparse, parse_qs
     _HTTP_OK = True
 except Exception:  # pragma: no cover
@@ -461,7 +461,10 @@ def _serve(initial_db, args):
     print(f"Serving TrendRadar RSS at http://{args.host}:{args.port}/rss.xml"
           + (f" (token required)" if token else "")
           + (f" | auto-crawl every {args.crawl_interval}s" if args.crawl_interval > 0 else ""))
-    HTTPServer((args.host, args.port), Handler).serve_forever()
+    # 多线程 + 连接超时：避免单线程被一条卡住的半开连接独占，导致其它
+    # 客户端（如 GitHub Actions 拉取 RSS）拿不到响应而超时、digest 板块缺失
+    Handler.timeout = 15
+    ThreadingHTTPServer((args.host, args.port), Handler).serve_forever()
 
 
 def _const_eq(a, b):
