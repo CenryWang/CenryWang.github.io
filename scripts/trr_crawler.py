@@ -1,4 +1,5 @@
 import subprocess, time, os, io, datetime
+os.environ["PYTHONIOENCODING"] = "utf-8"
 
 PY = r"C:/TrendRadar/.venv/Scripts/python.exe"
 PROJ = r"C:/TrendRadar"
