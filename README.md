@@ -10,6 +10,8 @@
 - `merge-quest.html` — **合成大冒险 · Merge Quest** 游戏页，单文件自包含，开箱即玩
 - `now.html` — **现在在做什么** 页面（nownownow 风格，记录当前重心，文案自行更新）
 - `tools.html` — **工具严选**：按场景分类聚合常用工具与 Agent Skills，带纯前端搜索过滤，零第三方依赖
+- `metals.html` — **贵金属与宏观行情**：黄金 / 白银 / 金银比 / 10 年期美债 / 贸易加权美元指数，今日值 + 区间变化 + 30 年月度回溯曲线
+- `data/metals.json` — 行情数据（`metals` 工作流每日自动生成，**勿手改**）
 - `digest.html` — **每日简报**（RSS 聚合日报，Actions 每日自动生成，**勿手改、勿从本地覆盖**）
 - `404.html` — 自定义 404 页（GitHub Pages 会自动使用它；承接已下线的 hot / robotics / 留言墙 旧链接）
 - `blog/` — **博客**：`posts/*.md` 是文章源（Markdown + frontmatter），`index.html` 与 `<slug>.html` 由 `scripts/build_blog.py` 构建生成（**勿手改生成的 html**）
@@ -18,9 +20,10 @@
   - `sync_nav.py` — 把导航同步到所有手写页面
   - `build_digest.py` — 每日简报生成
   - `build_blog.py` — 博客构建
+  - `build_metals.py` — 贵金属与宏观行情数据构建（纯标准库）
   - `check_site_health.py` — 线上站点健康自检
   - `trendradar_to_rss.py` / `trr_crawler.py` — 服务器端 TrendRadar 适配器与爬虫
-- `.github/workflows/` — 定时任务（`sync-digest` 每日同步简报、`site-health` 每日自检、`keepalive` 防止定时任务被自动禁用）
+- `.github/workflows/` — 定时任务（`sync-digest` 每日同步简报、`metals` 每日生成行情数据、`site-health` 每日自检、`keepalive` 防止定时任务被自动禁用）
 - `.nojekyll` — 禁用 GitHub Pages 的 Jekyll 处理（本站纯静态；防止生成页内容被 Liquid 误解析）
 
 ## 作品列表
@@ -60,7 +63,7 @@
 
 ## 导航统一
 
-所有页面的导航栏都由 `scripts/nav.py` 一处定义，共 9 个入口。改动流程：
+所有页面的导航栏都由 `scripts/nav.py` 一处定义，共 10 个入口。改动流程：
 
 ```bash
 # 1. 改 scripts/nav.py 里的 HOME_LINKS / SUB_LINKS
@@ -76,16 +79,60 @@ python scripts/build_blog.py    # 重新生成 blog/*.html
 
 `scripts/check_site_health.py`（纯标准库）每天由 `site-health` 工作流调用，检查：
 
-- 8 个主要页面 + `script.js` 是否全部返回 200
+- 11 个资源（含行情页、行情数据与 `script.js`）是否全部返回 200
 - 简报页头的「同步于 YYYY-MM-DD」是否在 3 天内
+- `data/metals.json` 的 `generated_at` 是否在 3 天内、指标数量是否正常
 - 页面上是否还残留已下线功能的引用（留言页 / countapi 点赞 / giscus 脚本）
-- 首页导航是否包含统一的 4 个独立页入口
+- 首页导航是否包含统一的 5 个独立页入口
 
 **任一项失败都会以非零码退出，让 Actions 变红**，不做静默降级。本地手动跑：
 
 ```bash
 python scripts/check_site_health.py
 ```
+
+## 贵金属与宏观行情看板
+
+`metals.html` 读取同仓库的 `data/metals.json`，每天北京时间 07:40 由 `metals` 工作流重新生成。页面纯静态、零前端库、零 API 密钥、运行时不请求任何第三方接口。
+
+**指标**：黄金、白银、金银比、10 年期美债收益率、美元指数（美联储广义贸易加权口径，**不是 ICE 的 DXY**）。
+**时间维度**：今日值 + 1月 / 3月 / 1年 / 3年 / 10年 / 30年 的区间变化，另有可切换指标与窗口的 30 年月度回溯曲线。
+
+数据源全部免费、无需注册或 API key：
+
+| 来源 | 用途 | 许可 |
+|---|---|---|
+| `gold-api.com` | XAU / XAG 现货「今日值」 | 公开免费接口 |
+| World Bank Commodity Markets "Pink Sheet" | 金银月度均价（1960 起）长周期序列 | CC BY 4.0，页面已署名 |
+| FRED `DGS10` | 10 年期美债收益率 | 美国政府公开数据 |
+| FRED `DTWEXBGS` | 广义贸易加权美元指数（2006 起） | 美国政府公开数据 |
+
+几点口径约定，避免数字被误读：
+
+- 所有指标统一降采样为月度序列（保留最近 30 年），**涨跌幅与曲线基于同一条序列**；卡片上的「今日值」是现货 / 最新观测，不与历史月均价混算。
+- 10 年期美债是利率，变化以**基点 (bp)** 表示，不套用百分比涨跌幅。
+- 美元指数用贸易加权口径，且 2006 年才有数据，30 年窗口如实留「—」，不拼接不同基期的旧序列。
+- 世界银行 xlsx 的下载链接**每月轮换文档 ID**，`build_metals.py` 从官方页面动态解析当前链接；短周期（1月 / 3月）是月度均价参考值，不是日频收盘涨跌幅。
+
+**失败即变红**：任一源不可达、数据为空、或时间戳超过阈值（现货 3 天 / FRED 14 天 / 世界银行 60 天），脚本直接 `exit 1`，Actions 变红，绝不静默发布空页或反复重发旧数据。
+
+## 风险提示与合规边界
+
+页面在**首屏**放置了不依赖 JavaScript 的静态风险提示，底部「数据来源与口径」区块还列出来源、许可、口径注意事项与免责声明；`data/metals.json` 里的 `sources` / `caveats` / `disclaimer` 由 `build_metals.py` 统一生成，页面渲染时读取，避免页面文案与数据文件脱节。
+
+明确写出的风险包括：贵金属价格、利率与汇率波动剧烈，投资可能造成本金损失；公开来源数据可能延迟或存在误差，不保证实时、准确、完整，也不是交易报价；历史涨跌幅不代表未来表现；据此操作的风险与后果由读者自行承担。
+
+页面定位是**纯数据展示**：不含投资建议、分析预测、买卖信号、收益承诺，不接交易平台 / 开户 / 返佣链接，不收费，也不放广告。不要往这个页面加「买入信号」「目标价」「拐点预警」之类的措辞——向公众提供行情的分析、预测或建议涉及证券投资咨询资质，性质完全不同。数据来源均标注名称、用途、链接与许可（World Bank Pink Sheet 为 CC BY 4.0，页面已署名）。
+
+本地生成与预览：
+
+```bash
+python scripts/build_metals.py      # 生成 data/metals.json
+python -m http.server 8000          # fetch 在 file:// 下会被浏览器拦截，必须走 HTTP
+# 然后打开 http://localhost:8000/metals.html
+```
+
+调试时若本机网络受限，可用 `--cache-dir <目录>` 复用 curl 下载的响应副本（生产 workflow 不传此参数，始终实时抓取）；时间戳校验依然生效，旧缓存会直接报错。
 
 ## 访问量统计
 

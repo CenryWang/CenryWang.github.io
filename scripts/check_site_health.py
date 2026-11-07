@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """站点健康自检（纯标准库，零依赖）。
 
-检查线上页面可访问、简报新鲜、已下线功能没有被手滑恢复。
+检查线上页面可访问、简报与行情数据新鲜、已下线功能没有被手滑恢复。
 任一项失败都以非零码退出，让 Actions 变红——绝不静默通过。
 
 用法：python3 scripts/check_site_health.py [BASE_URL]
 """
 import datetime
+import json
 import re
 import sys
 import urllib.request
@@ -16,6 +17,8 @@ BASE = (sys.argv[1] if len(sys.argv) > 1 else "https://cenrywang.github.io").rst
 PAGES = [
     "/",
     "/tools.html",
+    "/metals.html",
+    "/data/metals.json",
     "/now.html",
     "/blog/index.html",
     "/blog/welcome.html",
@@ -29,9 +32,10 @@ PAGES = [
 FORBIDDEN = ["guestbook.html", "countapi.xyz", "giscus.app"]
 
 # 导航统一后，首页必须包含这些入口
-NAV_REQUIRED = ["tools.html", "digest.html", "now.html", "blog/index.html"]
+NAV_REQUIRED = ["tools.html", "digest.html", "metals.html", "now.html", "blog/index.html"]
 
 MAX_DIGEST_AGE_DAYS = 3
+MAX_METALS_AGE_DAYS = 3
 
 errors = []
 
@@ -75,12 +79,28 @@ def main():
                 else:
                     print("digest 同步于 {}，{} 天前".format(day, age))
 
+        if path == "/data/metals.json":
+            try:
+                data = json.loads(text)
+                stamp = datetime.datetime.fromisoformat(
+                    data["generated_at"].replace("Z", "+00:00")
+                )
+                age = (datetime.datetime.now(datetime.timezone.utc) - stamp).days
+                if age > MAX_METALS_AGE_DAYS:
+                    errors.append("行情数据已 {} 天未更新（{}）".format(age, data["generated_at"]))
+                else:
+                    print("metals 生成于 {}，{} 天前".format(data["generated_at"], age))
+                if len(data.get("metrics", [])) < 5:
+                    errors.append("行情数据指标数量异常：{}".format(len(data.get("metrics", []))))
+            except Exception as exc:
+                errors.append("行情数据格式或时间戳异常：{}".format(exc))
+
     if errors:
         print("FAIL：站点健康检查未通过", file=sys.stderr)
         for item in errors:
             print("  - " + item, file=sys.stderr)
         return 1
-    print("OK：{} 个资源全部 200，简报新鲜，无已下线功能残留".format(len(PAGES)))
+    print("OK：{} 个资源全部 200，简报与行情数据新鲜，无已下线功能残留".format(len(PAGES)))
     return 0
 
 

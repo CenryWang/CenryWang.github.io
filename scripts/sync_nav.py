@@ -20,6 +20,7 @@ TARGETS = [
     ("index.html", dict(home=True)),
     ("now.html", dict()),
     ("tools.html", dict()),
+    ("metals.html", dict()),
     ("404.html", dict(base="/", logo="/", theme=False)),
 ]
 

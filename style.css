@@ -613,3 +613,126 @@ body {
     transform: none;
   }
 }
+
+/* 贵金属与宏观行情看板 */
+.metals-intro { line-height: 1.8; }
+.metals-gap { margin-top: 56px; }
+.metals-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px;
+  margin: 26px 0 8px;
+}
+.metals-card {
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 20px;
+}
+.metals-card-name {
+  color: var(--muted);
+  font-size: 0.88rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.metals-card-name span { font-size: 0.75rem; opacity: 0.8; }
+.metals-card-value {
+  font-size: 1.85rem;
+  line-height: 1.35;
+  margin: 8px 0 6px;
+  color: var(--accent1);
+  font-variant-numeric: tabular-nums;
+}
+.metals-card-meta, .metals-card-basis {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+.metals-card-basis { opacity: 0.8; }
+.metals-stamp { color: var(--muted); font-size: 0.8rem; }
+.metals-table-wrap { overflow-x: auto; padding: 6px 4px; }
+.metals-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+.metals-table th, .metals-table td {
+  padding: 12px 14px;
+  text-align: right;
+  border-bottom: 1px solid var(--glass-border);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.metals-table th:first-child, .metals-table td:first-child { text-align: left; }
+.metals-table thead th { color: var(--muted); font-weight: 500; }
+.metals-table tbody tr:last-child td { border-bottom: none; }
+.metals-table small { display: block; color: var(--muted); font-size: 0.72rem; }
+.metals-up { color: #ef4444; }
+.metals-down { color: #22c55e; }
+.metals-flat, .metals-na { color: var(--muted); }
+[data-theme="light"] .metals-up { color: #c62828; }
+[data-theme="light"] .metals-down { color: #15803d; }
+.metals-chart-wrap { padding: 20px 22px; }
+.metals-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: space-between;
+  align-items: center;
+}
+.metals-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.metals-tab {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.metals-tab:hover { border-color: var(--accent1); color: var(--text); }
+.metals-tab.active {
+  border-color: var(--accent1);
+  color: var(--accent1);
+  background: rgba(34, 211, 238, 0.10);
+}
+.metals-tabs-small .metals-tab { padding: 5px 11px; font-size: 0.78rem; }
+.metals-chart-meta { color: var(--muted); font-size: 0.85rem; margin: 16px 0 4px; }
+#metalsChart { width: 100%; height: auto; display: block; }
+/* 投资风险提示：纯静态、不依赖脚本，确保数据加载失败时依然可见 */
+.metals-risk {
+  border-left: 3px solid var(--accent3);
+  background: rgba(236, 72, 153, 0.06);
+  padding: 15px 20px;
+  margin: 0 0 26px;
+  font-size: 0.87rem;
+  line-height: 1.8;
+  color: var(--text);
+}
+.metals-risk > strong { display: block; color: var(--accent3); font-size: 0.95rem; letter-spacing: 0.02em; }
+.metals-risk p { margin: 8px 0 0; }
+.metals-risk p strong { color: var(--text); }
+.metals-note { color: var(--muted); font-size: 0.82rem; line-height: 1.75; margin-top: 12px; }
+.metals-sources { padding: 22px 26px; }
+.metals-sources ul { padding-left: 20px; margin: 10px 0 18px; }
+.metals-sources li { margin-bottom: 8px; font-size: 0.88rem; line-height: 1.7; }
+.metals-sources h3 { font-size: 1rem; font-weight: 500; margin-top: 18px; }
+.metals-sources a { color: var(--accent1); }
+.metals-disclaimer {
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.8;
+  margin-top: 8px;
+}
+.metals-error { padding: 20px; border-radius: 12px; color: var(--accent3); line-height: 1.8; }
+.metals-error code { font-family: var(--font-mono, monospace); font-size: 0.9em; }
+
+@media (max-width: 640px) {
+  .metals-cards { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .metals-card { padding: 16px; }
+  .metals-card-value { font-size: 1.45rem; }
+  .metals-chart-wrap, .metals-sources { padding: 14px; }
+}

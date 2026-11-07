@@ -1,0 +1,39 @@
+name: Metals dashboard
+
+on:
+  schedule:
+    # UTC 23:40 = 北京时间 07:40，错开每日简报（07:30）与健康自检（07:50）
+    - cron: '40 23 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+# 与简报共用同一并发组，避免两个 bot 同时 push 被 rejected
+concurrency:
+  group: content-update
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout homepage repo
+        uses: actions/checkout@v7
+
+      - name: Build metals data
+        # 任一数据源失败、数据为空或时间戳过期时，build_metals.py 会以非零码
+        # 退出，让本步失败、工作流变红——绝不静默发布空页或反复重发旧数据。
+        run: python3 scripts/build_metals.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/metals.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update metals data $(date -u +'%Y-%m-%d')"
+            git pull --rebase origin main
+            git push
+          fi
