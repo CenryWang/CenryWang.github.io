@@ -142,19 +142,23 @@ def render_post(meta, body_html, slug):
     desc = meta.get("description", title)
     date = meta.get("date", "")
     tags = [t.strip() for t in meta.get("tags", "").split(",") if t.strip()]
-    tag_html = " · ".join(f'<span class="gh-label">{t}</span>' for t in tags) if tags else ""
-    meta_line = (date + ("　" if date and tag_html else "") + tag_html)
+    # tag_html 已经是 HTML，不能再被 html.escape 包一层，否则页面会把
+    # "<span class=...>" 当纯文本显示出来（看起来像乱码）。
+    tag_html = " · ".join(
+        f'<span class="gh-label">{html.escape(t)}</span>' for t in tags
+    ) if tags else ""
+    meta_line = html.escape(date) + ("　" if date and tag_html else "") + tag_html
     head = HEAD.format(title=html.escape(title), desc=html.escape(desc), nav=NAV)
     body = f"""
   <header class="hero">
     <div class="hero-inner">
       <p class="hero-greeting reveal">博客</p>
       <h1 class="hero-name reveal" style="font-size:clamp(1.8rem,6vw,3.4rem)">{html.escape(title)}</h1>
-      <p class="hero-typed"><span>{html.escape(meta_line)}</span></p>
+      <p class="hero-typed"><span>{meta_line}</span></p>
     </div>
   </header>
   <section class="section">
-    <article class="about-card glass reveal" style="max-width:760px;margin:0 auto">
+    <article class="about-card glass blog-post" style="max-width:760px;margin:0 auto">
 {body_html}
       <p style="margin-top:28px"><a href="index.html" style="color:var(--accent1)">← 返回博客列表</a></p>
     </article>

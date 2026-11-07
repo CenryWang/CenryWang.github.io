@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cenry · 贵金属与宏观行情</title>
-  <meta name="description" content="黄金、白银、金银比、10 年期美债收益率与贸易加权美元指数的公开数据看板：今日值、区间变化与 30 年月度回溯曲线。" />
+  <meta name="description" content="黄金、白银、金银比、10 年期美债收益率、联邦基金有效利率与贸易加权美元指数的公开数据看板：今日值、区间变化与 30 年月度回溯曲线。" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2306060d'/%3E%3Ctext x='32' y='46' font-family='Segoe UI,Arial,sans-serif' font-size='40' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="style.css" />
   <script>
@@ -35,7 +35,6 @@
       <li><a href="tools.html">工具</a></li>
       <li><a href="digest.html">简报</a></li>
       <li><a href="metals.html">行情</a></li>
-      <li><a href="now.html">现在</a></li>
       <li><a href="blog/index.html">博客</a></li>
       <li><a href="index.html#contact">联系</a></li>
     </ul>
@@ -49,55 +48,84 @@
     <div class="hero-inner">
       <p class="hero-greeting reveal">公开数据 · 每日更新</p>
       <h1 class="hero-name reveal">贵金属与宏观行情</h1>
-      <p class="hero-typed"><span>黄金 / 白银 / 金银比 / 美债 / 美元指数</span></p>
+      <p class="hero-typed"><span>黄金 / 白银 / 金银比 / 美债 / 政策利率 / 美元指数</span></p>
     </div>
   </header>
 
-  <section class="section">
-    <h2 class="section-title reveal">今日速览</h2>
-    <p class="about-card glass reveal metals-intro">
-      五个公开指标的当日值与历史变化。数据全部来自免费公开来源，由 GitHub Actions 每日生成静态文件；
-      页面不请求任何第三方接口，也不含任何 API 密钥。
-      <strong>本页仅供信息参考，不构成投资建议、分析预测或买卖信号。</strong>
-    </p>
+  <section class="section metals-page">
+    <div class="metals-head">
+      <p class="metals-kicker">DATA / 六个指标</p>
+      <h2 class="section-title">今日速览</h2>
+      <p class="metals-lead">数据来自免费公开来源，由 GitHub Actions 每日生成静态文件；页面不请求第三方接口，也不含任何 API 密钥。</p>
+    </div>
+
     <div class="metals-risk" role="note" aria-label="投资风险提示">
       <strong>投资有风险 · 请先阅读</strong>
       <p>贵金属价格、利率与汇率波动剧烈，投资可能造成本金损失。本页数据来自公开免费来源，多为月度均价或延迟观测，<strong>不保证实时、准确、完整</strong>，也不是任何交易报价；历史涨跌幅与走势曲线<strong>不代表未来表现</strong>。</p>
       <p>本页仅供信息参考，不构成投资建议、分析预测、买卖信号或收益承诺，也不提供交易平台、开户或返佣链接。据此操作，风险与后果由读者自行承担。</p>
     </div>
+
     <div id="metalsCards" class="metals-cards" aria-live="polite"></div>
     <p id="metalsStamp" class="metals-stamp"></p>
 
-    <h2 class="section-title reveal metals-gap">区间变化</h2>
-    <div class="glass reveal metals-table-wrap">
-      <table class="metals-table">
-        <thead><tr id="metalsHead"><th>指标</th><th>当前值</th></tr></thead>
-        <tbody id="metalsChanges"></tbody>
-      </table>
-    </div>
-    <p class="metals-note">
-      涨跌幅完全基于同一条月度序列计算，与上方「今日值」（现货 / 最新观测）口径不同，不混用。
-      10 年期美债收益率是利率，变化以基点（bp）表示。「—」表示该序列历史长度不足。历史涨跌幅不代表未来表现。
-    </p>
-
-    <h2 class="section-title reveal metals-gap">历史回溯</h2>
-    <div class="glass reveal metals-chart-wrap">
-      <div class="metals-controls">
-        <div id="metricTabs" class="metals-tabs" role="group" aria-label="选择指标"></div>
-        <div id="windowTabs" class="metals-tabs metals-tabs-small" role="group" aria-label="选择时间窗口"></div>
+    <div class="metals-block">
+      <div class="metals-head">
+        <p class="metals-kicker">CHANGE / 区间对比</p>
+        <h2 class="section-title">区间变化</h2>
+        <p class="metals-lead">基于同一条月度序列计算，与上方「今日值」（现货 / 最新观测）口径不同，不混用。</p>
       </div>
-      <p id="chartMeta" class="metals-chart-meta"></p>
-      <svg id="metalsChart" viewBox="0 0 900 300" role="img" aria-label="历史月度走势曲线" preserveAspectRatio="xMidYMid meet"></svg>
-      <p id="chartHint" class="metals-note"></p>
+      <div class="metals-table-wrap">
+        <table class="metals-table">
+          <caption class="metals-caption">各时间区间变化幅度 · 涨红跌绿 · 利率以基点 (bp) 表示</caption>
+          <thead id="metalsHead"></thead>
+          <tbody id="metalsChanges"></tbody>
+        </table>
+      </div>
+      <p class="metals-note">10 年期美债收益率与联邦基金有效利率是利率，变化以基点（bp）表示；「—」表示该序列历史长度不足。历史涨跌幅不代表未来表现。</p>
     </div>
 
-    <h2 class="section-title reveal metals-gap">数据来源与口径</h2>
-    <div class="glass reveal metals-sources">
-      <ul id="sourceList"></ul>
-      <h3>需要注意</h3>
-      <ul id="caveatList"></ul>
-      <h3>风险提示与免责声明</h3>
-      <p id="disclaimer" class="metals-disclaimer">本页仅展示公开宏观与行情数据，仅供信息参考，不构成任何投资建议、分析预测、买卖信号或收益承诺。数据可能延迟或存在误差，历史表现不代表未来表现。贵金属价格、利率与汇率波动剧烈，投资有风险，据此操作的风险与后果由读者自行承担。</p>
+    <div class="metals-block">
+      <div class="metals-head">
+        <p class="metals-kicker">HISTORY / 月度序列</p>
+        <h2 class="section-title">历史回溯</h2>
+        <p class="metals-lead">同一口径的月度序列，最长 30 年；先选指标，再选时间窗口。</p>
+      </div>
+      <div class="metals-chart-wrap">
+        <div class="metals-controls">
+          <div class="metals-control-row">
+            <span class="metals-control-label">指标</span>
+            <div id="metricTabs" class="metals-seg" role="group" aria-label="选择指标"></div>
+          </div>
+          <div class="metals-control-row">
+            <span class="metals-control-label">区间</span>
+            <div id="windowTabs" class="metals-seg" role="group" aria-label="选择时间窗口"></div>
+          </div>
+        </div>
+        <p id="chartMeta" class="metals-chart-meta"></p>
+        <svg id="metalsChart" viewBox="0 0 900 300" role="img" aria-label="历史月度走势曲线" preserveAspectRatio="xMidYMid meet"></svg>
+        <p id="chartHint" class="metals-note"></p>
+      </div>
+    </div>
+
+    <div class="metals-block">
+      <div class="metals-head">
+        <p class="metals-kicker">SOURCES / 口径与合规</p>
+        <h2 class="section-title">数据来源与口径</h2>
+      </div>
+      <div class="metals-info-grid">
+        <div class="metals-info-card">
+          <h3>数据来源</h3>
+          <ul id="sourceList"></ul>
+        </div>
+        <div class="metals-info-card">
+          <h3>需要注意</h3>
+          <ul id="caveatList"></ul>
+        </div>
+      </div>
+      <div class="metals-disclaimer-box">
+        <h3>风险提示与免责声明</h3>
+        <p id="disclaimer" class="metals-disclaimer">本页仅展示公开宏观与行情数据，仅供信息参考，不构成任何投资建议、分析预测、买卖信号或收益承诺。数据可能延迟或存在误差，历史表现不代表未来表现。贵金属价格、利率与汇率波动剧烈，投资有风险，据此操作的风险与后果由读者自行承担。</p>
+      </div>
     </div>
   </section>
 
@@ -124,27 +152,29 @@
 
       function changeHtml(value, unit) {
         if (value === null || value === undefined) return '<span class="metals-na">—</span>';
-        var cls = value > 0 ? "metals-up" : value < 0 ? "metals-down" : "metals-flat";
+        var cls = value > 0 ? "up" : value < 0 ? "down" : "flat";
         var sign = value > 0 ? "+" : "";
         var text = unit === "bp" ? sign + num(value) + " bp" : sign + num(value) + "%";
-        return '<span class="' + cls + '">' + text + "</span>";
+        return '<span class="metals-chg metals-chg-' + cls + '">' + text + "</span>";
       }
 
       function showError(err) {
         document.getElementById("metalsCards").innerHTML =
-          '<div class="metals-error glass">数据加载失败：' + esc(err && err.message ? err.message : err) +
+          '<div class="metals-error">数据加载失败：' + esc(err && err.message ? err.message : err) +
           '。若用 file:// 直接打开本页，浏览器会拦截本地 JSON，请在仓库根目录运行 ' +
           '<code>python -m http.server</code> 后通过 http 访问。</div>';
       }
 
       function renderCards(data) {
         document.getElementById("metalsCards").innerHTML = data.metrics.map(function (m) {
-          return '<article class="metals-card glass">' +
-            '<div class="metals-card-name">' + esc(m.name) + '<span>' + esc(m.unit) + "</span></div>" +
+          return '<article class="metals-card">' +
+            '<div class="metals-card-top"><span class="metals-card-name">' + esc(m.name) +
+            '</span><span class="metals-card-unit">' + esc(m.unit) + "</span></div>" +
             '<div class="metals-card-value">' + num(m.now) + "</div>" +
-            '<div class="metals-card-meta">' + esc(m.now_source) + " · " + esc(m.now_time) + "</div>" +
-            '<div class="metals-card-basis">曲线口径：' + esc(m.basis) + "</div>" +
-            "</article>";
+            '<div class="metals-card-foot">' +
+              "<div>" + esc(m.now_source) + "</div>" +
+              "<div>" + esc(m.now_time) + " · " + esc(m.basis) + "</div>" +
+            "</div></article>";
         }).join("");
         document.getElementById("metalsStamp").textContent =
           "数据生成于 " + data.generated_at + "（UTC） · 每日由 GitHub Actions 更新";
@@ -152,11 +182,16 @@
 
       function renderTable(data) {
         document.getElementById("metalsHead").innerHTML =
-          "<th>指标</th><th>当前值</th>" +
-          data.windows.map(function (w) { return "<th>" + esc(w.label) + "</th>"; }).join("");
+          '<tr class="metals-thead-group"><th rowspan="2" class="metals-col-name">指标</th>' +
+          '<th rowspan="2" class="metals-col-now">当前值</th>' +
+          '<th colspan="' + data.windows.length + '" class="metals-col-group">区间变化</th></tr>' +
+          '<tr class="metals-thead-cols">' +
+          data.windows.map(function (w) { return "<th>" + esc(w.label) + "</th>"; }).join("") +
+          "</tr>";
         document.getElementById("metalsChanges").innerHTML = data.metrics.map(function (m) {
-          return "<tr><td>" + esc(m.name) + '<small>' + esc(m.unit) + "</small></td>" +
-            "<td>" + num(m.now) + "</td>" +
+          return '<tr><th scope="row" class="metals-col-name">' + esc(m.name) +
+            "<small>" + esc(m.unit) + "</small></th>" +
+            '<td class="metals-col-now">' + num(m.now) + "</td>" +
             data.windows.map(function (w) {
               return "<td>" + changeHtml(m.changes[w.key], m.change_unit) + "</td>";
             }).join("") + "</tr>";
@@ -165,9 +200,9 @@
 
       function renderMeta(data) {
         document.getElementById("sourceList").innerHTML = data.sources.map(function (s) {
-          return "<li><strong>" + esc(s.name) + "</strong> — " + esc(s.role) +
+          return "<li><strong>" + esc(s.name) + "</strong><span>" + esc(s.role) +
             ' · <a href="' + esc(s.url) + '" target="_blank" rel="noopener noreferrer">数据源</a>' +
-            " · " + esc(s.license) + "</li>";
+            " · " + esc(s.license) + "</span></li>";
         }).join("");
         document.getElementById("caveatList").innerHTML = data.caveats.map(function (c) {
           return "<li>" + esc(c) + "</li>";
@@ -177,11 +212,11 @@
 
       function renderTabs(data) {
         document.getElementById("metricTabs").innerHTML = data.metrics.map(function (m, i) {
-          return '<button type="button" class="metals-tab' + (i === state.metric ? " active" : "") +
+          return '<button type="button" class="metals-seg-btn' + (i === state.metric ? " active" : "") +
             '" data-metric="' + i + '">' + esc(m.name) + "</button>";
         }).join("");
         document.getElementById("windowTabs").innerHTML = data.windows.map(function (w) {
-          return '<button type="button" class="metals-tab' + (w.key === state.window ? " active" : "") +
+          return '<button type="button" class="metals-seg-btn' + (w.key === state.window ? " active" : "") +
             '" data-window="' + w.key + '">' + esc(w.label) + "</button>";
         }).join("");
       }
@@ -202,7 +237,7 @@
           return;
         }
 
-        var W = 900, H = 300, L = 62, R = 20, T = 18, B = 34;
+        var W = 900, H = 300, L = 66, R = 20, T = 18, B = 34;
         var values = points.map(function (p) { return p[1]; });
         var lo = Math.min.apply(null, values), hi = Math.max.apply(null, values);
         if (lo === hi) { lo -= 1; hi += 1; }
@@ -235,7 +270,7 @@
 
         var lastX = px(points.length - 1).toFixed(1), lastY = py(points[points.length - 1][1]).toFixed(1);
         svg.innerHTML =
-          '<path d="' + area + '" style="fill:var(--accent1);opacity:0.12" />' +
+          '<path d="' + area + '" style="fill:var(--accent1);opacity:0.10" />' +
           '<path d="' + line + '" style="fill:none;stroke:var(--accent1);stroke-width:2;stroke-linejoin:round" />' +
           grid + axis +
           '<circle cx="' + lastX + '" cy="' + lastY + '" r="4" style="fill:var(--accent1)" />';

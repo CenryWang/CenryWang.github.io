@@ -52,15 +52,19 @@ if (themeToggle) {
 
 // ===== 粒子背景 =====
 const canvas = document.getElementById("particles");
-const ctx = canvas.getContext("2d");
+// 404 / digest 等生成页没有粒子画布：不判空会在这些页面直接抛错，
+// 导致后面的 IntersectionObserver、页脚年份等逻辑全部中断。
+const ctx = canvas ? canvas.getContext("2d") : null;
 let particles = [];
 
 function resizeCanvas() {
+  if (!canvas) return;
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
 
 function initParticles() {
+  if (!canvas) return;
   particles = [];
   const count = Math.min(90, Math.floor(window.innerWidth / 16));
   for (let i = 0; i < count; i++) {
@@ -75,6 +79,7 @@ function initParticles() {
 }
 
 function drawParticles() {
+  if (!canvas || !ctx) return;
   // 标签页不可见时跳过绘制，但保留 rAF 以便切回来继续
   if (document.hidden) {
     if (!reduceMotion) requestAnimationFrame(drawParticles);
@@ -158,9 +163,11 @@ if (typedEl && !reduceMotion) {
 
 // ===== 顶部滚动进度条 =====
 window.addEventListener("scroll", () => {
+  const bar = document.getElementById("scrollProgress");
+  if (!bar) return;
   const h = document.documentElement;
   const scrolled = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
-  document.getElementById("scrollProgress").style.width = scrolled + "%";
+  bar.style.width = scrolled + "%";
 });
 
 // ===== 页脚年份自动更新（跨年不用手工改）=====

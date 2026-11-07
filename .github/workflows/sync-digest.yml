@@ -42,6 +42,11 @@ jobs:
             --feed "论文速递 · arXiv 机器人|https://rss.arxiv.org/rss/cs.RO|arXiv cs.RO 每日新论文，覆盖具身智能、人形机器人、自动驾驶。" \
             --feed "论文速递 · arXiv 多智能体|https://rss.arxiv.org/rss/cs.MA|arXiv cs.MA 每日新论文，覆盖智能体与多智能体系统。"
 
+      - name: Sync navigation
+        # 双保险：即使某次生成用了旧模板，也强制把导航拉回 nav.py 的唯一配置，
+        # 避免简报页出现「首页/简报/游戏」三件套而其它页是完整导航。
+        run: python3 scripts/sync_nav.py --only digest.html
+
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"

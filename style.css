@@ -614,6 +614,45 @@ body {
   }
 }
 
+/* 博客正文排版：build_blog.py 输出的是裸 HTML，若不显式给代码块与列表样式，
+   <pre> 里的 frontmatter 示例会挤成一团、中文与代码混排，看起来像乱码。 */
+.blog-post { line-height: 1.85; color: var(--text); }
+.blog-post h2 {
+  font-size: 1.22rem;
+  font-weight: 600;
+  margin: 32px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--glass-border);
+}
+/* 全站 .about-card p 是灰色 1.05rem；博客正文需要覆盖回正常对比度与字号 */
+.blog-post p { margin: 12px 0; color: var(--text); font-size: 0.95rem; }
+.blog-post li { color: var(--text); }
+.blog-post ul, .blog-post ol { margin: 12px 0 20px; padding-left: 22px; }
+.blog-post li { margin: 6px 0; }
+.blog-post a { color: var(--accent1); }
+.blog-post code {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Consolas, monospace);
+  font-size: 0.86em;
+  padding: 2px 6px;
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  background: rgba(127, 127, 127, 0.10);
+}
+.blog-post pre {
+  margin: 18px 0;
+  padding: 16px 18px;
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  background: rgba(127, 127, 127, 0.08);
+  overflow-x: auto;
+  font-size: 0.84rem;
+  line-height: 1.7;
+  white-space: pre;
+}
+.blog-post pre code { padding: 0; border: 0; background: none; font-size: inherit; }
+[data-theme="light"] .blog-post pre { background: rgba(0, 0, 0, 0.035); }
+[data-theme="light"] .blog-post code { background: rgba(0, 0, 0, 0.045); }
+
 /* 贵金属与宏观行情看板 */
 .metals-intro { line-height: 1.8; }
 .metals-gap { margin-top: 56px; }
@@ -736,3 +775,200 @@ body {
   .metals-card-value { font-size: 1.45rem; }
   .metals-chart-wrap, .metals-sources { padding: 14px; }
 }
+
+/* ---- 行情页排版 v2：统一层级、重做表格与选区 ---- */
+.metals-page { max-width: 1120px; margin: 0 auto; }
+.metals-head { margin-bottom: 20px; }
+.metals-kicker {
+  color: var(--accent1); font-size: 0.72rem; letter-spacing: 0.14em;
+  text-transform: uppercase; font-weight: 600; margin: 0 0 8px;
+}
+.metals-head .section-title { margin: 0 0 8px; }
+.metals-lead {
+  color: var(--muted); font-size: 0.9rem; line-height: 1.75;
+  max-width: 70ch; margin: 0;
+}
+.metals-block { margin-top: 64px; }
+.metals-intro { line-height: 1.8; }
+.metals-gap { margin-top: 56px; }
+
+.metals-risk {
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--accent3);
+  border-radius: 8px;
+  background: rgba(236, 72, 153, 0.05);
+  padding: 14px 18px;
+  margin: 24px 0 0;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  color: var(--text);
+}
+.metals-risk > strong { display: block; color: var(--accent3); font-size: 0.9rem; letter-spacing: 0.02em; }
+.metals-risk p { margin: 8px 0 0; }
+.metals-risk p strong { color: var(--text); }
+
+.metals-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 22px 0 10px;
+}
+.metals-card {
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  background: rgba(127, 127, 127, 0.035);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 148px;
+}
+.metals-card-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.metals-card-name { font-size: 0.9rem; font-weight: 500; color: var(--text); }
+.metals-card-unit { font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+.metals-card-value {
+  font-size: 1.75rem; line-height: 1.3; margin: 14px 0 auto;
+  color: var(--text); font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+}
+.metals-card-foot {
+  margin-top: 14px; padding-top: 12px;
+  border-top: 1px solid var(--glass-border);
+  color: var(--muted); font-size: 0.73rem; line-height: 1.6;
+}
+.metals-card-meta, .metals-card-basis { color: var(--muted); font-size: 0.76rem; line-height: 1.6; }
+.metals-stamp { color: var(--muted); font-size: 0.78rem; }
+
+/* 表格：双层表头、首列固定、数值徽标、行 hover */
+.metals-table-wrap {
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  background: rgba(127, 127, 127, 0.025);
+  overflow-x: auto;
+  padding: 0;
+}
+.metals-caption {
+  caption-side: top; text-align: left;
+  padding: 13px 18px; color: var(--muted); font-size: 0.78rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+.metals-table { width: 100%; min-width: 900px; border-collapse: collapse; font-size: 0.85rem; }
+.metals-table th, .metals-table td {
+  padding: 11px 14px; text-align: right; white-space: nowrap;
+  border-bottom: 1px solid var(--glass-border);
+  font-variant-numeric: tabular-nums;
+}
+.metals-thead-group th {
+  color: var(--muted); font-weight: 600; font-size: 0.75rem; letter-spacing: 0.06em;
+  background: rgba(127, 127, 127, 0.07);
+}
+.metals-thead-cols th {
+  color: var(--muted); font-weight: 500; font-size: 0.78rem;
+  background: rgba(127, 127, 127, 0.03);
+}
+.metals-col-group { text-align: center !important; }
+.metals-table .metals-col-name {
+  text-align: left !important;
+  position: sticky; left: 0; z-index: 1;
+  background: var(--bg);
+  min-width: 172px;
+  font-weight: 500;
+}
+.metals-thead-group .metals-col-name, .metals-thead-cols .metals-col-name { background: var(--bg); }
+.metals-col-now { font-weight: 600; color: var(--text); }
+.metals-table tbody tr:hover td, .metals-table tbody tr:hover th { background: rgba(34, 211, 238, 0.06); }
+.metals-table tbody tr:last-child td, .metals-table tbody tr:last-child th { border-bottom: none; }
+.metals-table small { display: block; color: var(--muted); font-size: 0.7rem; font-weight: 400; margin-top: 2px; }
+.metals-chg {
+  display: inline-block; min-width: 76px; text-align: right;
+  padding: 3px 8px; border-radius: 4px; font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+.metals-chg-up { color: #ef4444; background: rgba(239, 68, 68, 0.10); }
+.metals-chg-down { color: #22c55e; background: rgba(34, 197, 94, 0.10); }
+.metals-chg-flat { color: var(--muted); background: rgba(127, 127, 127, 0.08); }
+[data-theme="light"] .metals-chg-up { color: #c62828; background: rgba(198, 40, 40, 0.08); }
+[data-theme="light"] .metals-chg-down { color: #15803d; background: rgba(21, 128, 61, 0.08); }
+.metals-up { color: #ef4444; }
+.metals-down { color: #22c55e; }
+.metals-flat, .metals-na { color: var(--muted); }
+[data-theme="light"] .metals-up { color: #c62828; }
+[data-theme="light"] .metals-down { color: #15803d; }
+
+/* 选区：紧凑分段控件，取代药丸按钮 */
+.metals-chart-wrap {
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  background: rgba(127, 127, 127, 0.025);
+  padding: 20px 22px 16px;
+}
+.metals-controls {
+  display: flex; flex-direction: column; gap: 12px;
+  padding-bottom: 16px; border-bottom: 1px solid var(--glass-border);
+}
+.metals-control-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.metals-control-label { min-width: 32px; color: var(--muted); font-size: 0.75rem; letter-spacing: 0.05em; }
+.metals-seg { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.metals-seg-btn {
+  border: 1px solid var(--glass-border); background: transparent;
+  color: var(--muted); border-radius: 5px; padding: 6px 12px;
+  font-family: inherit; font-size: 0.8rem; cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.metals-seg-btn:hover { color: var(--text); border-color: var(--accent1); }
+.metals-seg-btn.active {
+  color: var(--text); border-color: var(--accent1);
+  background: rgba(34, 211, 238, 0.12);
+  box-shadow: inset 0 -2px 0 var(--accent1);
+}
+.metals-chart-meta { color: var(--muted); font-size: 0.82rem; margin: 16px 0 2px; }
+#metalsChart { width: 100%; height: auto; display: block; }
+.metals-note { color: var(--muted); font-size: 0.8rem; line-height: 1.75; margin-top: 12px; }
+
+/* 来源 / 免责 */
+.metals-info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.metals-info-card {
+  border: 1px solid var(--glass-border); border-radius: 10px;
+  background: rgba(127, 127, 127, 0.025); padding: 18px 20px;
+}
+.metals-info-card h3 { font-size: 0.92rem; font-weight: 600; margin: 0 0 12px; }
+.metals-info-card ul { padding-left: 18px; margin: 0; }
+.metals-info-card li { margin-bottom: 9px; font-size: 0.8rem; line-height: 1.7; color: var(--muted); }
+.metals-info-card li strong { display: block; color: var(--text); font-weight: 500; }
+.metals-info-card a { color: var(--accent1); }
+.metals-disclaimer-box { margin-top: 16px; border-left: 3px solid var(--accent3); padding: 2px 0 2px 16px; }
+.metals-disclaimer-box h3 { font-size: 0.92rem; font-weight: 600; margin: 0 0 8px; }
+.metals-disclaimer { color: var(--muted); font-size: 0.82rem; line-height: 1.8; margin: 0; }
+.metals-error { padding: 20px; border-radius: 10px; color: var(--accent3); line-height: 1.8; }
+
+@media (max-width: 900px) {
+  .metals-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .metals-info-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .metals-cards { grid-template-columns: 1fr; gap: 10px; }
+  .metals-card { min-height: 0; padding: 14px 16px; }
+  .metals-card-value { font-size: 1.5rem; margin: 10px 0 auto; }
+  .metals-block { margin-top: 46px; }
+  .metals-chart-wrap { padding: 14px; }
+  .metals-control-label { min-width: 100%; }
+  .metals-seg-btn { padding: 5px 9px; font-size: 0.75rem; }
+  .metals-table { min-width: 860px; }
+}
+
+/* 排版微调：徽标等宽、行高舒展、卡片脚注提亮 */
+.metals-chg { width: 92px; min-width: 92px; }
+.metals-card-foot { font-size: 0.78rem; }
+.metals-table tbody tr { height: 46px; }
+.metals-table td { padding-left: 10px; padding-right: 10px; }
+
+/* 内容面板用接近不透明的表面：亮色主题下极光光晕会透过半透明背景，
+   让表格和图表看起来像蒙了一层粉紫色，影响阅读。 */
+.metals-card, .metals-table-wrap, .metals-chart-wrap, .metals-info-card {
+  background: rgba(10, 10, 20, 0.82);
+}
+[data-theme=light] .metals-card,
+[data-theme=light] .metals-table-wrap,
+[data-theme=light] .metals-chart-wrap,
+[data-theme=light] .metals-info-card {
+  background: rgba(255, 255, 255, 0.92);
+}
+[data-theme=light] .metals-risk { color: #15171f; background: rgba(219, 39, 119, 0.055); }

@@ -19,7 +19,6 @@ PAGES = [
     "/tools.html",
     "/metals.html",
     "/data/metals.json",
-    "/now.html",
     "/blog/index.html",
     "/blog/welcome.html",
     "/digest.html",
@@ -29,10 +28,16 @@ PAGES = [
 ]
 
 # 已下线功能：一旦重新出现在页面里就说明有人误覆盖了文件
-FORBIDDEN = ["guestbook.html", "countapi.xyz", "giscus.app"]
+FORBIDDEN = ["guestbook.html", "countapi.xyz", "giscus.app", "now.html"]
 
 # 导航统一后，首页必须包含这些入口
-NAV_REQUIRED = ["tools.html", "digest.html", "metals.html", "now.html", "blog/index.html"]
+NAV_REQUIRED = ["tools.html", "digest.html", "metals.html", "blog/index.html"]
+
+# 这些页面都必须使用 nav.py 的同一套入口（按标签比对，忽略 ../ 等路径前缀差异）
+NAV_CHECK_PAGES = [
+    "/", "/tools.html", "/metals.html", "/blog/index.html",
+    "/blog/welcome.html", "/digest.html", "/404.html",
+]
 
 MAX_DIGEST_AGE_DAYS = 3
 MAX_METALS_AGE_DAYS = 3
@@ -51,6 +56,7 @@ def fetch(path):
 
 
 def main():
+    nav_labels = [None]  # 第一份导航作为基准，后面逐页比对
     for path in PAGES:
         try:
             text = fetch(path)
@@ -66,6 +72,19 @@ def main():
             for item in NAV_REQUIRED:
                 if item not in text:
                     errors.append("首页导航缺少 {}".format(item))
+
+        if path in NAV_CHECK_PAGES:
+            nav = re.search(r'<nav class="nav">(.*?)</nav>', text, re.S)
+            if not nav:
+                errors.append("{} 缺少站点导航".format(path))
+            else:
+                labels = tuple(re.findall(r"<li><a[^>]*>([^<]+)</a>", nav.group(1)))
+                if not labels:
+                    errors.append("{} 导航没有入口".format(path))
+                elif nav_labels[0] is None:
+                    nav_labels[0] = labels
+                elif labels != nav_labels[0]:
+                    errors.append("{} 导航与其它页不一致：{}".format(path, " / ".join(labels)))
 
         if path == "/digest.html":
             match = re.search(r"同步于\s*(\d{4}-\d{2}-\d{2})", text)
@@ -90,7 +109,7 @@ def main():
                     errors.append("行情数据已 {} 天未更新（{}）".format(age, data["generated_at"]))
                 else:
                     print("metals 生成于 {}，{} 天前".format(data["generated_at"], age))
-                if len(data.get("metrics", [])) < 5:
+                if len(data.get("metrics", [])) < 6:
                     errors.append("行情数据指标数量异常：{}".format(len(data.get("metrics", []))))
             except Exception as exc:
                 errors.append("行情数据格式或时间戳异常：{}".format(exc))

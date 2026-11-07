@@ -313,6 +313,7 @@ def main():
             wb_url = wb_xlsx_url()
         wb_rows, wb_url = wb_prices(wb_url, wb_raw)
         dgs10 = to_monthly(fred_series("DGS10"))
+        ffr = to_monthly(fred_series("DFF"))
         twd = to_monthly(fred_series("DTWEXBGS"))
     except Exception as exc:  # noqa: BLE001 - 任何源失败都必须让工作流变红
         print("FAIL：数据抓取或校验失败 —— {}".format(exc), file=sys.stderr)
@@ -345,10 +346,16 @@ def main():
             "利率不是价格，变化以基点 (bp) 表示，不使用百分比涨跌幅。",
         ),
         make_metric(
+            "ffr", "联邦基金有效利率", "%", "月末观测 · FRED DFF",
+            ffr[-1][1], "FRED DFF 最新月内观测", ffr[-1][0] + " (月内最后观测)",
+            ffr, "bp",
+            "美联储政策利率的市场执行值（有效利率），不是 FOMC 目标区间；利率变化以基点 (bp) 表示。",
+        ),
+        make_metric(
             "dxy", "美元指数（贸易加权）", "指数点", "月末观测 · FRED DTWEXBGS",
             twd[-1][1], "FRED DTWEXBGS 最新月内观测", twd[-1][0] + " (月内最后观测)",
             twd, "%",
-            "美联储广义贸易加权美元指数，**不是 ICE 的 DXY**；该序列自 2006 年起，30 年窗口无数据。",
+            "美联储广义贸易加权美元指数，不是 ICE 的 DXY；该序列自 2006 年起，30 年窗口无数据。",
         ),
     ]
 
@@ -360,12 +367,14 @@ def main():
             {"name": "gold-api.com", "role": "黄金 / 白银现货今日值", "url": "https://api.gold-api.com/", "license": "公开免费接口"},
             {"name": "World Bank Commodity Markets \"Pink Sheet\"", "role": "金银月度均价长周期序列", "url": wb_url, "license": "CC BY 4.0，需署名"},
             {"name": "FRED · DGS10", "role": "10 年期美债收益率", "url": FRED_CSV.format("DGS10"), "license": "美国政府公开数据"},
+            {"name": "FRED · DFF", "role": "联邦基金有效利率（政策利率）", "url": FRED_CSV.format("DFF"), "license": "美国政府公开数据"},
             {"name": "FRED · DTWEXBGS", "role": "广义贸易加权美元指数", "url": FRED_CSV.format("DTWEXBGS"), "license": "美国政府公开数据"},
         ],
         "caveats": [
             "所有指标统一为月度序列（最近 30 年）；1 月 / 3 月等短周期为月度参考值，不是日频收盘涨跌幅。",
             "世界银行月度均价每月更新一次，页面显示的「今日值」为另一来源的现货价，二者口径不同、不混算。",
             "美元指数采用美联储广义贸易加权口径，非 ICE DXY；该序列始于 2006 年，30 年数据不可用。",
+            "联邦基金有效利率是政策利率的市场执行值，并非 FOMC 目标区间；与 10 年期美债收益率同为利率，变化均以 bp 表示。",
             "金银比在同一时点、同一口径内由金价除以银价得到。",
             "公开来源的数据可能延迟、修订或存在误差，不保证实时、准确、完整，也不构成任何交易报价。",
             "历史涨跌幅与走势曲线仅描述过去，不代表未来表现。",

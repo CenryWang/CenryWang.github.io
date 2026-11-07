@@ -4,20 +4,19 @@
 
 ## 目录结构
 
-- `index.html` — 首页（关于 / 技能 / 作品 / 推荐 / 工具 / 简报 / 现在 / 博客 / 联系）
+- `index.html` — 首页（关于 / 技能 / 作品 / 推荐 / 工具 / 简报 / 行情 / 博客 / 联系）
 - `style.css` — 全站样式（含亮/暗双主题变量）
 - `script.js` — 全站交互（粒子背景 / 打字机 / 滚动进度条 / 主题切换 / 减少动态效果）
 - `merge-quest.html` — **合成大冒险 · Merge Quest** 游戏页，单文件自包含，开箱即玩
-- `now.html` — **现在在做什么** 页面（nownownow 风格，记录当前重心，文案自行更新）
 - `tools.html` — **工具严选**：按场景分类聚合常用工具与 Agent Skills，带纯前端搜索过滤，零第三方依赖
-- `metals.html` — **贵金属与宏观行情**：黄金 / 白银 / 金银比 / 10 年期美债 / 贸易加权美元指数，今日值 + 区间变化 + 30 年月度回溯曲线
+- `metals.html` — **贵金属与宏观行情**：黄金 / 白银 / 金银比 / 10 年期美债 / 联邦基金有效利率 / 贸易加权美元指数六个指标，今日值 + 区间变化 + 30 年月度回溯曲线
 - `data/metals.json` — 行情数据（`metals` 工作流每日自动生成，**勿手改**）
 - `digest.html` — **每日简报**（RSS 聚合日报，Actions 每日自动生成，**勿手改、勿从本地覆盖**）
-- `404.html` — 自定义 404 页（GitHub Pages 会自动使用它；承接已下线的 hot / robotics / 留言墙 旧链接）
+- `404.html` — 自定义 404 页（GitHub Pages 会自动使用它；承接已下线的 hot / robotics / 留言墙 / 现在 旧链接）
 - `blog/` — **博客**：`posts/*.md` 是文章源（Markdown + frontmatter），`index.html` 与 `<slug>.html` 由 `scripts/build_blog.py` 构建生成（**勿手改生成的 html**）
 - `scripts/` — 页面生成与运维脚本：
   - `nav.py` — **全站导航的唯一配置源**
-  - `sync_nav.py` — 把导航同步到所有手写页面
+  - `sync_nav.py` — 把导航同步到所有页面（含 bot 生成的 digest.html）
   - `build_digest.py` — 每日简报生成
   - `build_blog.py` — 博客构建
   - `build_metals.py` — 贵金属与宏观行情数据构建（纯标准库）
@@ -63,15 +62,15 @@
 
 ## 导航统一
 
-所有页面的导航栏都由 `scripts/nav.py` 一处定义，共 10 个入口。改动流程：
+所有页面的导航栏都由 `scripts/nav.py` 一处定义，共 9 个入口。改动流程：
 
 ```bash
 # 1. 改 scripts/nav.py 里的 HOME_LINKS / SUB_LINKS
-python scripts/sync_nav.py      # 同步到 index.html / now.html / tools.html / 404.html
+python scripts/sync_nav.py      # 同步全站（含 digest.html）；--only <文件> 可只同步一个
 python scripts/build_blog.py    # 重新生成 blog/*.html
 ```
 
-`build_blog.py` 与 `build_digest.py` 会直接 import `nav.py`，所以博客页和每日自动生成的简报页也使用同一套导航，不会被 bot 覆盖回旧版本。404 与简报页使用 `/` 绝对路径（任意 URL 下都正确），且不输出明暗切换按钮（它们有自己的内联脚本，不加载 `script.js`）。
+`build_blog.py` 与 `build_digest.py` 会直接 import `nav.py`，所以博客页和每日自动生成的简报页也使用同一套导航，不会被 bot 覆盖回旧版本；`sync-digest.yml` 在生成简报后还会再跑一次 `sync_nav.py --only digest.html` 作为双保险。404 与简报页使用 `/` 绝对路径（任意 URL 下都正确），且不输出明暗切换按钮（它们有自己的内联脚本，不加载 `script.js`）。
 
 新增/下线栏目时，记得同步更新 `scripts/check_site_health.py` 里的 `NAV_REQUIRED` 与 `FORBIDDEN` 列表。
 
@@ -79,11 +78,11 @@ python scripts/build_blog.py    # 重新生成 blog/*.html
 
 `scripts/check_site_health.py`（纯标准库）每天由 `site-health` 工作流调用，检查：
 
-- 11 个资源（含行情页、行情数据与 `script.js`）是否全部返回 200
+- 10 个资源（含行情页、行情数据与 `script.js`）是否全部返回 200
 - 简报页头的「同步于 YYYY-MM-DD」是否在 3 天内
 - `data/metals.json` 的 `generated_at` 是否在 3 天内、指标数量是否正常
 - 页面上是否还残留已下线功能的引用（留言页 / countapi 点赞 / giscus 脚本）
-- 首页导航是否包含统一的 5 个独立页入口
+- 首页导航是否包含统一的 4 个独立页入口，且 7 个页面的导航标签序列完全一致（防止简报页回退）
 
 **任一项失败都会以非零码退出，让 Actions 变红**，不做静默降级。本地手动跑：
 
@@ -95,7 +94,7 @@ python scripts/check_site_health.py
 
 `metals.html` 读取同仓库的 `data/metals.json`，每天北京时间 07:40 由 `metals` 工作流重新生成。页面纯静态、零前端库、零 API 密钥、运行时不请求任何第三方接口。
 
-**指标**：黄金、白银、金银比、10 年期美债收益率、美元指数（美联储广义贸易加权口径，**不是 ICE 的 DXY**）。
+**指标（6 个）**：黄金、白银、金银比、10 年期美债收益率、联邦基金有效利率（FRED DFF，政策利率的市场执行值，非 FOMC 目标区间）、美元指数（美联储广义贸易加权口径，**不是 ICE 的 DXY**）。
 **时间维度**：今日值 + 1月 / 3月 / 1年 / 3年 / 10年 / 30年 的区间变化，另有可切换指标与窗口的 30 年月度回溯曲线。
 
 数据源全部免费、无需注册或 API key：
@@ -105,12 +104,13 @@ python scripts/check_site_health.py
 | `gold-api.com` | XAU / XAG 现货「今日值」 | 公开免费接口 |
 | World Bank Commodity Markets "Pink Sheet" | 金银月度均价（1960 起）长周期序列 | CC BY 4.0，页面已署名 |
 | FRED `DGS10` | 10 年期美债收益率 | 美国政府公开数据 |
+| FRED `DFF` | 联邦基金有效利率（政策利率） | 美国政府公开数据 |
 | FRED `DTWEXBGS` | 广义贸易加权美元指数（2006 起） | 美国政府公开数据 |
 
 几点口径约定，避免数字被误读：
 
 - 所有指标统一降采样为月度序列（保留最近 30 年），**涨跌幅与曲线基于同一条序列**；卡片上的「今日值」是现货 / 最新观测，不与历史月均价混算。
-- 10 年期美债是利率，变化以**基点 (bp)** 表示，不套用百分比涨跌幅。
+- 10 年期美债与联邦基金有效利率都是利率，变化以**基点 (bp)** 表示，不套用百分比涨跌幅。
 - 美元指数用贸易加权口径，且 2006 年才有数据，30 年窗口如实留「—」，不拼接不同基期的旧序列。
 - 世界银行 xlsx 的下载链接**每月轮换文档 ID**，`build_metals.py` 从官方页面动态解析当前链接；短周期（1月 / 3月）是月度均价参考值，不是日频收盘涨跌幅。
 

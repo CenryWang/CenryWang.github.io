@@ -32,7 +32,6 @@ HOME_LINKS = [
     ("工具", "tools.html"),
     ("简报", "digest.html"),
     ("行情", "metals.html"),
-    ("现在", "now.html"),
     ("博客", "blog/index.html"),
     ("联系", "#contact"),
 ]
@@ -45,7 +44,6 @@ SUB_LINKS = [
     ("工具", "tools.html"),
     ("简报", "digest.html"),
     ("行情", "metals.html"),
-    ("现在", "now.html"),
     ("博客", "blog/index.html"),
     ("联系", "index.html#contact"),
 ]
