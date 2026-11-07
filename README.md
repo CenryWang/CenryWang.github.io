@@ -4,18 +4,23 @@
 
 ## 目录结构
 
-- `index.html` — 首页（关于 / 技能 / 作品 / 推荐 / 工具 / 简报 / 现在 / 博客 / 留言 / 联系）
-- `style.css` — 首页样式（含亮/暗双主题变量）
-- `script.js` — 首页交互（粒子背景 / 打字机 / 滚动进度条 / 主题切换）
+- `index.html` — 首页（关于 / 技能 / 作品 / 推荐 / 工具 / 简报 / 现在 / 博客 / 联系）
+- `style.css` — 全站样式（含亮/暗双主题变量）
+- `script.js` — 全站交互（粒子背景 / 打字机 / 滚动进度条 / 主题切换 / 减少动态效果）
 - `merge-quest.html` — **合成大冒险 · Merge Quest** 游戏页，单文件自包含，开箱即玩
 - `now.html` — **现在在做什么** 页面（nownownow 风格，记录当前重心，文案自行更新）
-- `guestbook.html` — **访客留言墙**（基于 giscus / GitHub Discussions，需先完成下方配置）
-- `tools.html` — **工具严选**：分类展示精选工具（AI 助手 / 开发 / Windows 效率 / 学习科研 / 设计素材 / 我做的），每张卡片带 👍 点赞（countapi.xyz 计数，localStorage 防重复）
+- `tools.html` — **工具严选**：按场景分类聚合常用工具与 Agent Skills，带纯前端搜索过滤，零第三方依赖
 - `digest.html` — **每日简报**（RSS 聚合日报，Actions 每日自动生成，**勿手改、勿从本地覆盖**）
-- `404.html` — 自定义 404 页（GitHub Pages 会自动使用它；承接已下线的 hot / robotics 旧链接）
+- `404.html` — 自定义 404 页（GitHub Pages 会自动使用它；承接已下线的 hot / robotics / 留言墙 旧链接）
 - `blog/` — **博客**：`posts/*.md` 是文章源（Markdown + frontmatter），`index.html` 与 `<slug>.html` 由 `scripts/build_blog.py` 构建生成（**勿手改生成的 html**）
-- `scripts/` — 页面生成脚本（`build_digest.py` 简报、`build_blog.py` 博客）
-- `.github/workflows/` — 定时任务（`sync-digest` 每日同步简报、`keepalive` 防止定时任务被自动禁用）
+- `scripts/` — 页面生成与运维脚本：
+  - `nav.py` — **全站导航的唯一配置源**
+  - `sync_nav.py` — 把导航同步到所有手写页面
+  - `build_digest.py` — 每日简报生成
+  - `build_blog.py` — 博客构建
+  - `check_site_health.py` — 线上站点健康自检
+  - `trendradar_to_rss.py` / `trr_crawler.py` — 服务器端 TrendRadar 适配器与爬虫
+- `.github/workflows/` — 定时任务（`sync-digest` 每日同步简报、`site-health` 每日自检、`keepalive` 防止定时任务被自动禁用）
 - `.nojekyll` — 禁用 GitHub Pages 的 Jekyll 处理（本站纯静态；防止生成页内容被 Liquid 误解析）
 
 ## 作品列表
@@ -42,14 +47,45 @@
 - 数据来自 garss fork（<https://github.com/CenryWang/garss>，每天北京时间 06:00 抓取 RSS 生成日报并发邮件），本仓库 `sync-digest` 工作流每天 07:30 把它渲染成站点风格的页面
 - 简报同时合并 **AIHOT**（数字生命卡兹克的 AI 资讯聚合站）作为附加源：工作流额外抓取 `https://aihot.news/feed.xml`，取近 3 天精选（上限 20 条）渲染为「AIHOT 精选 · 数字生命卡兹克」区块，标注来源与版权。AIHOT 抓取失败或最新条目超过 7 天（疑似停更）时自动跳过该区块，不影响 garss 主源
 - 简报还合并 **热搜雷达 · TrendRadar**：TrendRadar 跑在你的轻量服务器上（聚合微博/知乎/抖音等热榜，存进 SQLite），由 `scripts/trendradar_to_rss.py` 适配器把最新 SQLite 转成 RSS，GA 再当作第二个附加源抓进来，渲染为「热搜雷达 · TrendRadar」区块。服务器不可达或抓取失败时该区块自动跳过，不影响主源
+- 另合并 **arXiv cs.AI / cs.RO / cs.MA** 三路每日新论文（周六周日 arXiv 不发布更新，届时区块缺席属正常）
 - 想调整日报订阅改 garss fork 的 `EditREADME.md`
-- 用自带 `GITHUB_TOKEN` 即可跑；**仅当接入 TrendRadar 时**需要额外配置仓库密钥 `TRENDRADAR_RSS_URL`（值为你服务器上适配器的带 token 访问地址，如 `https://你的域名:8088/rss.xml?token=xxx`）。不接 TrendRadar 时忽略此密钥，工作流照常运行
+- 用自带 `GITHUB_TOKEN` 即可跑；**仅当接入 TrendRadar 时**需要额外配置仓库密钥 `TRENDRADAR_RSS_URL`（值为服务器上适配器的带 token 访问地址）。更换服务器后记得同步更新这个密钥
 - **源数据过期会让工作流变红**：`build_digest.py` 会解析源 README 的「生成时间」，超过 3 天或非预期格式就直接退出（而不是把旧日报再发一遍）。上游停更时你看 Actions 是红的，而不是页面上看到一份一个月前的日报却毫无察觉
 
 ## 定时任务维护
 
 - **60 天无提交会自动禁用 schedule**（GitHub 官方行为，只发一封邮件）。仓库现在靠每日简报的自动提交维持活跃；`keepalive` 工作流每月 1 号检查一次，只有最近提交已超过 45 天才补一个空 commit。正常运行时永远不会触发，不污染历史
 - 站点内容由 bot 自动提交，**本地副本经常落后于远端**。从本地同步文件到推送目录时，`digest.html` 这类生成物要以远端为准（否则会把最新内容覆盖成旧版）
+- `site-health` 每天北京时间 07:50 检查线上页面（见下节），不产生提交
+
+## 导航统一
+
+所有页面的导航栏都由 `scripts/nav.py` 一处定义，共 9 个入口。改动流程：
+
+```bash
+# 1. 改 scripts/nav.py 里的 HOME_LINKS / SUB_LINKS
+python scripts/sync_nav.py      # 同步到 index.html / now.html / tools.html / 404.html
+python scripts/build_blog.py    # 重新生成 blog/*.html
+```
+
+`build_blog.py` 与 `build_digest.py` 会直接 import `nav.py`，所以博客页和每日自动生成的简报页也使用同一套导航，不会被 bot 覆盖回旧版本。404 与简报页使用 `/` 绝对路径（任意 URL 下都正确），且不输出明暗切换按钮（它们有自己的内联脚本，不加载 `script.js`）。
+
+新增/下线栏目时，记得同步更新 `scripts/check_site_health.py` 里的 `NAV_REQUIRED` 与 `FORBIDDEN` 列表。
+
+## 站点健康自检
+
+`scripts/check_site_health.py`（纯标准库）每天由 `site-health` 工作流调用，检查：
+
+- 8 个主要页面 + `script.js` 是否全部返回 200
+- 简报页头的「同步于 YYYY-MM-DD」是否在 3 天内
+- 页面上是否还残留已下线功能的引用（留言页 / countapi 点赞 / giscus 脚本）
+- 首页导航是否包含统一的 4 个独立页入口
+
+**任一项失败都会以非零码退出，让 Actions 变红**，不做静默降级。本地手动跑：
+
+```bash
+python scripts/check_site_health.py
+```
 
 ## 访问量统计
 
@@ -57,18 +93,9 @@
 
 ## 主题切换（亮 / 暗）
 
-首页、`now.html`、`guestbook.html` 右上角有明暗切换按钮，选择写入 `localStorage`，刷新保持；首屏在 `<head>` 内联脚本提前应用，避免闪烁。亮色主题通过 `style.css` 的 `[data-theme="light"]` 变量覆盖实现，不影响默认暗色科技风。
+各页面右上角有明暗切换按钮，选择写入 `localStorage`，刷新保持；首屏在 `<head>` 内联脚本提前应用，避免闪烁。亮色主题通过 `style.css` 的 `[data-theme="light"]` 变量覆盖实现，不影响默认暗色科技风。
 
-## 访客留言（giscus）
-
-`guestbook.html` 用 [giscus](https://giscus.app)（基于 GitHub Discussions，免费、无需额外注册）承载留言。首次使用前需在 GitHub 侧完成一次性配置，然后把 `guestbook.html` 里的两处占位替换掉：
-
-1. 仓库 `CenryWang/CenryWang.github.io` 必须是 **Public**，并在仓库 `Settings → General → Features` 开启 **Discussions**
-2. 安装 giscus App：<https://github.com/apps/giscus>（授权该仓库）
-3. 打开 <https://giscus.app>，填入仓库、选好分类（如「留言」），复制生成的 `data-repo-id` 与 `data-category-id`
-4. 把 `guestbook.html` 中 `data-repo-id="REPO_ID"` 与 `data-category-id="CATEGORY_ID"` 两处占位替换成真实值即可
-
-主题切换会自动通过 `postMessage` 同步给 giscus 评论区（暗色↔亮色）。
+`script.js` 同时尊重系统的 `prefers-reduced-motion`：开启后关闭 CSS 动画之外的粒子循环、打字机与光标光晕，标签页不可见时也会跳过粒子绘制。
 
 ## 博客（内容管线）
 
@@ -94,9 +121,15 @@
    python scripts/build_blog.py
    ```
 
-3. 生成的 `blog/*.html` 复用首页 `style.css` 与 `script.js`（粒子背景、明暗主题、滚动揭示自动带上）。文章页已预留 giscus 评论位，可后续接入。
+3. 生成的 `blog/*.html` 复用首页 `style.css` 与 `script.js`（粒子背景、明暗主题、滚动揭示自动带上）。
 
 > 构建产物是生成文件，提交前重新跑一遍脚本即可；不要手工改 `blog/index.html` 与 `<slug>.html`，改 `posts/*.md` 源文件。
+
+## 已下线的功能
+
+- 热榜（hot board）、机器人文献（robotics）：旧链接统一由 `404.html` 承接
+- 访客留言墙（`guestbook.html` / giscus）：2026-11-07 整块移除，包括导航入口、`script.js` 里的 giscus 消息同步与文章页评论位
+- 工具页点赞（countapi.xyz）：第三方计数服务已不可用，改为纯严选清单 + 本地搜索过滤，不再依赖任何外部计数 API
 
 ## 联系方式（首页已配置）
 

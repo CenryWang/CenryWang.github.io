@@ -20,6 +20,8 @@ import os
 import re
 import ssl
 import sys
+
+from nav import render as render_nav
 import urllib.request
 import xml.etree.ElementTree as ET
 from email.utils import parsedate_to_datetime
@@ -95,14 +97,7 @@ PAGE = """<!DOCTYPE html>
     <span class="blob blob-3"></span>
   </div>
 
-  <nav class="nav">
-    <a href="/" class="nav-logo">Cenry</a>
-    <ul class="nav-links">
-      <li><a href="/">首页</a></li>
-      <li><a href="digest.html">简报</a></li>
-      <li><a href="merge-quest.html">游戏</a></li>
-    </ul>
-  </nav>
+__NAV__
 
   <section class="section digest-shell">
     <h2 class="section-title">每日简报</h2>
@@ -388,7 +383,8 @@ def main():
 
     now = datetime.datetime.now(tz).strftime("%Y-%m-%d %H:%M")
     page = (
-        PAGE.replace("__SRC_TIME__", src_time.strftime("%Y-%m-%d %H:%M"))
+        PAGE.replace("__NAV__", render_nav("/", logo="/", theme=False))
+        .replace("__SRC_TIME__", src_time.strftime("%Y-%m-%d %H:%M"))
         .replace("__TIME__", now)
         .replace("__YEAR__", str(now[:4]))
         .replace("__FEED_NOTES__", feed_notes)

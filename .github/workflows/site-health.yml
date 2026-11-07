@@ -1,0 +1,23 @@
+name: Site health check
+
+on:
+  schedule:
+    # UTC 23:50 = 北京时间 07:50，在每日简报同步（07:30）之后
+    - cron: '50 23 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+# 只检查已上线的页面，因此不挂 push 触发：
+# push 时 Pages 尚未部署，检查线上会拿到旧版本并误报。
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout homepage repo
+        uses: actions/checkout@v7
+
+      - name: Check live site
+        # 失败即让本工作流变红（页面 404 / 简报过期 / 已下线功能被恢复）
+        run: python3 scripts/check_site_health.py

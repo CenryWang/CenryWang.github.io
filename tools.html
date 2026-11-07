@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cenry · 工具严选</title>
-  <meta name="description" content="CenryWang 精选的好用工具：AI 助手、开发工具、Windows 效率、学习科研、设计素材" />
+  <meta name="description" content="CenryWang 精选的好用工具：AI 助手、开发工具、Windows 效率、学习科研、设计绘图与 Agent Skills" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2306060d'/%3E%3Ctext x='32' y='46' font-family='Segoe UI,Arial,sans-serif' font-size='40' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="style.css" />
   <script>
@@ -29,12 +29,13 @@
     <a href="index.html" class="nav-logo">Cenry</a>
     <ul class="nav-links">
       <li><a href="index.html#about">关于</a></li>
+      <li><a href="index.html#skills">技能</a></li>
       <li><a href="index.html#projects">作品</a></li>
+      <li><a href="index.html#recommend">推荐</a></li>
       <li><a href="tools.html">工具</a></li>
-      <li><a href="blog/index.html">博客</a></li>
       <li><a href="digest.html">简报</a></li>
       <li><a href="now.html">现在</a></li>
-      <li><a href="guestbook.html">留言</a></li>
+      <li><a href="blog/index.html">博客</a></li>
       <li><a href="index.html#contact">联系</a></li>
     </ul>
     <button id="themeToggle" class="theme-toggle" type="button" aria-label="切换明暗主题">
@@ -54,8 +55,14 @@
   <section class="section">
     <h2 class="section-title reveal">精选清单</h2>
     <p class="about-card glass reveal" style="color:var(--muted)">
-      下面是我日常在用的工具，按场景分类。每张卡片右下角的 <span style="color:var(--accent3)">♡</span> 可以点赞——数据用公开计数服务统计，仅记录次数、不收集任何个人信息。
+      下面是我日常在用的工具与资源，按场景分类。纯手工整理、没有排名，直接搜索名称或用途即可定位。
     </p>
+
+    <div class="tool-search-wrap glass reveal">
+      <input id="toolSearch" class="tool-search" type="search" placeholder="搜索工具、分类或用途…" aria-label="搜索工具" autocomplete="off" />
+      <span class="tool-result" id="toolResult">共 33 个</span>
+    </div>
+    <p class="tool-empty" id="toolEmpty" hidden>没有匹配的工具，换个关键词试试。</p>
 
     <!-- AI 助手 -->
     <h3 class="tools-cat reveal">AI 助手</h3>
@@ -63,32 +70,37 @@
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🤖</span><div><h3>ChatGPT</h3><span class="tool-cat">AI 助手</span></div></div>
         <p>OpenAI 通用对话与写作助手，生态最成熟，插件与记忆能力强。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://chat.openai.com" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="chatgpt" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://chat.openai.com" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🧠</span><div><h3>Claude</h3><span class="tool-cat">AI 助手</span></div></div>
         <p>Anthropic 出品，长文本理解与代码能力突出，适合读论文、改大段代码。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://claude.ai" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="claude" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://claude.ai" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🐋</span><div><h3>DeepSeek</h3><span class="tool-cat">AI 助手</span></div></div>
         <p>国产开源大模型，推理与代码表现强，API 性价比高。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://www.deepseek.com" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="deepseek" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://www.deepseek.com" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🌊</span><div><h3>Kimi</h3><span class="tool-cat">AI 助手</span></div></div>
-        <p>长上下文、中文长文档处理友好，上传 PDF / 网页 summaries 很顺手。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://kimi.moonshot.cn" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="kimi" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <p>长上下文、中文长文档处理友好，上传 PDF / 网页做摘要很顺手。</p>
+        <div class="tool-foot"><a class="tool-link" href="https://kimi.moonshot.cn" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🔎</span><div><h3>Perplexity</h3><span class="tool-cat">AI 助手</span></div></div>
         <p>联网问答，答案带引用来源，适合做调研与事实核查。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://www.perplexity.ai" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="perplexity" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://www.perplexity.ai" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">⌨️</span><div><h3>Cursor</h3><span class="tool-cat">AI 编辑器</span></div></div>
         <p>AI 原生代码编辑器，Tab 补全与多文件改写体验优秀。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://cursor.com" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="cursor" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://cursor.com" target="_blank" rel="noopener">访问 ↗</a></div>
+      </article>
+      <article class="tool glass reveal">
+        <div class="tool-head"><span class="tool-emoji">🍒</span><div><h3>Cherry Studio</h3><span class="tool-cat">AI 客户端</span></div></div>
+        <p>开源多模型 AI 桌面工作台：一问多答对比模型、知识库、助手、Agent / Skills 与 MCP，数据留在本地。</p>
+        <div class="tool-foot"><a class="tool-link" href="https://cherry-ai.com" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
     </div>
 
@@ -98,22 +110,27 @@
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🐙</span><div><h3>GitHub</h3><span class="tool-cat">代码托管</span></div></div>
         <p>代码托管与协作中枢，也是本站的部署与自动化底座。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://github.com" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="github" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://github.com" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">💻</span><div><h3>VS Code</h3><span class="tool-cat">编辑器</span></div></div>
         <p>主流轻量代码编辑器，插件生态极其丰富，几乎万能。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://code.visualstudio.com" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="vscode" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://code.visualstudio.com" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🦀</span><div><h3>Tauri</h3><span class="tool-cat">桌面框架</span></div></div>
         <p>Rust 构建跨平台桌面应用，体积小、性能好，我的 AIToolsChain 就基于它。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://tauri.app" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="tauri" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://tauri.app" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🐳</span><div><h3>Docker</h3><span class="tool-cat">容器</span></div></div>
         <p>容器化开发与环境一致部署，服务器上的 TrendRadar 也跑在容器友好的环境里。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://www.docker.com" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="docker" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://www.docker.com" target="_blank" rel="noopener">访问 ↗</a></div>
+      </article>
+      <article class="tool glass reveal">
+        <div class="tool-head"><span class="tool-emoji">🔀</span><div><h3>CC Switch</h3><span class="tool-cat">配置管理</span></div></div>
+        <p>一个桌面应用统一管理 Claude Code / Codex / Gemini CLI 等工具的供应商配置、MCP 与 Skills，切换不用手改 JSON。Tauri 2 + Rust。</p>
+        <div class="tool-foot"><a class="tool-link" href="https://github.com/farion1231/cc-switch" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
     </div>
 
@@ -123,22 +140,27 @@
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🛠️</span><div><h3>PowerToys</h3><span class="tool-cat">效率套件</span></div></div>
         <p>微软官方效率套件：FancyZones 窗口管理、键盘重映射、取色器等。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://learn.microsoft.com/windows/powertoys" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="powertoys" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://learn.microsoft.com/windows/powertoys" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🔍</span><div><h3>Everything</h3><span class="tool-cat">文件搜索</span></div></div>
         <p>极速本地文件名搜索，输入即出结果，秒级定位文件。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://www.voidtools.com" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="everything" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://www.voidtools.com" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">📝</span><div><h3>Obsidian</h3><span class="tool-cat">笔记</span></div></div>
         <p>本地优先的双向链接笔记，Markdown 存储，知识库可完全自控。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://obsidian.md" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="obsidian" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://obsidian.md" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🚀</span><div><h3>uTools</h3><span class="tool-cat">启动器</span></div></div>
         <p>插件化快速启动与工具箱，一步直达计算、翻译、剪贴板等小工具。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://u.tools" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="utools" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://u.tools" target="_blank" rel="noopener">访问 ↗</a></div>
+      </article>
+      <article class="tool glass reveal">
+        <div class="tool-head"><span class="tool-emoji">✨</span><div><h3>Magpie</h3><span class="tool-cat">窗口缩放</span></div></div>
+        <p>把任意窗口放大到全屏并做超分，内置 Anime4K、FSR、Lanczos 等算法；老游戏和低分辨率窗口的救星。</p>
+        <div class="tool-foot"><a class="tool-link" href="https://github.com/Blinue/Magpie" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
     </div>
 
@@ -148,42 +170,82 @@
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">📄</span><div><h3>arXiv</h3><span class="tool-cat">论文预印本</span></div></div>
         <p>论文预印本平台，本站每日简报也在抓它的 cs.AI / cs.RO / cs.MA。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://arxiv.org" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="arxiv" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://arxiv.org" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">📚</span><div><h3>Zotero</h3><span class="tool-cat">文献管理</span></div></div>
         <p>文献管理与引用工具，浏览器一键抓取、自动生成参考文献。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://www.zotero.org" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="zotero" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://www.zotero.org" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🕸️</span><div><h3>Connected Papers</h3><span class="tool-cat">论文脉络</span></div></div>
         <p>可视化论文关联网络，快速摸清一个方向的来龙去脉。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://www.connectedpapers.com" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="connectedpapers" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://www.connectedpapers.com" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🎓</span><div><h3>Google Scholar</h3><span class="tool-cat">学术检索</span></div></div>
         <p>学术检索与引用追踪，关注作者与论文的被引动态。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://scholar.google.com" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="scholar" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://scholar.google.com" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
     </div>
 
-    <!-- 设计素材 -->
-    <h3 class="tools-cat reveal">设计素材</h3>
+    <!-- 设计与绘图 -->
+    <h3 class="tools-cat reveal">设计与绘图</h3>
     <div class="tools-grid">
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🎨</span><div><h3>Figma</h3><span class="tool-cat">界面设计</span></div></div>
         <p>协作式界面设计，浏览器即可用，组件与自动布局高效。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://www.figma.com" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="figma" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://www.figma.com" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">✏️</span><div><h3>Excalidraw</h3><span class="tool-cat">手绘白板</span></div></div>
-        <p>手绘风图表/白板，画架构图、流程图又轻又快。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://excalidraw.com" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="excalidraw" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <p>手绘风图表 / 白板，画架构图、流程图又轻又快。</p>
+        <div class="tool-foot"><a class="tool-link" href="https://excalidraw.com" target="_blank" rel="noopener">访问 ↗</a></div>
+      </article>
+      <article class="tool glass reveal">
+        <div class="tool-head"><span class="tool-emoji">📐</span><div><h3>draw.io</h3><span class="tool-cat">流程图</span></div></div>
+        <p>免费流程图 / 架构图工具（diagrams.net），可存本地、GitHub 或网盘，也有离线桌面版。</p>
+        <div class="tool-foot"><a class="tool-link" href="https://app.diagrams.net/" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🖼️</span><div><h3>remove.bg</h3><span class="tool-cat">抠图</span></div></div>
         <p>一键去背景，做配图、头像、素材处理极方便。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://www.remove.bg" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="removebg" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://www.remove.bg" target="_blank" rel="noopener">访问 ↗</a></div>
+      </article>
+    </div>
+
+    <!-- Agent Skills -->
+    <h3 class="tools-cat reveal">Agent Skills</h3>
+    <div class="tools-grid">
+      <article class="tool glass reveal">
+        <div class="tool-head"><span class="tool-emoji">🧩</span><div><h3>anthropics/skills</h3><span class="tool-cat">官方示例库</span></div></div>
+        <p>Anthropic 官方 Agent Skills 仓库：SKILL.md 范例、文档处理技能（docx / pdf / pptx / xlsx）与规范实现。</p>
+        <div class="tool-foot"><a class="tool-link" href="https://github.com/anthropics/skills" target="_blank" rel="noopener">访问 ↗</a></div>
+      </article>
+      <article class="tool glass reveal">
+        <div class="tool-head"><span class="tool-emoji">📖</span><div><h3>Agent Skills 规范</h3><span class="tool-cat">开放规范</span></div></div>
+        <p>SKILL.md 格式与跨客户端兼容说明，自己写 skill 前先看这份规范。</p>
+        <div class="tool-foot"><a class="tool-link" href="https://agentskills.io" target="_blank" rel="noopener">访问 ↗</a></div>
+      </article>
+      <article class="tool glass reveal">
+        <div class="tool-head"><span class="tool-emoji">⚡</span><div><h3>obra/superpowers</h3><span class="tool-cat">工程方法论</span></div></div>
+        <p>给编码 Agent 套上资深工程师工作流：TDD、系统化调试、代码评审、子代理与分支收尾。</p>
+        <div class="tool-foot"><a class="tool-link" href="https://github.com/obra/superpowers" target="_blank" rel="noopener">访问 ↗</a></div>
+      </article>
+      <article class="tool glass reveal">
+        <div class="tool-head"><span class="tool-emoji">🎯</span><div><h3>ui-ux-pro-max-skill</h3><span class="tool-cat">UI / UX 设计</span></div></div>
+        <p>面向专业 UI/UX 的设计智能：生成设计系统、排版与组件规范，避免千篇一律的 AI 页面。</p>
+        <div class="tool-foot"><a class="tool-link" href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill" target="_blank" rel="noopener">访问 ↗</a></div>
+      </article>
+      <article class="tool glass reveal">
+        <div class="tool-head"><span class="tool-emoji">🗂️</span><div><h3>awesome-agent-skills</h3><span class="tool-cat">资源索引</span></div></div>
+        <p>VoltAgent 维护的 1000+ 官方与社区 Skills 索引，按场景分类，找现成技能最省时间。</p>
+        <div class="tool-foot"><a class="tool-link" href="https://github.com/VoltAgent/awesome-agent-skills" target="_blank" rel="noopener">访问 ↗</a></div>
+      </article>
+      <article class="tool glass reveal">
+        <div class="tool-head"><span class="tool-emoji">🔬</span><div><h3>claude-scientific-skills</h3><span class="tool-cat">科研技能</span></div></div>
+        <p>面向科研工作者的 Skills 集合：文献检索、数据处理与分析流程，和每日论文速递正好配套。</p>
+        <div class="tool-foot"><a class="tool-link" href="https://github.com/K-Dense-AI/claude-scientific-skills" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
     </div>
 
@@ -193,16 +255,14 @@
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🧰</span><div><h3>AIToolsChain</h3><span class="tool-cat">我的项目</span></div></div>
         <p>面向非技术用户的 Windows AI 工具安装管理器，Tauri v2 构建，强制 SHA256 校验。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://github.com/CenryWang/AIToolsChain" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="aitoolschain" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://github.com/CenryWang/AIToolsChain" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
       <article class="tool glass reveal">
         <div class="tool-head"><span class="tool-emoji">🎮</span><div><h3>Merge Quest</h3><span class="tool-cat">我的项目</span></div></div>
         <p>合成大冒险小游戏，单文件自包含，开箱即玩。</p>
-        <div class="tool-foot"><a class="tool-link" href="https://cenrywang.github.io/merge-quest.html" target="_blank" rel="noopener">访问 ↗</a><button class="like-btn" data-like-key="mergequest" type="button" aria-label="点赞"><span class="like-icon">♡</span><span class="like-count">…</span></button></div>
+        <div class="tool-foot"><a class="tool-link" href="https://cenrywang.github.io/merge-quest.html" target="_blank" rel="noopener">访问 ↗</a></div>
       </article>
     </div>
-
-    <p class="like-note">点赞数据由 countapi.xyz 提供，仅统计次数，不收集个人信息。</p>
   </section>
 
   <footer class="footer">
@@ -213,49 +273,34 @@
   <script src="script.js"></script>
   <script>
     (function () {
-      var NS = "cenry-tools";
-      var API = "https://api.countapi.xyz";
-      function getLiked() {
-        try { return JSON.parse(localStorage.getItem("liked-tools") || "[]"); }
-        catch (e) { return []; }
+      var input = document.getElementById("toolSearch");
+      if (!input) return;
+      var cards = Array.prototype.slice.call(document.querySelectorAll(".tool"));
+      var groups = Array.prototype.slice.call(document.querySelectorAll(".tools-grid"));
+      var empty = document.getElementById("toolEmpty");
+      var result = document.getElementById("toolResult");
+      function apply() {
+        var q = input.value.trim().toLowerCase();
+        var shown = 0;
+        cards.forEach(function (c) {
+          var hit = !q || (c.textContent || "").toLowerCase().indexOf(q) !== -1;
+          c.hidden = !hit;
+          if (hit) {
+            shown++;
+            c.classList.add("visible");
+          }
+        });
+        groups.forEach(function (g) {
+          var visible = Array.prototype.slice.call(g.querySelectorAll(".tool")).some(function (c) { return !c.hidden; });
+          g.hidden = !visible;
+          var cat = g.previousElementSibling;
+          if (cat && cat.classList && cat.classList.contains("tools-cat")) cat.hidden = !visible;
+        });
+        if (empty) empty.hidden = shown !== 0;
+        if (result) result.textContent = q ? "匹配 " + shown + " 个" : "共 " + cards.length + " 个";
       }
-      function setLiked(arr) {
-        try { localStorage.setItem("liked-tools", JSON.stringify(arr)); } catch (e) {}
-      }
-      function markLiked(btn, on) {
-        btn.classList.toggle("liked", on);
-        btn.querySelector(".like-icon").textContent = on ? "❤" : "♡";
-      }
-      function setCount(btn, n) { btn.querySelector(".like-count").textContent = n; }
-      function toggle(btn, key) {
-        var arr = getLiked();
-        var isLiked = arr.indexOf(key) !== -1;
-        if (isLiked) {
-          fetch(API + "/get/" + NS + "/" + key).then(function (r) { return r.json(); }).then(function (d) {
-            var nv = Math.max(0, (d.value || 0) - 1);
-            return fetch(API + "/update/" + NS + "/" + key + "?value=" + nv).then(function () { return nv; });
-          }).then(function (nv) {
-            setCount(btn, nv); markLiked(btn, false);
-            var a = getLiked(), i = a.indexOf(key); if (i !== -1) { a.splice(i, 1); setLiked(a); }
-          }).catch(function () {});
-        } else {
-          fetch(API + "/hit/" + NS + "/" + key).then(function (r) { return r.json(); }).then(function (d) {
-            if (typeof d.value === "number") {
-              setCount(btn, d.value); markLiked(btn, true);
-              var a = getLiked(); if (a.indexOf(key) === -1) { a.push(key); setLiked(a); }
-            }
-          }).catch(function () {});
-        }
-      }
-      var liked = getLiked();
-      Array.prototype.slice.call(document.querySelectorAll(".like-btn")).forEach(function (btn) {
-        var key = btn.getAttribute("data-like-key");
-        if (liked.indexOf(key) !== -1) markLiked(btn, true);
-        fetch(API + "/get/" + NS + "/" + key).then(function (r) { return r.json(); })
-          .then(function (d) { if (typeof d.value === "number") setCount(btn, d.value); })
-          .catch(function () {});
-        btn.addEventListener("click", function () { toggle(btn, key); });
-      });
+      input.addEventListener("input", apply);
+      apply();
     })();
   </script>
 </body>

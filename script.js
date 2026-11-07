@@ -1,8 +1,15 @@
+// ===== 减少动态效果（尊重系统设置）=====
+// CSS 已关闭过渡/动画，这里同步停掉粒子循环、打字机与光标光晕，
+// 避免 prefers-reduced-motion 下 CPU 仍在每帧空转。
+const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 // ===== 自定义光标光晕 =====
 const glow = document.createElement("div");
 glow.className = "cursor-glow";
 document.body.appendChild(glow);
+if (reduceMotion) glow.style.display = "none";
 window.addEventListener("mousemove", (e) => {
+  if (reduceMotion) return;
   glow.style.left = e.clientX + "px";
   glow.style.top = e.clientY + "px";
 });
@@ -31,6 +38,7 @@ let PRGB = getParticleRGB();
 function updateParticleColor() {
   particleColor = getComputedStyle(document.documentElement).getPropertyValue("--particle").trim() || particleColor;
   PRGB = getParticleRGB();
+  if (reduceMotion) drawParticles();
 }
 if (themeToggle) {
   themeToggle.addEventListener("click", () => {
@@ -39,31 +47,8 @@ if (themeToggle) {
     document.documentElement.setAttribute("data-theme", next);
     try { localStorage.setItem("theme", next); } catch (e) {}
     updateParticleColor();
-    const giscus = document.querySelector("iframe.giscus-frame");
-    if (giscus) {
-      giscus.contentWindow.postMessage(
-        { giscus: { setConfig: { theme: next === "light" ? "light" : "dark" } } },
-        "https://giscus.app"
-      );
-    }
   });
 }
-
-// giscus 加载完成后用站点当前主题覆盖（保证与站点明暗一致，不跟随系统）
-window.addEventListener("message", (e) => {
-  if (e.origin !== "https://giscus.app") return;
-  if (e.data && e.data.giscus && e.data.giscus.loaded) {
-    const cur =
-      document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
-    const f = document.querySelector("iframe.giscus-frame");
-    if (f) {
-      f.contentWindow.postMessage(
-        { giscus: { setConfig: { theme: cur } } },
-        "https://giscus.app"
-      );
-    }
-  }
-});
 
 // ===== 粒子背景 =====
 const canvas = document.getElementById("particles");
@@ -90,13 +75,20 @@ function initParticles() {
 }
 
 function drawParticles() {
+  // 标签页不可见时跳过绘制，但保留 rAF 以便切回来继续
+  if (document.hidden) {
+    if (!reduceMotion) requestAnimationFrame(drawParticles);
+    return;
+  }
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   for (let i = 0; i < particles.length; i++) {
     const p = particles[i];
-    p.x += p.vx;
-    p.y += p.vy;
-    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    if (!reduceMotion) {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    }
 
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
@@ -118,7 +110,7 @@ function drawParticles() {
       }
     }
   }
-  requestAnimationFrame(drawParticles);
+  if (!reduceMotion) requestAnimationFrame(drawParticles);
 }
 
 resizeCanvas();
@@ -127,11 +119,17 @@ drawParticles();
 window.addEventListener("resize", () => {
   resizeCanvas();
   initParticles();
+  if (reduceMotion) drawParticles();
 });
 
 // ===== 打字机 =====
 const typedEl = document.getElementById("typed");
-if (typedEl) {
+if (typedEl && reduceMotion) {
+  typedEl.textContent = "创作者 · 开发者 · 开拓者";
+  const c = document.querySelector(".cursor");
+  if (c) c.style.display = "none";
+}
+if (typedEl && !reduceMotion) {
   const words = ["创作者", "开发者", "开拓者"];
   let wi = 0;
   let ci = 0;
