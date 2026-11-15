@@ -287,10 +287,126 @@ body {
   padding: 30px;
 }
 
-/* 关于 */
-.about-card p {
+/* 关于：编辑式身份卡 —— 靠字号层级、编号轨道与细分隔线建立秩序，不堆装饰 */
+.about-card.about-card--profile {
+  padding: 0;
+  overflow: hidden;
+}
+.about-intro {
+  position: relative;
+  padding: 42px 44px 38px;
+  border-bottom: 1px solid var(--glass-border);
+}
+.about-intro::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 42px;
+  bottom: 38px;
+  width: 3px;
+  background: linear-gradient(180deg, var(--accent1), var(--accent2));
+}
+.about-kicker {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: var(--accent1);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+.about-statement {
+  color: var(--text);
+  font-size: clamp(1.75rem, 4.4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.025em;
+}
+.about-em {
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+}
+.about-meta {
+  margin-top: 22px;
   color: var(--muted);
-  font-size: 1.05rem;
+  font-size: 0.84rem;
+  letter-spacing: 0.12em;
+}
+.about-meta i {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin: 0 11px;
+  border-radius: 50%;
+  background: var(--accent1);
+  opacity: 0.75;
+  vertical-align: middle;
+}
+.about-facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+.about-fact {
+  position: relative;
+  padding: 28px 30px 32px;
+  border-right: 1px solid var(--glass-border);
+  transition: background 0.25s;
+}
+.about-fact:last-child { border-right: 0; }
+.about-fact::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 30px;
+  right: 30px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.about-fact:hover { background: rgba(127, 127, 127, 0.07); }
+.about-fact:hover::before { transform: scaleX(1); }
+.about-fact dt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.about-index {
+  color: var(--accent1);
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+.about-fact dd { color: var(--text); line-height: 1.6; }
+.about-fact dd strong {
+  display: block;
+  font-size: 1.08rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+.about-fact dd span {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 0.87rem;
+}
+.about-signoff {
+  padding: 22px 44px 26px;
+  border-top: 1px solid var(--glass-border);
+  color: var(--muted);
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  text-align: right;
 }
 
 /* 技能 */
@@ -1170,43 +1286,73 @@ body.has-board { padding-left: var(--sidebar-w); }
   font-weight: 700;
 }
 .board-tree-nav { flex: 1; min-height: 0; }
+/* 板块目录：每一项都是一条可见的横向 bar，而不是散落的纯文字链接。
+   默认态就给背景 + 边框，hover / 当前项再叠加强调色与左侧竖条。 */
 .board-tree, .board-tree-sub { list-style: none; }
-.board-tree { display: flex; flex-direction: column; gap: 2px; }
+.board-tree { display: flex; flex-direction: column; gap: 8px; }
 .board-tree > li > a {
-  display: block;
-  min-height: 40px;
-  padding: 9px 12px;
-  border-radius: 8px;
-  color: var(--muted);
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 9px 12px 9px 16px;
+  border: 1px solid var(--glass-border);
+  border-radius: 9px;
+  background: rgba(127, 127, 127, 0.07);
+  color: var(--text);
   font-size: 0.88rem;
   line-height: 1.4;
   text-decoration: none;
-  transition: color 0.2s, background 0.2s;
+  transition: color 0.2s, background 0.2s, border-color 0.2s, transform 0.2s;
+}
+.board-tree > li > a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 18px;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent1);
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 .board-tree > li > a:hover {
-  color: var(--text);
-  background: rgba(127, 127, 127, 0.09);
+  background: rgba(34, 211, 238, 0.10);
+  border-color: rgba(34, 211, 238, 0.42);
+  transform: translateX(2px);
 }
+.board-tree > li > a:hover::before { opacity: 0.55; }
 .board-tree > li > a.is-active {
   color: var(--accent1);
-  background: rgba(34, 211, 238, 0.10);
-  box-shadow: inset 2px 0 0 var(--accent1);
+  background: rgba(34, 211, 238, 0.13);
+  border-color: rgba(34, 211, 238, 0.55);
   font-weight: 600;
 }
+.board-tree > li > a.is-active::before { opacity: 1; }
 .board-tree-sub {
-  margin: 4px 0 10px 14px;
+  margin: 8px 0 10px 14px;
   padding-left: 10px;
   border-left: 1px solid var(--glass-border);
 }
 .board-tree-sub a {
   display: block;
-  padding: 5px 8px;
+  margin-bottom: 4px;
+  padding: 6px 10px;
+  border: 1px solid transparent;
   border-radius: 6px;
+  background: rgba(127, 127, 127, 0.05);
   color: var(--muted);
   font-size: 0.79rem;
   text-decoration: none;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
 }
-.board-tree-sub a:hover { color: var(--text); background: rgba(127, 127, 127, 0.09); }
+.board-tree-sub a:hover {
+  color: var(--text);
+  background: rgba(34, 211, 238, 0.09);
+  border-color: rgba(34, 211, 238, 0.30);
+}
 .board-map-link {
   display: block;
   padding: 12px 12px 2px;
@@ -1338,8 +1484,10 @@ body.has-board { padding-left: var(--sidebar-w); }
   text-align: center;
 }
 
-/* 窄屏：侧栏从左侧固定栏变成导航下方的横向目录条，始终 sticky 可用 */
-@media (max-width: 1000px) {
+/* 窄屏：侧栏从左侧固定栏变成导航下方的横向目录条，始终 sticky 可用。
+   断点从 1000px 收到 860px：笔记本分屏 / 平板横屏仍保持左侧侧栏，
+   只有真正的手机宽度才降级为横条，避免「二级导航跑到顶部」的错位感。 */
+@media (max-width: 860px) {
   :root { --nav-h: 64px; }
   html { scroll-padding-top: 118px; }
   .nav { padding: 12px 6vw; }
@@ -1366,12 +1514,17 @@ body.has-board { padding-left: var(--sidebar-w); }
   .board-tree > li { flex-shrink: 0; }
   .board-tree > li > a {
     min-height: 0;
-    padding: 7px 12px;
+    padding: 7px 14px;
     border: 1px solid var(--glass-border);
     border-radius: 999px;
+    background: rgba(127, 127, 127, 0.09);
     font-size: 0.82rem;
     white-space: nowrap;
   }
+  /* 胶囊条里不显示左侧竖条，也不做位移，保持横向滚动时稳定 */
+  .board-tree > li > a::before { display: none; }
+  .board-tree > li > a:hover,
+  .board-tree > li > a.is-active { transform: none; }
   .board-tree-sub, .board-map-link { display: none; }
   .sitemap-root-node { flex-wrap: wrap; }
   .sitemap-root-meta { margin-left: 0; flex-basis: 100%; }
@@ -1393,4 +1546,32 @@ body.has-board { padding-left: var(--sidebar-w); }
   .nav-links a { font-size: 0.78rem; }
   .nav-map { padding: 6px 9px; font-size: 0.75rem; }
   .theme-toggle { width: 34px; height: 34px; margin-left: 0; }
+}
+
+/* ---- 关于身份卡：窄屏收成单列，保留编号轨道与细分隔线 ----
+   放在文件末尾，避免被前面无条件的布局规则盖掉。 */
+@media (max-width: 640px) {
+  .about-intro { padding: 30px 24px 28px; }
+  .about-intro::before { top: 30px; bottom: 28px; }
+  /* 窄屏刻意断成两行：渐变部分独占一行，避免末尾只剩一个孤字 */
+  .about-statement { font-size: clamp(1.45rem, 6.6vw, 1.75rem); }
+  .about-statement .about-em { display: block; }
+  .about-kicker { margin-bottom: 14px; }
+  .about-meta { margin-top: 16px; font-size: 0.78rem; }
+  .about-facts { grid-template-columns: 1fr; }
+  .about-fact {
+    padding: 22px 24px 24px;
+    border-right: 0;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .about-fact:last-child { border-bottom: 0; }
+  .about-fact::before { left: 24px; right: 24px; }
+  .about-signoff { padding: 18px 24px 22px; font-size: 0.88rem; }
+}
+@media (min-width: 641px) and (max-width: 860px) {
+  .about-intro { padding: 34px 30px 32px; }
+  .about-intro::before { top: 34px; bottom: 32px; }
+  .about-fact { padding: 24px 20px 26px; }
+  .about-fact::before { left: 20px; right: 20px; }
+  .about-signoff { padding: 20px 30px 24px; }
 }

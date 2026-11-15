@@ -62,6 +62,38 @@ def sync_body_class(text, has_sidebar):
     return re.sub(r"<body([^>]*)>", repl, text, count=1)
 
 
+THEME_PRELOAD = (
+    '<script>(function () { try { var t = localStorage.getItem("theme"); '
+    'if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); '
+    '} catch (e) {} })();</script>'
+)
+
+# 旧模板 digest.html 自带内联滚动/reveal 脚本，会与全站 script.js 重复执行。
+# 逐块判断而不是用跨块正则，避免误吃掉 <head> 里的主题预加载脚本。
+LEGACY_SCRIPT_BLOCK = re.compile(r"[ \t]*<script>[\s\S]*?</script>[ \t]*\n?")
+
+
+def ensure_digest_shell(text, newline="\n"):
+    """digest.html 由 bot 每日生成：即使某次用了旧模板，也把全站骨架幂等拉回。
+
+    只补结构（style.css / 主题预加载 / script.js），绝不改动简报正文数据。
+    """
+    if "style.css" not in text:
+        text = text.replace(
+            "</head>", '<link rel="stylesheet" href="/style.css" />' + newline + "</head>", 1
+        )
+    if 'localStorage.getItem("theme")' not in text:
+        text = text.replace("</head>", THEME_PRELOAD + newline + "</head>", 1)
+    if 'src="/script.js"' not in text and 'src="script.js"' not in text:
+        def drop_legacy(match):
+            return "" if "scrollProgress" in match.group(0) else match.group(0)
+        text = LEGACY_SCRIPT_BLOCK.sub(drop_legacy, text)
+        text = text.replace(
+            "</body>", '<script src="/script.js"></script>' + newline + "</body>", 1
+        )
+    return text
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--only", nargs="*", help="仅同步这些相对路径（默认全部）")
@@ -86,6 +118,8 @@ def main():
             print("WARN: no nav block found in {}".format(rel))
             continue
         updated = sync_body_class(updated, has_sidebar)
+        if rel == "digest.html":
+            updated = ensure_digest_shell(updated, newline)
         if updated != text:
             with open(path, "w", encoding="utf-8", newline="") as f:
                 f.write(updated)

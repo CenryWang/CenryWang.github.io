@@ -74,7 +74,7 @@
 - 博客 → 全部文章 + 每篇文章（`build_blog.py` 从 posts 动态注入）
 - 奇思 → 人生一万天 / 合成大冒险
 
-原先 9 个平铺入口把首页锚点和独立页面混在一行，层级不清、窄屏还容易折行；现在二级目录统一收进左侧，≤1000px 时侧栏自动变成导航下方的横向胶囊条（sticky 常驻）。
+原先 9 个平铺入口把首页锚点和独立页面混在一行，层级不清、窄屏还容易折行；现在二级目录统一收进左侧。侧栏里**每一条目录项都是独立的横向 bar**（默认态就有背景 + 1px 边框 + 9px 圆角，hover 叠青色，当前项加左侧竖条强调），不是散落的纯文字链接；工具页展开的 7 个分类也用轻量化的小 bar。`style.css` 的响应式断点为 **≤860px**：笔记本分屏 / 平板横屏仍保持左侧侧栏，只有真正的手机宽度才降级成导航下方的横向胶囊条（sticky 常驻，且仍是 bar 形态）。新增响应式覆盖一律放在 `style.css` 文件末尾，否则会被后面的无条件规则盖掉。
 
 改动流程（**只改 `nav.py` 一处**）：
 
@@ -86,7 +86,17 @@ python scripts/build_sitemap.py   # 重新生成 sitemap.html（分支结构不�
 
 `build_blog.py` 与 `build_digest.py` 直接 import `nav.py`，所以博客页和每日自动生成的简报页也使用同一套导航；`sync-digest.yml` 生成简报后再跑一次 `sync_nav.py --only digest.html` 作为双保险。404 / 简报页用 `/` 绝对路径（任意 URL 下都正确）。`sync_nav.py` 的替换单元是「nav + 紧随其后的可选侧栏」，重复运行幂等，同时按有无侧栏维护 `<body class="has-board">`。
 
+**简报页骨架兜底**：`digest.html` 由 bot 每日生成，历史产物可能是旧模板（9 项旧导航、无侧栏、旧内联滚动脚本、缺主题预加载），点进去就会「导航逻辑退回旧版」。`sync_nav.py` 对 `digest.html` 额外调用幂等的 `ensure_digest_shell()`，只补齐 `style.css` 引用、`localStorage.theme` 预加载与 `/script.js`（并移除旧内联脚本），**绝不改动简报正文数据**。因此即便某次 bot 用了旧模板，workflow 里的 `sync_nav.py --only digest.html` 也会把结构拉回统一；手工修复线上旧产物同样只需跑这一条命令。
+
 新增/下线栏目时，记得同步更新 `scripts/check_site_health.py` 的 `NAV_REQUIRED` / `NAV_CHECK_PAGES` / `SIDEBAR_PAGES` / `SITEMAP_REQUIRED` 与 `FORBIDDEN` 列表。
+
+## 首页「关于我」身份卡
+
+`index.html` 的 `#about` 不是普通段落，而是一张编辑式身份卡：大字主张句（渐变高亮）→ `01/02/03` 编号信息栅格 → 右对齐落款。设计感来自字号层级、编号轨道、细分隔线与 hover 顶部亮线，不依赖额外图片或动画脚本，避免堆装饰。
+
+- 文案信息全部来自本人简介，重组为 `BACKGROUND / RESEARCH / TRAIT` 三格；每格保持「主值（`strong`）+ 副值（`span`）」两行结构，新增内容照此扩展。
+- 主张句的渐变色用 `--accent1` / `--accent2`，亮色主题自动切到深色变体，无需单独配色。
+- ≤640px 收成单列，且 `.about-statement .about-em` 设为 `display:block` **刻意断成两行**，避免末尾出现「西。」这类孤字；响应式覆盖一律放在 `style.css` 文件末尾。
 
 ## 工具严选与奇思板块
 
