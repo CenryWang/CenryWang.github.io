@@ -62,6 +62,9 @@ PAGE = """<!DOCTYPE html>
 <title>每日简报 · Cenry</title>
 <meta name="description" content="RSS 聚合每日简报，GitHub Actions 自动更新" />
 <link rel="stylesheet" href="style.css" />
+<script>
+  (function () { try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {} })();
+</script>
 <style>
   .digest-shell { max-width: 1080px; }
   .digest-meta { text-align: center; color: var(--muted); font-size: 0.95rem; margin: -18px 0 30px; }
@@ -88,7 +91,7 @@ PAGE = """<!DOCTYPE html>
   .digest-footer { text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 50px; }
 </style>
 </head>
-<body>
+<body class="has-board">
   <div class="scroll-progress" id="scrollProgress"></div>
 
   <div class="aurora" aria-hidden="true">
@@ -109,23 +112,8 @@ __BODY__
 
   <footer class="digest-footer">© __YEAR__ CenryWang · 内容来自 RSS 订阅源，GitHub Actions 自动生成</footer>
 
-  <script>
-    (function () {
-      var bar = document.getElementById("scrollProgress");
-      window.addEventListener("scroll", function () {
-        var h = document.documentElement;
-        bar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + "%";
-      });
-      if ("IntersectionObserver" in window) {
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) { if (e.isIntersecting) e.target.classList.add("visible"); });
-        }, { threshold: 0.05 });
-        document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
-      } else {
-        document.querySelectorAll(".reveal").forEach(function (el) { el.classList.add("visible"); });
-      }
-    })();
-  </script>
+  <!-- 简报页也加载全站脚本：滚动进度、揭示动画、页脚年份与明暗主题统一由 script.js 负责 -->
+  <script src="/script.js"></script>
 </body>
 </html>
 """
@@ -383,7 +371,7 @@ def main():
 
     now = datetime.datetime.now(tz).strftime("%Y-%m-%d %H:%M")
     page = (
-        PAGE.replace("__NAV__", render_nav("/", logo="/", theme=False))
+        PAGE.replace("__NAV__", render_nav("/", logo="/", board="信息", active="简报"))
         .replace("__SRC_TIME__", src_time.strftime("%Y-%m-%d %H:%M"))
         .replace("__TIME__", now)
         .replace("__YEAR__", str(now[:4]))

@@ -13,7 +13,7 @@
     })();
   </script>
 </head>
-<body>
+<body class="has-board">
   <div class="scroll-progress" id="scrollProgress"></div>
   <div class="aurora" aria-hidden="true">
     <span class="blob blob-1"></span><span class="blob blob-2"></span><span class="blob blob-3"></span>
@@ -22,30 +22,41 @@
   <nav class="nav">
     <a href="../index.html" class="nav-logo">Cenry</a>
     <ul class="nav-links">
-      <li><a href="../index.html#about">关于</a></li>
-      <li><a href="../index.html#skills">技能</a></li>
-      <li><a href="../index.html#projects">作品</a></li>
-      <li><a href="../index.html#recommend">推荐</a></li>
-      <li><a href="../tools.html">工具</a></li>
-      <li><a href="../digest.html">简报</a></li>
-      <li><a href="../metals.html">行情</a></li>
-      <li><a href="../blog/index.html">博客</a></li>
-      <li><a href="../index.html#contact">联系</a></li>
+      <li><a href="../index.html">首页</a></li>
+      <li><a href="../info.html">信息</a></li>
+      <li><a href="../blog/index.html" class="nav-active" aria-current="page">博客</a></li>
+      <li><a href="../whimsy.html">奇思</a></li>
     </ul>
+    <a class="nav-map" href="../sitemap.html" title="查看站点分支结构">导航</a>
     <button id="themeToggle" class="theme-toggle" type="button" aria-label="切换明暗主题">
       <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
     </button>
   </nav>
+<aside class="board-sidebar">
+  <div class="board-sidebar-head">
+    <span class="board-kicker">板块目录</span>
+    <strong class="board-name">博客</strong>
+  </div>
+  <nav class="board-tree-nav" aria-label="博客板块目录">
+    <ul class="board-tree">
+      <li><a href="../blog/index.html" class="is-active" aria-current="page">全部文章</a></li>
+      <li><a href="../blog/welcome.html">欢迎来到我的博客</a></li>
+    </ul>
+  </nav>
+  <a class="board-map-link" href="../sitemap.html">站点分支结构 →</a>
+</aside>
 
-  <header class="hero">
+  <header class="hero hero--compact">
     <div class="hero-inner">
-      <p class="hero-greeting reveal">写作</p>
-      <h1 class="hero-name reveal" style="font-size:clamp(1.8rem,6vw,3.4rem)">博客</h1>
+      <p class="hero-greeting reveal">Blog</p>
+      <h1 class="hero-name hero-name--compact reveal">博客</h1>
       <p class="hero-typed"><span>随笔 · 笔记 · 研究碎片</span></p>
     </div>
   </header>
-  <section class="section">
+  <section class="section section--tight">
+    <h2 class="section-title reveal">全部文章</h2>
+    <p class="section-lead reveal">共 1 篇 · 随笔、读书笔记与折腾记录，点标题即可阅读。</p>
     <div class="projects-grid">
 
       <article class="project glass reveal">

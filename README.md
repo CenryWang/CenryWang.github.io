@@ -4,19 +4,23 @@
 
 ## 目录结构
 
-- `index.html` — 首页（关于 / 技能 / 作品 / 推荐 / 工具 / 简报 / 行情 / 博客 / 联系）
-- `style.css` — 全站样式（含亮/暗双主题变量）
-- `script.js` — 全站交互（粒子背景 / 打字机 / 滚动进度条 / 主题切换 / 减少动态效果）
-- `merge-quest.html` — **合成大冒险 · Merge Quest** 游戏页，单文件自包含，开箱即玩
-- `tools.html` — **工具严选**：按场景分类聚合常用工具与 Agent Skills，带纯前端搜索过滤，零第三方依赖
+- `index.html` — **首页**主板块（关于 / 技能 / 作品 / 推荐 / 联系）
+- `info.html` — **信息**主板块落地页，下设简报 / 工具 / 行情三个子板块
+- `whimsy.html` — **奇思**主板块落地页（人生一万天 / 合成大冒险）
+- `sitemap.html` — **站点导航页**，展示全站分支结构（由 `scripts/build_sitemap.py` 生成，**勿手改**）
+- `style.css` — 全站样式（含亮/暗双主题变量、左侧板块目录、导航页分支树）
+- `script.js` — 全站交互（粒子背景 / 打字机 / 滚动进度条 / 主题切换 / 人生一万天 / 减少动态效果）
+- `merge-quest.html` — **合成大冒险 · Merge Quest** 游戏页，Vite 单文件自包含，开箱即玩；文件末尾追加了「← 奇思」返回入口与明暗主题接入段（**重新构建游戏时须保留该段**）
+- `tools.html` — **工具严选**：7 个分类（AI大模型 / Coding工具 / 常用框架 / 常用工具软件 / 学习科研 / 设计绘图 / Agent Skills），带纯前端搜索过滤，零第三方依赖
 - `metals.html` — **贵金属与宏观行情**：黄金 / 白银 / 金银比 / 10 年期美债 / 联邦基金有效利率 / 贸易加权美元指数六个指标，今日值 + 区间变化 + 30 年月度回溯曲线
 - `data/metals.json` — 行情数据（`metals` 工作流每日自动生成，**勿手改**）
 - `digest.html` — **每日简报**（RSS 聚合日报，Actions 每日自动生成，**勿手改、勿从本地覆盖**）
 - `404.html` — 自定义 404 页（GitHub Pages 会自动使用它；承接已下线的 hot / robotics / 留言墙 / 现在 旧链接）
 - `blog/` — **博客**：`posts/*.md` 是文章源（Markdown + frontmatter），`index.html` 与 `<slug>.html` 由 `scripts/build_blog.py` 构建生成（**勿手改生成的 html**）
 - `scripts/` — 页面生成与运维脚本：
-  - `nav.py` — **全站导航的唯一配置源**
-  - `sync_nav.py` — 把导航同步到所有页面（含 bot 生成的 digest.html）
+  - `nav.py` — **全站站点树的唯一配置源**（4 主板块 + 板块内目录 + 工具 7 分类）
+  - `sync_nav.py` — 把顶部导航与左侧板块目录同步到所有页面（含 bot 生成的 digest.html）
+  - `build_sitemap.py` — 从 nav.py 生成站点导航页
   - `build_digest.py` — 每日简报生成
   - `build_blog.py` — 博客构建
   - `build_metals.py` — 贵金属与宏观行情数据构建（纯标准库）
@@ -60,29 +64,48 @@
 - 站点内容由 bot 自动提交，**本地副本经常落后于远端**。从本地同步文件到推送目录时，`digest.html` 这类生成物要以远端为准（否则会把最新内容覆盖成旧版）
 - `site-health` 每天北京时间 07:50 检查线上页面（见下节），不产生提交
 
-## 导航统一
+## 导航结构（4 主板块 + 左侧板块目录）
 
-所有页面的导航栏都由 `scripts/nav.py` 一处定义，共 9 个入口。改动流程：
+顶部主导航只有 **首页 / 信息 / 博客 / 奇思** 四个主板块，另有一个「导航」工具入口指向 `sitemap.html`。
+每个主板块的页面左侧显示「板块内目录」（`render_sidebar()`），层级关系全部定义在 `scripts/nav.py` 的 `SITE_TREE`：
+
+- 首页 → 关于我 / 技能 / 作品 / 推荐 / 联系
+- 信息 → 板块概览 / 简报 / 工具 / 行情；**工具**展开后是 7 个分类锚点
+- 博客 → 全部文章 + 每篇文章（`build_blog.py` 从 posts 动态注入）
+- 奇思 → 人生一万天 / 合成大冒险
+
+原先 9 个平铺入口把首页锚点和独立页面混在一行，层级不清、窄屏还容易折行；现在二级目录统一收进左侧，≤1000px 时侧栏自动变成导航下方的横向胶囊条（sticky 常驻）。
+
+改动流程（**只改 `nav.py` 一处**）：
 
 ```bash
-# 1. 改 scripts/nav.py 里的 HOME_LINKS / SUB_LINKS
-python scripts/sync_nav.py      # 同步全站（含 digest.html）；--only <文件> 可只同步一个
-python scripts/build_blog.py    # 重新生成 blog/*.html
+python scripts/sync_nav.py        # 同步全站导航 + 侧栏；--only <文件> 可只同步一个
+python scripts/build_blog.py      # 重新生成 blog/*.html（侧栏要列出全部文章）
+python scripts/build_sitemap.py   # 重新生成 sitemap.html（分支结构不能与站点脱节）
 ```
 
-`build_blog.py` 与 `build_digest.py` 会直接 import `nav.py`，所以博客页和每日自动生成的简报页也使用同一套导航，不会被 bot 覆盖回旧版本；`sync-digest.yml` 在生成简报后还会再跑一次 `sync_nav.py --only digest.html` 作为双保险。404 与简报页使用 `/` 绝对路径（任意 URL 下都正确），且不输出明暗切换按钮（它们有自己的内联脚本，不加载 `script.js`）。
+`build_blog.py` 与 `build_digest.py` 直接 import `nav.py`，所以博客页和每日自动生成的简报页也使用同一套导航；`sync-digest.yml` 生成简报后再跑一次 `sync_nav.py --only digest.html` 作为双保险。404 / 简报页用 `/` 绝对路径（任意 URL 下都正确）。`sync_nav.py` 的替换单元是「nav + 紧随其后的可选侧栏」，重复运行幂等，同时按有无侧栏维护 `<body class="has-board">`。
 
-新增/下线栏目时，记得同步更新 `scripts/check_site_health.py` 里的 `NAV_REQUIRED` 与 `FORBIDDEN` 列表。
+新增/下线栏目时，记得同步更新 `scripts/check_site_health.py` 的 `NAV_REQUIRED` / `NAV_CHECK_PAGES` / `SIDEBAR_PAGES` / `SITEMAP_REQUIRED` 与 `FORBIDDEN` 列表。
+
+## 工具严选与奇思板块
+
+- `tools.html` 的 7 个二级分类与 `nav.py` 的 `TOOL_CATEGORIES` 一一对应，标题带 `id="cat-*"` 锚点，左侧目录可直接跳转；搜索过滤会把无匹配的分类整块隐藏。
+- 2026-11-15 移除 Perplexity / Docker / PowerToys / Figma / remove.bg；原「我做的」分类并入「常用工具软件」；补充 Vue 3 / Vite / React 三张框架卡，让「常用框架」这一分类成立。
+- Magpie 条目按 `Blinue/Magpie` 官方 README 校正：名称、官方仓库链接、分类标签改为「窗口超分」，描述补充 Win+Shift+A 快捷键、WinUI 3 / 40+ 着色器效果与 Win10 1903+ / Win11 系统要求。
+- 「人生一万天」计算器从首页迁入 `whimsy.html`（奇思板块），逻辑仍复用 `script.js`；首页只保留关于 / 技能 / 作品 / 推荐 / 联系。
 
 ## 站点健康自检
 
 `scripts/check_site_health.py`（纯标准库）每天由 `site-health` 工作流调用，检查：
 
-- 10 个资源（含行情页、行情数据与 `script.js`）是否全部返回 200
+- 13 个资源（含信息 / 奇思 / 导航页、行情数据与 `script.js`）是否全部返回 200
 - 简报页头的「同步于 YYYY-MM-DD」是否在 3 天内
 - `data/metals.json` 的 `generated_at` 是否在 3 天内、指标数量是否正常
 - 页面上是否还残留已下线功能的引用（留言页 / countapi 点赞 / giscus 脚本）
-- 首页导航是否包含统一的 4 个独立页入口，且 7 个页面的导航标签序列完全一致（防止简报页回退）
+- 首页导航是否包含 4 个主板块与导航页入口，且 10 个页面的 4 项导航标签序列完全一致（防止简报页回退）
+- 8 个板块页面是否都带左侧「板块内目录」；导航页是否列全部分支节点
+- 11 个 HTML 页面是否都有 `localStorage` 主题预加载与可切换按钮；Vite 游戏页是否保留 `mqThemeToggle` 与 `html[data-theme="dark"]` 覆盖（防止重建游戏时把主题接入冲掉）
 
 **任一项失败都会以非零码退出，让 Actions 变红**，不做静默降级。本地手动跑：
 
@@ -140,7 +163,11 @@ python -m http.server 8000          # fetch 在 file:// 下会被浏览器拦截
 
 ## 主题切换（亮 / 暗）
 
-各页面右上角有明暗切换按钮，选择写入 `localStorage`，刷新保持；首屏在 `<head>` 内联脚本提前应用，避免闪烁。亮色主题通过 `style.css` 的 `[data-theme="light"]` 变量覆盖实现，不影响默认暗色科技风。
+**全站所有页面**（含 404 与每日简报）右上角都有明暗切换按钮，选择写入 `localStorage`，刷新保持；首屏在 `<head>` 内联脚本提前应用，避免闪烁。亮色主题通过 `style.css` 的 `[data-theme="light"]` 变量覆盖实现，不影响默认暗色科技风。404 与简报页改为加载 `script.js`（原先各自的内联脚本已移除），因此主题、滚动进度、揭示动画与页脚年份行为与其余页面完全一致；侧栏在亮色下使用接近不透明的白底，避免极光光晕透过面板影响小字可读性。
+
+`merge-quest.html` 是 Vite 单文件产物，不加载 `style.css` / `script.js`，因此在文件内追加了一段自包含的接入代码：`<head>` 里读同一个 `localStorage.theme` 并覆盖游戏自身的 `:root` 变量与硬编码浅色面板，右下角常驻「← 奇思」返回链接与主题按钮（按钮层级高于游戏弹层，首次进入的引导卡不会挡住它）。**重新构建游戏时请保留这段**，健康自检会检查它是否还在。
+
+窄屏（≤640px）顶部导航做了专门压缩：默认 18px 间距会让第四个主板块「奇思」溢出到「导航」按钮上被裁掉；末尾的高优先级 `@media` 把间距、logo、按钮尺寸一并收紧，390 / 375 / 360 / 320px 均已实测四项无横向溢出。
 
 `script.js` 同时尊重系统的 `prefers-reduced-motion`：开启后关闭 CSS 动画之外的粒子循环、打字机与光标光晕，标签页不可见时也会跳过粒子绘制。
 
@@ -168,9 +195,22 @@ python -m http.server 8000          # fetch 在 file:// 下会被浏览器拦截
    python scripts/build_blog.py
    ```
 
-3. 生成的 `blog/*.html` 复用首页 `style.css` 与 `script.js`（粒子背景、明暗主题、滚动揭示自动带上）。
+3. 生成的 `blog/*.html` 复用首页 `style.css` 与 `script.js`（粒子背景、明暗主题、滚动揭示自动带上）。博客索引页与文章页使用 `hero--compact` + `.section--tight`，让「全部文章」标题和文章卡片落在首屏——沿用首页全屏 hero 时，点进博客后首屏只有大字和粒子背景，看起来像没离开首页。改版式请改 `scripts/build_blog.py` 模板，不要手改生成页。
 
 > 构建产物是生成文件，提交前重新跑一遍脚本即可；不要手工改 `blog/index.html` 与 `<slug>.html`，改 `posts/*.md` 源文件。
+
+## 本地 / 面板预览
+
+**直接打开 `blog/index.html` 只会看到裸文字**：预览服务按「被打开文件的所在目录」单独映射，此时 `blog/` 成了映射根，页面里的 `../style.css` / `../script.js` 会解析到映射之外 → 404。站点本身没问题（正常部署与从首页点进去都正常）。
+
+需要看效果时生成自包含快照（CSS / JS 内联、站内链接全部改写到同一目录，任何映射方式都能完整显示）：
+
+```bash
+python scripts/build_preview.py                    # 输出到系统临时目录
+python scripts/build_preview.py <输出目录>          # 指定目录
+```
+
+`build_preview.py` 会生成 11 个页面 + `data/metals.json` 的副本；快照**只用于预览，不要提交进站点**。
 
 ## 已下线的功能
 

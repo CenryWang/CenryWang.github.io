@@ -136,8 +136,71 @@ ${n.name} · ${n.desc}`),te.win())}}let Rn=null;function xe(n){Jt.textContent=n,
     </table>
   `),ft.querySelectorAll(".mode-btn").forEach(a=>{a.addEventListener("click",()=>{he=a.getAttribute("data-mode"),Xe(),Be=[vt(),vt()],Fe(),ft.querySelectorAll(".mode-btn").forEach(f=>f.classList.toggle("on",f===a)),xe(`掉落难度:${u[he]}(下一发起生效)`)})}),ft.querySelectorAll("tr[data-i]").forEach(a=>{a.addEventListener("click",()=>{const f=a.getAttribute("data-i");if(f==="endless"){W.maxLevelCleared>=50?(Zt(We.length-1),V=!0,ze()):xe("先通关 50 关才能进无尽模式");return}Zt(Number(f))})}),(i=document.getElementById("dbg-back"))==null||i.addEventListener("click",()=>Zt(0)),(r=document.getElementById("dbg-restore"))==null||r.addEventListener("click",()=>{Ot(),pe&&(vn(),xe("已回到正式进度"))}),(e=document.getElementById("dbg-clear"))==null||e.addEventListener("click",()=>{Ai(),xe("存档已清空,页面即将刷新"),setTimeout(()=>location.reload(),900)})}ia.addEventListener("click",La);aa.addEventListener("click",ka);oa.addEventListener("click",Fa);en.textContent=On()?"🔇":"🔊";en.addEventListener("click",()=>{const n=!On();ui(n),en.textContent=n?"🔇":"🔊"});const N=Ti();if(N){if(N.endless?V=!0:Number.isInteger(N.levelIndex)&&N.levelIndex>=0&&N.levelIndex<We.length&&(fe=N.levelIndex),Number.isFinite(N.score)&&N.score>0&&(Q=N.score),N.stars&&typeof N.stars=="object"&&(Te=N.stars),Array.isArray(N.ach)&&N.ach.forEach(n=>Ee.add(n)),Array.isArray(N.seenMods)&&N.seenMods.forEach(n=>dt.add(n)),Array.isArray(N.seenIntro)&&N.seenIntro.forEach(n=>qe.add(n)),N.stats&&typeof N.stats=="object")for(const n of Object.keys(W)){const o=Number(N.stats[n]);Number.isFinite(o)&&o>0&&(W[n]=o)}N.dropMode&&(he=N.dropMode)}ze();</script>
     <style rel="stylesheet" crossorigin>:root{--bg: #eef1f7;--panel: #ffffff;--accent: #e89b1c;--accent-bright: #ffd24d;--text: #2a3040;--muted: #7c8496;--chip: rgba(255, 255, 255, .88);--line: #e7eaf1}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Microsoft YaHei,sans-serif;overscroll-behavior:none}#app{display:flex;flex-direction:column;align-items:center;min-height:100%;padding:8px 8px 16px;gap:10px}#hud{width:100%;max-width:440px;display:flex;justify-content:space-between;align-items:center;background:var(--panel);border-radius:14px;padding:10px 14px;box-shadow:0 4px 16px #283c641a;gap:8px}.hud-item{display:flex;flex-direction:column;align-items:center;line-height:1.15;font-size:18px;font-weight:700}.hud-item .label{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:2px}.hud-goal{flex:1}#hud-btns{display:flex;gap:2px}#hud-btns button{border:none;background:transparent;font-size:16px;cursor:pointer;padding:4px 3px;line-height:1}#stage{position:relative;width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center}#game{width:100%;height:auto;border-radius:16px;background:linear-gradient(#eaf6ff,#cde9ff);box-shadow:0 8px 26px #283c6429;touch-action:none}#next{position:absolute;top:8px;right:10px;background:var(--chip);border-radius:10px;padding:4px 10px;font-size:13px;display:flex;gap:6px;align-items:center}#next .label{color:var(--muted)}#next-canvas{width:30px;height:30px;flex:none}#next2-canvas{width:22px;height:22px;opacity:.5;flex:none}#chain{width:100%;max-width:440px;height:auto;background:var(--panel);border-radius:12px;box-shadow:0 4px 16px #283c641a}#next-name{font-weight:700;color:var(--accent);min-width:34px}#drops-left{position:absolute;top:8px;left:10px;background:var(--chip);border-radius:10px;padding:4px 10px;font-size:13px;font-weight:700;color:#e07b00}#combo{position:absolute;bottom:18px;left:50%;transform:translate(-50%);font-size:22px;font-weight:900;color:#e07b00;text-shadow:0 2px 10px rgba(255,210,77,.7);pointer-events:none;transition:transform .1s;text-align:center}#combo-timer{width:92px;height:5px;margin:4px auto 0;background:#ffffffa6;border-radius:3px;overflow:hidden}#combo-fill{height:100%;width:100%;background:linear-gradient(90deg,#ffd24d,#ff7a45);border-radius:3px}#combo.hot{animation:comboPulse .35s infinite alternate}@keyframes comboPulse{0%{transform:translate(-50%) scale(1)}to{transform:translate(-50%) scale(1.18)}}#level-banner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:#fff9;border-radius:16px;pointer-events:none;z-index:10}#banner-title{font-size:22px;font-weight:900;color:var(--accent);text-shadow:0 1px 6px rgba(255,255,255,.9)}#banner-mods{font-size:14px;font-weight:700;color:#2f7fd6}#level-banner.pop #banner-title{animation:bannerIn .5s cubic-bezier(.22,1.4,.36,1)}@keyframes bannerIn{0%{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}#overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#1e283c66;backdrop-filter:blur(3px);z-index:50}#overlay.hidden{display:none}.overlay-card{background:var(--panel);border-radius:18px;padding:26px 30px;text-align:center;max-width:320px;box-shadow:0 12px 40px #1e283c40}.overlay-card h2{margin:0 0 8px;color:var(--accent)}#overlay-stars{font-size:26px;color:var(--accent);letter-spacing:6px;margin-bottom:6px;min-height:32px}.overlay-card p{margin:0 0 18px;color:var(--muted);line-height:1.5}#overlay-btn{border:none;background:var(--accent-bright);color:#4a3400;font-weight:700;font-size:16px;padding:10px 28px;border-radius:12px;cursor:pointer}#overlay-btn:active{transform:translateY(1px)}#overlay-btn2{border:1px solid var(--muted);background:transparent;color:var(--text);font-weight:600;font-size:14px;padding:8px 20px;border-radius:12px;cursor:pointer;margin-top:10px;width:100%}#overlay-btn2:active{transform:translateY(1px)}#overlay-btn3{border:1px solid var(--accent);background:#fff8ea;color:var(--accent);font-weight:700;font-size:14px;padding:8px 20px;border-radius:12px;cursor:pointer;margin-top:10px;width:100%}#overlay-btn3:active{transform:translateY(1px)}#panel{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#1e283c66;backdrop-filter:blur(3px);z-index:60}.panel-card{background:var(--panel);border-radius:18px;padding:18px 20px;width:min(92vw,430px);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 12px 40px #1e283c40}.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.panel-head h2{margin:0;font-size:19px;color:var(--accent)}#panel-close{border:none;background:transparent;font-size:16px;color:var(--muted);cursor:pointer;padding:4px 8px}#panel-body{overflow-y:auto;font-size:13px;line-height:1.55;color:var(--text)}.rules h3{margin:12px 0 4px;font-size:14px;color:var(--accent)}.rules h3:first-child{margin-top:0}.rules p{margin:0 0 4px}.rules ul{margin:0;padding-left:18px}.mech{background:#f6f8fc;border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:6px 0}.mech b{font-size:13px;color:var(--accent)}.mech small{color:var(--muted);margin-left:6px;font-size:11px}.mech-diagram{margin:6px 0 0;padding:8px 10px;background:#fff;border-radius:8px;border:1px dashed var(--line);font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:11px;line-height:1.4;color:#3a4250;white-space:pre;overflow-x:auto}.ach-sum{margin:0 0 8px;font-weight:700;color:var(--muted)}.ach{display:flex;gap:10px;align-items:center;padding:8px 6px;border-bottom:1px solid var(--line)}.ach:last-child{border-bottom:none}.ach .medal{font-size:20px;flex:none}.ach b{display:block;font-size:13px}.ach small{color:var(--muted)}.ach.locked{opacity:.42}.ach>span:not(.medal){flex:1}.ach-share{flex:none;border:1px solid var(--accent);background:#fff8ea;color:var(--accent);font-size:12px;font-weight:700;padding:4px 12px;border-radius:8px;cursor:pointer}.ach-share:active{transform:translateY(1px)}.dbg-actions{display:flex;gap:8px;margin-bottom:8px}.dbg-actions button{flex:1;border:1px solid var(--accent);background:#fff8ea;color:var(--accent);font-weight:700;font-size:13px;padding:8px 0;border-radius:10px;cursor:pointer}.dbg-actions button.danger{border-color:#e05656;background:#fff0f0;color:#e05656}.dbg-actions button.mode-btn.on{background:var(--accent-bright);color:#4a3400}.hint{margin:0 0 8px;color:var(--muted);font-size:12px}.lv-table{width:100%;border-collapse:collapse;font-size:12px}.lv-table th{text-align:left;color:var(--muted);font-weight:600;padding:4px 6px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel)}.lv-table td{padding:5px 6px;border-bottom:1px solid var(--line)}.lv-table tr[data-i]{cursor:pointer}.lv-table tr[data-i]:hover{background:#f2f6ff}.lv-table tr.current{background:#fff3d6;font-weight:700}#toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%);background:#2a3040;color:var(--accent-bright);font-size:14px;font-weight:700;padding:10px 18px;border-radius:12px;box-shadow:0 8px 24px #1e283c59;z-index:70;white-space:pre-line;text-align:center;pointer-events:none;animation:toastIn .3s cubic-bezier(.22,1.4,.36,1)}@keyframes toastIn{0%{transform:translate(-50%) translateY(20px);opacity:0}to{transform:translate(-50%) translateY(0);opacity:1}}#intro{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#1e283c73;backdrop-filter:blur(3px);z-index:55}.intro-card{background:var(--panel);border-radius:18px;padding:22px 24px;width:min(88vw,360px);max-height:82vh;overflow-y:auto;box-shadow:0 12px 40px #1e283c40}.intro-card h2{margin:0 0 4px;font-size:20px;color:var(--accent)}.intro-card .intro-tag{display:inline-block;font-size:11px;font-weight:700;color:#2f7fd6;background:#e8f2ff;border-radius:6px;padding:2px 8px;margin-bottom:10px}.intro-card p{margin:6px 0;font-size:14px;line-height:1.6;color:var(--text)}.intro-card ul{margin:6px 0;padding-left:18px;font-size:13px;line-height:1.7;color:var(--text)}.intro-tip{background:#fff8ea;border:1px dashed var(--accent);border-radius:10px;padding:8px 12px;font-size:13px;line-height:1.6;color:#7a5200;margin:10px 0 4px}#intro-btn{border:none;background:var(--accent-bright);color:#4a3400;font-weight:700;font-size:16px;padding:10px 28px;border-radius:12px;cursor:pointer;width:100%;margin-top:12px}#intro-btn:active{transform:translateY(1px)}.hidden{display:none!important}</style>
+  <!-- ===== 全站主题接入（追加于 Vite 单文件构建产物；重新构建游戏时请保留此段） ===== -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("theme");
+        document.documentElement.setAttribute("data-theme", t === "light" ? "light" : "dark");
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
+  <style>
+    html[data-theme="dark"] {
+      --bg:#0b0e16; --panel:#161c2a; --accent:#f0a830; --accent-bright:#ffd24d;
+      --text:#e9edf6; --muted:#9099af; --chip:rgba(255,255,255,.08); --line:#2a344a;
+    }
+    html[data-theme="dark"] #game{background:linear-gradient(#101a2e,#182a49);box-shadow:0 8px 26px #00000066}
+    html[data-theme="dark"] #combo{color:#ffd24d;text-shadow:0 2px 10px #00000099}
+    html[data-theme="dark"] #combo-timer{background:#ffffff2b}
+    html[data-theme="dark"] #drops-left{color:#ffd24d}
+    html[data-theme="dark"] #level-banner{background:#0b0e16e6}
+    html[data-theme="dark"] #banner-mods,html[data-theme="dark"] .intro-tag{color:#8ec5ff}
+    html[data-theme="dark"] .intro-tag{background:#2f7fd633}
+    html[data-theme="dark"] #overlay,html[data-theme="dark"] #panel,html[data-theme="dark"] #intro{background:#05070ccc}
+    html[data-theme="dark"] .dbg-actions button.danger{background:#3a1f24}
+    html[data-theme="dark"] .lv-table tr[data-i]:hover{background:#ffffff0f}
+    html[data-theme="dark"] .lv-table tr.current{background:#f0a8302e}
+    html[data-theme="dark"] #overlay-btn3,html[data-theme="dark"] .ach-share,
+    html[data-theme="dark"] .dbg-actions button,html[data-theme="dark"] .intro-tip{background:#2a2315;color:#f4c46a}
+    html[data-theme="dark"] .mech{background:#ffffff0a}
+    html[data-theme="dark"] .mech-diagram{background:#0f1522;color:#c9d3e8}
+    html[data-theme="dark"] #toast{background:#202838}
+    html[data-theme="dark"] #hud,html[data-theme="dark"] #chain,
+    html[data-theme="dark"] .overlay-card,html[data-theme="dark"] .panel-card,
+    html[data-theme="dark"] .intro-card{box-shadow:0 8px 28px #00000066}
+    .mq-sitebar{position:fixed;right:10px;bottom:10px;z-index:90;display:flex;gap:6px;align-items:center}
+    .mq-sitebar a,.mq-sitebar button{font:600 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;text-decoration:none;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:7px 11px;cursor:pointer;box-shadow:0 4px 14px #1e283c40}
+    .mq-sitebar a:hover,.mq-sitebar button:hover{border-color:var(--accent)}
+    .mq-sitebar button{min-width:32px;text-align:center}
+    @media (max-width:480px){.mq-sitebar{right:8px;bottom:8px}}
+  </style>
   </head>
   <body>
+    <!-- 全站接入：返回「奇思」板块 + 与主页共用 localStorage.theme 的明暗切换 -->
+    <div class="mq-sitebar">
+      <a href="whimsy.html">← 奇思</a>
+      <button id="mqThemeToggle" type="button" title="切换明暗主题">☀</button>
+    </div>
+    <script>
+      (function () {
+        var btn = document.getElementById("mqThemeToggle");
+        function sync() {
+          var dark = document.documentElement.getAttribute("data-theme") !== "light";
+          btn.textContent = dark ? "☀" : "☾";
+          btn.setAttribute("aria-label", dark ? "切换到亮色主题" : "切换到暗色主题");
+        }
+        sync();
+        btn.addEventListener("click", function () {
+          var next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+          document.documentElement.setAttribute("data-theme", next);
+          try { localStorage.setItem("theme", next); } catch (e) {}
+          sync();
+        });
+      })();
+    </script>
     <div id="app">
       <header id="hud">
         <div class="hud-item">

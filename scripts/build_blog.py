@@ -19,8 +19,14 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POSTS_DIR = os.path.join(ROOT, "blog", "posts")
 OUT_DIR = os.path.join(ROOT, "blog")
 
-# 导航统一由 scripts/nav.py 提供（改导航只改那一个文件）
-NAV = render_nav("../")
+# 导航与左侧「博客板块目录」统一由 scripts/nav.py 提供（改导航只改那一个文件）
+def blog_nav(active, posts):
+    """侧栏列出全部文章；nav.py 只定义「全部文章」这一条固定目录项。"""
+    items = [("全部文章", "blog/index.html")] + [
+        (meta.get("title", slug), "blog/{}.html".format(slug))
+        for meta, _body, slug in posts
+    ]
+    return render_nav("../", board="博客", active=active, sidebar_items=items)
 
 HEAD = """<!DOCTYPE html>
 <html lang="zh-CN">
@@ -37,7 +43,7 @@ HEAD = """<!DOCTYPE html>
     }})();
   </script>
 </head>
-<body>
+<body class="has-board">
   <div class="scroll-progress" id="scrollProgress"></div>
   <div class="aurora" aria-hidden="true">
     <span class="blob blob-1"></span><span class="blob blob-2"></span><span class="blob blob-3"></span>
@@ -137,7 +143,7 @@ def md_to_html(md):
     return "\n".join(out)
 
 
-def render_post(meta, body_html, slug):
+def render_post(meta, body_html, slug, nav):
     title = meta.get("title", slug)
     desc = meta.get("description", title)
     date = meta.get("date", "")
@@ -148,16 +154,16 @@ def render_post(meta, body_html, slug):
         f'<span class="gh-label">{html.escape(t)}</span>' for t in tags
     ) if tags else ""
     meta_line = html.escape(date) + ("　" if date and tag_html else "") + tag_html
-    head = HEAD.format(title=html.escape(title), desc=html.escape(desc), nav=NAV)
+    head = HEAD.format(title=html.escape(title), desc=html.escape(desc), nav=nav)
     body = f"""
-  <header class="hero">
+  <header class="hero hero--compact">
     <div class="hero-inner">
-      <p class="hero-greeting reveal">博客</p>
-      <h1 class="hero-name reveal" style="font-size:clamp(1.8rem,6vw,3.4rem)">{html.escape(title)}</h1>
+      <p class="hero-greeting reveal">Blog · 文章</p>
+      <h1 class="hero-name hero-name--compact reveal" style="font-size:clamp(1.8rem,5vw,3.2rem)">{html.escape(title)}</h1>
       <p class="hero-typed"><span>{meta_line}</span></p>
     </div>
   </header>
-  <section class="section">
+  <section class="section section--tight">
     <article class="about-card glass blog-post" style="max-width:760px;margin:0 auto">
 {body_html}
       <p style="margin-top:28px"><a href="index.html" style="color:var(--accent1)">← 返回博客列表</a></p>
@@ -167,7 +173,7 @@ def render_post(meta, body_html, slug):
     return head + body + FOOT
 
 
-def render_index(posts):
+def render_index(posts, nav):
     cards = []
     for p in sorted(posts, key=lambda x: x[0].get("date", ""), reverse=True):
         meta, slug = p[0], p[2]
@@ -182,16 +188,18 @@ def render_index(posts):
         <p>{desc}</p>
         <div class="gh-meta"><span>{date}</span>{('&nbsp;' + tag_html) if tag_html else ''}</div>
       </article>""")
-    head = HEAD.format(title="博客", desc="CenryWang 的随笔与笔记", nav=NAV)
+    head = HEAD.format(title="博客", desc="CenryWang 的随笔与笔记", nav=nav)
     body = f"""
-  <header class="hero">
+  <header class="hero hero--compact">
     <div class="hero-inner">
-      <p class="hero-greeting reveal">写作</p>
-      <h1 class="hero-name reveal" style="font-size:clamp(1.8rem,6vw,3.4rem)">博客</h1>
+      <p class="hero-greeting reveal">Blog</p>
+      <h1 class="hero-name hero-name--compact reveal">博客</h1>
       <p class="hero-typed"><span>随笔 · 笔记 · 研究碎片</span></p>
     </div>
   </header>
-  <section class="section">
+  <section class="section section--tight">
+    <h2 class="section-title reveal">全部文章</h2>
+    <p class="section-lead reveal">共 {len(posts)} 篇 · 随笔、读书笔记与折腾记录，点标题即可阅读。</p>
     <div class="projects-grid">
 {''.join(cards)}
     </div>
@@ -208,12 +216,13 @@ def main():
             text = f.read()
         meta, body = parse_frontmatter(text)
         slug = meta.get("slug") or os.path.splitext(os.path.basename(path))[0]
-        body_html = md_to_html(body)
+        posts.append((meta, md_to_html(body), slug))
+    # 先收齐所有文章，侧栏才能列出完整目录
+    for meta, body_html, slug in posts:
         with open(os.path.join(OUT_DIR, slug + ".html"), "w", encoding="utf-8") as f:
-            f.write(render_post(meta, body_html, slug))
-        posts.append((meta, body_html, slug))
+            f.write(render_post(meta, body_html, slug, blog_nav(meta.get("title", slug), posts)))
     with open(os.path.join(OUT_DIR, "index.html"), "w", encoding="utf-8") as f:
-        f.write(render_index(posts))
+        f.write(render_index(posts, blog_nav("全部文章", posts)))
     print(f"built {len(posts)} post(s) + index -> {OUT_DIR}")
 
 

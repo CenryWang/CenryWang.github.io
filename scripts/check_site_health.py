@@ -16,8 +16,11 @@ BASE = (sys.argv[1] if len(sys.argv) > 1 else "https://cenrywang.github.io").rst
 
 PAGES = [
     "/",
+    "/info.html",
     "/tools.html",
     "/metals.html",
+    "/whimsy.html",
+    "/sitemap.html",
     "/data/metals.json",
     "/blog/index.html",
     "/blog/welcome.html",
@@ -30,13 +33,35 @@ PAGES = [
 # 已下线功能：一旦重新出现在页面里就说明有人误覆盖了文件
 FORBIDDEN = ["guestbook.html", "countapi.xyz", "giscus.app", "now.html"]
 
-# 导航统一后，首页必须包含这些入口
-NAV_REQUIRED = ["tools.html", "digest.html", "metals.html", "blog/index.html"]
+# 导航重构后，首页必须包含 4 个主板块入口与导航页入口
+NAV_REQUIRED = ["info.html", "blog/index.html", "whimsy.html", "sitemap.html"]
 
-# 这些页面都必须使用 nav.py 的同一套入口（按标签比对，忽略 ../ 等路径前缀差异）
+# 这些页面都必须使用 nav.py 的同一套 4 项主导航（按标签比对）
 NAV_CHECK_PAGES = [
-    "/", "/tools.html", "/metals.html", "/blog/index.html",
-    "/blog/welcome.html", "/digest.html", "/404.html",
+    "/", "/info.html", "/tools.html", "/metals.html", "/whimsy.html",
+    "/sitemap.html", "/blog/index.html", "/blog/welcome.html",
+    "/digest.html", "/404.html",
+]
+
+# 这些页面属于某个主板块，左侧必须出现板块内目录
+SIDEBAR_PAGES = [
+    "/", "/info.html", "/tools.html", "/metals.html", "/whimsy.html",
+    "/blog/index.html", "/blog/welcome.html", "/digest.html",
+]
+
+# 全站明暗主题：每个 HTML 页面都要有主题预加载 + 可切换的按钮。
+# 普通页靠 script.js；merge-quest.html 是 Vite 单文件产物，靠自身内联脚本。
+THEME_PAGES = [
+    "/", "/info.html", "/tools.html", "/metals.html", "/whimsy.html",
+    "/sitemap.html", "/blog/index.html", "/blog/welcome.html",
+    "/digest.html", "/404.html", "/merge-quest.html",
+]
+
+# 导航页必须列出完整分支结构（防止改了 nav.py 却忘了重跑 build_sitemap.py）
+SITEMAP_REQUIRED = [
+    "首页", "信息", "博客", "奇思", "板块概览", "简报", "工具", "行情",
+    "人生一万天", "合成大冒险", "AI大模型", "Coding工具", "常用框架",
+    "常用工具软件", "学习科研", "设计绘图", "Agent Skills",
 ]
 
 MAX_DIGEST_AGE_DAYS = 3
@@ -85,6 +110,23 @@ def main():
                     nav_labels[0] = labels
                 elif labels != nav_labels[0]:
                     errors.append("{} 导航与其它页不一致：{}".format(path, " / ".join(labels)))
+
+        if path in SIDEBAR_PAGES and 'class="board-sidebar"' not in text:
+            errors.append("{} 缺少左侧板块目录".format(path))
+
+        if path in THEME_PAGES:
+            if 'localStorage.getItem("theme")' not in text:
+                errors.append("{} 缺少明暗主题预加载".format(path))
+            if path == "/merge-quest.html":
+                if "mqThemeToggle" not in text or 'html[data-theme="dark"]' not in text:
+                    errors.append("{} 缺少明暗主题接入（Vite 重建后容易丢）".format(path))
+            elif "script.js" not in text or 'id="themeToggle"' not in text:
+                errors.append("{} 缺少全站主题按钮或 script.js".format(path))
+
+        if path == "/sitemap.html":
+            for label in SITEMAP_REQUIRED:
+                if label not in text:
+                    errors.append("导航页缺少分支：{}".format(label))
 
         if path == "/digest.html":
             match = re.search(r"同步于\s*(\d{4}-\d{2}-\d{2})", text)

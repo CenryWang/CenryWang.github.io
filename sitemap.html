@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>站点导航 · Cenry</title>
+  <meta name="description" content="CenryWang 个人主页的完整分支结构：首页、信息、博客、奇思四大板块与全部子页面" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%23a855f7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2306060d'/%3E%3Ctext x='32' y='46' font-family='Segoe UI,Arial,sans-serif' font-size='40' font-weight='700' fill='url(%23g)' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    (function () {
+      try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t); } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <div class="aurora" aria-hidden="true">
+    <span class="blob blob-1"></span><span class="blob blob-2"></span><span class="blob blob-3"></span>
+  </div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">Cenry</a>
+    <ul class="nav-links">
+      <li><a href="index.html">首页</a></li>
+      <li><a href="info.html">信息</a></li>
+      <li><a href="blog/index.html">博客</a></li>
+      <li><a href="whimsy.html">奇思</a></li>
+    </ul>
+    <a class="nav-map" href="sitemap.html" title="查看站点分支结构">导航</a>
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="切换明暗主题">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </nav>
+
+  <header class="hero hero--compact">
+    <div class="hero-inner">
+      <p class="hero-greeting reveal">Site Map</p>
+      <h1 class="hero-name hero-name--compact reveal">站点导航</h1>
+      <p class="hero-typed"><span>一张图看懂本站的分支结构</span></p>
+    </div>
+  </header>
+
+  <section class="section sitemap-section">
+    <div class="sitemap-root">
+      <div class="sitemap-root-node glass">
+        <span class="sitemap-root-dot"></span>
+        <strong>CenryWang · 个人主页</strong>
+        <span class="sitemap-root-meta">4 个主板块 · 13 个分支节点</span>
+      </div>
+      <ol class="sitemap-branches">
+      <li class="sitemap-branch glass">
+        <div class="sitemap-branch-head">
+          <span class="sitemap-index">01</span>
+          <div>
+            <h2><a href="index.html">首页</a></h2>
+            <p>关于我、技能、作品、推荐与联系方式</p>
+          </div>
+        </div>
+        <ul class="sitemap-leaves"><li><a href="index.html#about">关于我</a></li><li><a href="index.html#skills">技能</a></li><li><a href="index.html#projects">作品</a></li><li><a href="index.html#recommend">推荐</a></li><li><a href="index.html#contact">联系</a></li></ul>
+      </li>      <li class="sitemap-branch glass">
+        <div class="sitemap-branch-head">
+          <span class="sitemap-index">02</span>
+          <div>
+            <h2><a href="info.html">信息</a></h2>
+            <p>每日简报、工具严选与贵金属宏观行情</p>
+          </div>
+        </div>
+        <ul class="sitemap-leaves"><li><a href="info.html">板块概览</a></li><li><a href="digest.html">简报</a></li><li class="has-sub"><a href="tools.html">工具</a><ul class="sitemap-sub"><li><a href="tools.html#cat-llm">AI大模型</a></li><li><a href="tools.html#cat-coding">Coding工具</a></li><li><a href="tools.html#cat-framework">常用框架</a></li><li><a href="tools.html#cat-software">常用工具软件</a></li><li><a href="tools.html#cat-research">学习科研</a></li><li><a href="tools.html#cat-design">设计绘图</a></li><li><a href="tools.html#cat-skills">Agent Skills</a></li></ul></li><li><a href="metals.html">行情</a></li></ul>
+      </li>      <li class="sitemap-branch glass">
+        <div class="sitemap-branch-head">
+          <span class="sitemap-index">03</span>
+          <div>
+            <h2><a href="blog/index.html">博客</a></h2>
+            <p>随笔、笔记与研究碎片</p>
+          </div>
+        </div>
+        <ul class="sitemap-leaves"><li><a href="blog/index.html">全部文章</a></li><li><a href="blog/welcome.html">欢迎来到我的博客</a></li></ul>
+      </li>      <li class="sitemap-branch glass">
+        <div class="sitemap-branch-head">
+          <span class="sitemap-index">04</span>
+          <div>
+            <h2><a href="whimsy.html">奇思</a></h2>
+            <p>一些好玩的小工具与实验</p>
+          </div>
+        </div>
+        <ul class="sitemap-leaves"><li><a href="whimsy.html#days">人生一万天</a></li><li><a href="merge-quest.html">合成大冒险</a></li></ul>
+      </li>
+      </ol>
+    </div>
+    <p class="sitemap-note">顶部导航只保留 4 个主板块；进入任一板块后，左侧目录会展开该板块下的全部去处。</p>
+  </section>
+
+  <footer class="footer">
+    <div>© <span id="year">2026</span> CenryWang · <a href="index.html" style="color:var(--muted)">返回首页</a></div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
