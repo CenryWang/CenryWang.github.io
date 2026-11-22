@@ -31,6 +31,9 @@ TARGETS = [
     ("tools.html", dict(board="信息", active="工具")),
     ("metals.html", dict(board="信息", active="行情")),
     ("whimsy.html", dict(board="奇思", active="人生一万天")),
+    ("lab.html", dict(board="奇思", active="机械臂实验室")),
+    ("live.html", dict(board="奇思", active="实时控制台")),
+    ("playground.html", dict(board="奇思", active="Shader 实验场")),
     ("sitemap.html", dict()),                      # 导航页不显示侧栏，自身就是全站目录
     ("404.html", dict(base="/", logo="/")),        # 404 不属于任何主板块
     ("digest.html", dict(base="/", logo="/", board="信息", active="简报")),

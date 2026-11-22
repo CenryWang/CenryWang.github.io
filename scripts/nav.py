@@ -98,6 +98,9 @@ SITE_TREE = [
         "items": [
             ("人生一万天", "whimsy.html#days"),
             ("合成大冒险", "merge-quest.html"),
+            ("机械臂实验室", "lab.html"),
+            ("实时控制台", "live.html"),
+            ("Shader 实验场", "playground.html"),
         ],
     },
 ]

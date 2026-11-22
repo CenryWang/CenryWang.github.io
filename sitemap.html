@@ -39,16 +39,100 @@
     <div class="hero-inner">
       <p class="hero-greeting reveal">Site Map</p>
       <h1 class="hero-name hero-name--compact reveal">站点导航</h1>
-      <p class="hero-typed"><span>一张图看懂本站的分支结构</span></p>
+      <p class="hero-typed"><span>把整站摊开成一张可以点的星图</span></p>
     </div>
   </header>
 
+  <section class="section star-section">
+    <h2 class="section-title reveal">星图</h2>
+    <div class="star-map-wrap glass reveal">
+      <p class="star-readout" id="starReadout">悬停任意节点查看去处，点击即可跳转</p>
+      <div class="star-map-scroll">
+<svg class="star-map" viewBox="70 40 760 620" width="100%" height="auto" role="img" aria-label="站点星图：4 个主板块与全部子页面">
+  <g class="star-orbits" aria-hidden="true">
+    <circle cx="450" cy="350" r="150"/>
+    <circle cx="450" cy="350" r="268"/>
+  </g>
+  <g class="star-core">
+    <circle cx="450" cy="350" r="40"/>
+    <text x="450" y="345" text-anchor="middle">Cenry</text>
+    <text x="450" y="366" text-anchor="middle" class="star-core-sub">4 板块 · 23 节点</text>
+  </g>
+  <g class="star-branch" data-board="0">
+    <path class="star-edge star-edge--trunk" d="M450.0,350.0 L450.0,200.0"/>
+    <path class="star-edge" d="M450.0,200.0 L304.0,125.2"/>
+    <a class="star-node star-node--leaf" href="index.html#about" data-label="关于我" data-href="index.html#about"><circle cx="304.0" cy="125.2" r="5.5"/><title>关于我</title></a>
+    <path class="star-edge" d="M450.0,200.0 L373.9,93.0"/>
+    <a class="star-node star-node--leaf" href="index.html#skills" data-label="技能" data-href="index.html#skills"><circle cx="373.9" cy="93.0" r="5.5"/><title>技能</title></a>
+    <path class="star-edge" d="M450.0,200.0 L450.0,82.0"/>
+    <a class="star-node star-node--leaf" href="index.html#projects" data-label="作品" data-href="index.html#projects"><circle cx="450.0" cy="82.0" r="5.5"/><title>作品</title></a>
+    <path class="star-edge" d="M450.0,200.0 L526.1,93.0"/>
+    <a class="star-node star-node--leaf" href="index.html#recommend" data-label="推荐" data-href="index.html#recommend"><circle cx="526.1" cy="93.0" r="5.5"/><title>推荐</title></a>
+    <path class="star-edge" d="M450.0,200.0 L596.0,125.2"/>
+    <a class="star-node star-node--leaf" href="index.html#contact" data-label="联系" data-href="index.html#contact"><circle cx="596.0" cy="125.2" r="5.5"/><title>联系</title></a>
+    <a class="star-node star-node--board" href="index.html" data-label="首页" data-href="index.html"><circle cx="450.0" cy="200.0" r="25"/><text x="450.0" y="200.0" text-anchor="middle" dominant-baseline="central">首页</text><title>首页</title></a>
+  </g>
+  <g class="star-branch" data-board="1">
+    <path class="star-edge star-edge--trunk" d="M450.0,350.0 L600.0,350.0"/>
+    <path class="star-edge" d="M600.0,350.0 L674.8,204.0"/>
+    <a class="star-node star-node--leaf" href="info.html" data-label="板块概览" data-href="info.html"><circle cx="674.8" cy="204.0" r="5.5"/><title>板块概览</title></a>
+    <path class="star-edge" d="M600.0,350.0 L690.1,230.8"/>
+    <a class="star-node star-node--leaf" href="digest.html" data-label="简报" data-href="digest.html"><circle cx="690.1" cy="230.8" r="5.5"/><title>简报</title></a>
+    <path class="star-edge" d="M600.0,350.0 L702.2,259.2"/>
+    <a class="star-node star-node--leaf" href="tools.html" data-label="工具" data-href="tools.html"><circle cx="702.2" cy="259.2" r="5.5"/><title>工具</title></a>
+    <path class="star-edge" d="M600.0,350.0 L710.9,288.8"/>
+    <a class="star-node star-node--leaf" href="tools.html#cat-llm" data-label="AI大模型" data-href="tools.html#cat-llm"><circle cx="710.9" cy="288.8" r="5.5"/><title>AI大模型</title></a>
+    <path class="star-edge" d="M600.0,350.0 L716.2,319.2"/>
+    <a class="star-node star-node--leaf" href="tools.html#cat-coding" data-label="Coding工具" data-href="tools.html#cat-coding"><circle cx="716.2" cy="319.2" r="5.5"/><title>Coding工具</title></a>
+    <path class="star-edge" d="M600.0,350.0 L718.0,350.0"/>
+    <a class="star-node star-node--leaf" href="tools.html#cat-framework" data-label="常用框架" data-href="tools.html#cat-framework"><circle cx="718.0" cy="350.0" r="5.5"/><title>常用框架</title></a>
+    <path class="star-edge" d="M600.0,350.0 L716.2,380.8"/>
+    <a class="star-node star-node--leaf" href="tools.html#cat-software" data-label="常用工具软件" data-href="tools.html#cat-software"><circle cx="716.2" cy="380.8" r="5.5"/><title>常用工具软件</title></a>
+    <path class="star-edge" d="M600.0,350.0 L710.9,411.2"/>
+    <a class="star-node star-node--leaf" href="tools.html#cat-research" data-label="学习科研" data-href="tools.html#cat-research"><circle cx="710.9" cy="411.2" r="5.5"/><title>学习科研</title></a>
+    <path class="star-edge" d="M600.0,350.0 L702.2,440.8"/>
+    <a class="star-node star-node--leaf" href="tools.html#cat-design" data-label="设计绘图" data-href="tools.html#cat-design"><circle cx="702.2" cy="440.8" r="5.5"/><title>设计绘图</title></a>
+    <path class="star-edge" d="M600.0,350.0 L690.1,469.2"/>
+    <a class="star-node star-node--leaf" href="tools.html#cat-skills" data-label="Agent Skills" data-href="tools.html#cat-skills"><circle cx="690.1" cy="469.2" r="5.5"/><title>Agent Skills</title></a>
+    <path class="star-edge" d="M600.0,350.0 L674.8,496.0"/>
+    <a class="star-node star-node--leaf" href="metals.html" data-label="行情" data-href="metals.html"><circle cx="674.8" cy="496.0" r="5.5"/><title>行情</title></a>
+    <a class="star-node star-node--board" href="info.html" data-label="信息" data-href="info.html"><circle cx="600.0" cy="350.0" r="25"/><text x="600.0" y="350.0" text-anchor="middle" dominant-baseline="central">信息</text><title>信息</title></a>
+  </g>
+  <g class="star-branch" data-board="2">
+    <path class="star-edge star-edge--trunk" d="M450.0,350.0 L450.0,500.0"/>
+    <path class="star-edge" d="M450.0,500.0 L596.0,574.8"/>
+    <a class="star-node star-node--leaf" href="blog/index.html" data-label="全部文章" data-href="blog/index.html"><circle cx="596.0" cy="574.8" r="5.5"/><title>全部文章</title></a>
+    <path class="star-edge" d="M450.0,500.0 L304.0,574.8"/>
+    <a class="star-node star-node--leaf" href="blog/welcome.html" data-label="欢迎来到我的博客" data-href="blog/welcome.html"><circle cx="304.0" cy="574.8" r="5.5"/><title>欢迎来到我的博客</title></a>
+    <a class="star-node star-node--board" href="blog/index.html" data-label="博客" data-href="blog/index.html"><circle cx="450.0" cy="500.0" r="25"/><text x="450.0" y="500.0" text-anchor="middle" dominant-baseline="central">博客</text><title>博客</title></a>
+  </g>
+  <g class="star-branch" data-board="3">
+    <path class="star-edge star-edge--trunk" d="M450.0,350.0 L300.0,350.0"/>
+    <path class="star-edge" d="M300.0,350.0 L225.2,496.0"/>
+    <a class="star-node star-node--leaf" href="whimsy.html#days" data-label="人生一万天" data-href="whimsy.html#days"><circle cx="225.2" cy="496.0" r="5.5"/><title>人生一万天</title></a>
+    <path class="star-edge" d="M300.0,350.0 L193.0,426.1"/>
+    <a class="star-node star-node--leaf" href="merge-quest.html" data-label="合成大冒险" data-href="merge-quest.html"><circle cx="193.0" cy="426.1" r="5.5"/><title>合成大冒险</title></a>
+    <path class="star-edge" d="M300.0,350.0 L182.0,350.0"/>
+    <a class="star-node star-node--leaf" href="lab.html" data-label="机械臂实验室" data-href="lab.html"><circle cx="182.0" cy="350.0" r="5.5"/><title>机械臂实验室</title></a>
+    <path class="star-edge" d="M300.0,350.0 L193.0,273.9"/>
+    <a class="star-node star-node--leaf" href="live.html" data-label="实时控制台" data-href="live.html"><circle cx="193.0" cy="273.9" r="5.5"/><title>实时控制台</title></a>
+    <path class="star-edge" d="M300.0,350.0 L225.2,204.0"/>
+    <a class="star-node star-node--leaf" href="playground.html" data-label="Shader 实验场" data-href="playground.html"><circle cx="225.2" cy="204.0" r="5.5"/><title>Shader 实验场</title></a>
+    <a class="star-node star-node--board" href="whimsy.html" data-label="奇思" data-href="whimsy.html"><circle cx="300.0" cy="350.0" r="25"/><text x="300.0" y="350.0" text-anchor="middle" dominant-baseline="central">奇思</text><title>奇思</title></a>
+  </g>
+</svg>
+      </div>
+      <p class="star-hint">中心 → 4 个主板块 → 全部叶子节点 · 窄屏可左右滑动</p>
+    </div>
+  </section>
+
   <section class="section sitemap-section">
+    <h2 class="section-title reveal">完整目录</h2>
     <div class="sitemap-root">
       <div class="sitemap-root-node glass">
         <span class="sitemap-root-dot"></span>
         <strong>CenryWang · 个人主页</strong>
-        <span class="sitemap-root-meta">4 个主板块 · 13 个分支节点</span>
+        <span class="sitemap-root-meta">4 个主板块 · 16 个分支节点</span>
       </div>
       <ol class="sitemap-branches">
       <li class="sitemap-branch glass">
@@ -86,7 +170,7 @@
             <p>一些好玩的小工具与实验</p>
           </div>
         </div>
-        <ul class="sitemap-leaves"><li><a href="whimsy.html#days">人生一万天</a></li><li><a href="merge-quest.html">合成大冒险</a></li></ul>
+        <ul class="sitemap-leaves"><li><a href="whimsy.html#days">人生一万天</a></li><li><a href="merge-quest.html">合成大冒险</a></li><li><a href="lab.html">机械臂实验室</a></li><li><a href="live.html">实时控制台</a></li><li><a href="playground.html">Shader 实验场</a></li></ul>
       </li>
       </ol>
     </div>
@@ -97,5 +181,25 @@
     <div>© <span id="year">2026</span> CenryWang · <a href="index.html" style="color:var(--muted)">返回首页</a></div>
   </footer>
   <script src="script.js"></script>
+  <script>
+    (function () {
+      var out = document.getElementById("starReadout");
+      var map = document.querySelector(".star-map");
+      if (!out || !map) return;
+      var nodes = map.querySelectorAll(".star-node");
+      Array.prototype.forEach.call(nodes, function (a) {
+        function show() {
+          out.textContent = a.getAttribute("data-label") + " → " + a.getAttribute("data-href");
+          out.classList.add("is-live");
+        }
+        a.addEventListener("mouseenter", show);
+        a.addEventListener("focus", show);
+      });
+      map.addEventListener("mouseleave", function () {
+        out.textContent = "悬停任意节点查看去处，点击即可跳转";
+        out.classList.remove("is-live");
+      });
+    })();
+  </script>
 </body>
 </html>

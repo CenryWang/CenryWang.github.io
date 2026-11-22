@@ -26,6 +26,9 @@ PAGES = [
     "/blog/welcome.html",
     "/digest.html",
     "/merge-quest.html",
+    "/lab.html",
+    "/live.html",
+    "/playground.html",
     "/404.html",
     "/script.js",
 ]
@@ -40,13 +43,14 @@ NAV_REQUIRED = ["info.html", "blog/index.html", "whimsy.html", "sitemap.html"]
 NAV_CHECK_PAGES = [
     "/", "/info.html", "/tools.html", "/metals.html", "/whimsy.html",
     "/sitemap.html", "/blog/index.html", "/blog/welcome.html",
-    "/digest.html", "/404.html",
+    "/digest.html", "/404.html", "/lab.html", "/live.html", "/playground.html",
 ]
 
 # 这些页面属于某个主板块，左侧必须出现板块内目录
 SIDEBAR_PAGES = [
     "/", "/info.html", "/tools.html", "/metals.html", "/whimsy.html",
     "/blog/index.html", "/blog/welcome.html", "/digest.html",
+    "/lab.html", "/live.html", "/playground.html",
 ]
 
 # 全站明暗主题：每个 HTML 页面都要有主题预加载 + 可切换的按钮。
@@ -55,12 +59,15 @@ THEME_PAGES = [
     "/", "/info.html", "/tools.html", "/metals.html", "/whimsy.html",
     "/sitemap.html", "/blog/index.html", "/blog/welcome.html",
     "/digest.html", "/404.html", "/merge-quest.html",
+    "/lab.html", "/live.html", "/playground.html",
 ]
 
 # 导航页必须列出完整分支结构（防止改了 nav.py 却忘了重跑 build_sitemap.py）
+# 星图版导航页把标签保留在节点 <title> 与下方完整目录里，这里仍按文本核对。
 SITEMAP_REQUIRED = [
     "首页", "信息", "博客", "奇思", "板块概览", "简报", "工具", "行情",
-    "人生一万天", "合成大冒险", "AI大模型", "Coding工具", "常用框架",
+    "人生一万天", "合成大冒险", "机械臂实验室", "实时控制台", "Shader 实验场",
+    "AI大模型", "Coding工具", "常用框架",
     "常用工具软件", "学习科研", "设计绘图", "Agent Skills",
 ]
 
